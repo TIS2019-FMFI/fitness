@@ -3,22 +3,30 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@react-app/styled": "^1.2.10",
     "@types/jest": "24.0.19",
     "@types/node": "12.11.5",
     "@types/react": "16.9.9",
     "@types/react-dom": "16.9.2",
+    "@types/react-router-dom": "^5.1.0",
     "node-sass": "^4.12.0",
     "prettier": "^1.18.2",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
+    "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
+    "scss-loader": "0.0.1",
+    "style-loader": "^1.0.0",
     "typescript": "3.6.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "npm-run-all --parallel startscript typed",
+    "startscript": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "develop": "npm-run-all --parallel start typed",
+    "typed": "onchange 'src/**/*.scss' -- npx tsm src"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -39,6 +47,9 @@
     "@typescript-eslint/eslint-plugin": "^2.5.0",
     "@typescript-eslint/parser": "^2.5.0",
     "eslint": "^6.5.1",
-    "eslint-plugin-react": "^7.16.0"
+    "eslint-plugin-react": "^7.16.0",
+    "npm-run-all": "^4.1.5",
+    "onchange": "^6.1.0",
+    "typed-scss-modules": "0.0.12"
   }
 }

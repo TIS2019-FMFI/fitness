@@ -1,15 +1,23 @@
 import React from 'react';
+import Styled from '@react-app/styled';
+
 import snakeoil from './images/snakeoil.jpg';
-import './App.scss';
+import defaultStyles from './App.scss';
 
-const App: React.FC = () => {
-    return (
-        <div className='App'>
-            <header className='App-header'>
-                <img src={snakeoil} className='App-logo' alt='logo' />
-            </header>
-        </div>
-    );
-};
+export interface Props {
+    styles: typeof defaultStyles;
+}
 
-export default App;
+class App extends React.Component<Props> {
+    render() {
+        const { styles } = this.props;
+
+        return (
+            <div className={styles.appHeader}>
+                <img src={snakeoil} className={styles.appLogo} alt='logo' />
+            </div>
+        );
+    }
+}
+
+export default Styled(defaultStyles)(App);
