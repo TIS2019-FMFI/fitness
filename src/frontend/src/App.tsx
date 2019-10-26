@@ -1,23 +1,33 @@
 import React from 'react';
-import Styled from '@react-app/styled';
+import styled from 'styled-components';
 
 import snakeoil from './images/snakeoil.jpg';
-import defaultStyles from './App.scss';
 
-export interface Props {
-    styles: typeof defaultStyles;
-}
+const AppHeader = styled.div`
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+`;
+
+const Logo = styled.img`
+    height: 40vmin;
+`;
+
+export interface Props {}
 
 class App extends React.Component<Props> {
     render() {
-        const { styles } = this.props;
-
         return (
-            <div className={styles.appHeader}>
-                <img src={snakeoil} className={styles.appLogo} alt='logo' />
-            </div>
+            <AppHeader>
+                <Logo src={snakeoil} alt='logo' />
+            </AppHeader>
         );
     }
 }
 
-export default Styled(defaultStyles)(App);
+export default App;
