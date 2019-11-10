@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import Navigation from './navigation/navigation';
+import UserManagement from './user-management/user-management';
 
 function App() {
     return (
@@ -10,21 +11,23 @@ function App() {
             <Container>
                 <Route>{({ location }) => <Navigation path={location.pathname} />}</Route>
                 <Switch>
-                    <Route path='/users'>
-                        <p>Users</p>
-                    </Route>
-                    <Route path='/reservation'>
-                        <p>reservation</p>
-                    </Route>
-                    <Route path='/procedures'>
-                        <p>procedures</p>
-                    </Route>
-                    <Route path='/history'>
-                        <p>history</p>
-                    </Route>
-                    <Route path='/'>
-                        <p>Main</p>
-                    </Route>
+                    <MainContent>
+                        <Route path='/users'>
+                            <UserManagement />
+                        </Route>
+                        <Route path='/reservation'>
+                            <p>reservation</p>
+                        </Route>
+                        <Route path='/procedures'>
+                            <p>procedures</p>
+                        </Route>
+                        <Route path='/history'>
+                            <p>history</p>
+                        </Route>
+                        <Route exact={true} path='/'>
+                            <p>Main</p>
+                        </Route>
+                    </MainContent>
                 </Switch>
             </Container>
         </Router>
@@ -34,6 +37,12 @@ function App() {
 const Container = styled.div`
     display: flex;
     flex-flow: row;
+
+    background-color: #f4f5f9;
+`;
+
+const MainContent = styled.div`
+    margin-left: 40px;
 `;
 
 export default App;
