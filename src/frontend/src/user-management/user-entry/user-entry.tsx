@@ -11,30 +11,87 @@ import { TableRow } from '../user-management';
 
 export interface Props {
     id: number;
+    name: string;
+    phoneNumber: string;
+    isActive: boolean;
+    isMultisport: boolean;
+    isGDPR: boolean;
 }
 
 function UserEntry(props: Props) {
-    const { id } = props;
-
+    const { id, name, phoneNumber, isActive, isMultisport, isGDPR } = props;
+    const [user, setUser] = useState({ name, phoneNumber, isActive, isMultisport, isGDPR });
     const [isEditing, setIsEditing] = useState(false);
 
     return (
         <TableRow key={id}>
             <TableData width='50px'>{id}</TableData>
             <TableData width='120px'>
-                {isEditing ? <TableInput type='text' placeholder='Lorem Ipsum' /> : 'Lorem Ipsum'}
+                {isEditing ? (
+                    <TableInput
+                        onChange={event => {
+                            user.name = event.target.value;
+                            setUser({ ...user });
+                        }}
+                        type='text'
+                        value={user.name}
+                        placeholder={name}
+                    />
+                ) : (
+                    <span>{user.name}</span>
+                )}
             </TableData>
             <TableData width='120px'>
-                {isEditing ? <TableInput type='text' placeholder='0900 000 000' /> : '0900 000 000'}
+                {isEditing ? (
+                    <TableInput
+                        onChange={event => {
+                            user.phoneNumber = event.target.value;
+                            setUser({ ...user });
+                        }}
+                        value={user.phoneNumber}
+                        type='text'
+                        placeholder={phoneNumber}
+                    />
+                ) : (
+                    <span>{user.phoneNumber}</span>
+                )}
             </TableData>
             <TableData>
-                <TableInput type='checkbox' name='vehicle1' value='Bike' />
+                <TableInput
+                    type='checkbox'
+                    name='isActive'
+                    onChange={() => {
+                        user.isActive = !user.isActive;
+                        setUser({ ...user });
+                    }}
+                    disabled={!isEditing}
+                    checked={user.isActive}
+                />
             </TableData>
             <TableData>
-                <TableInput type='checkbox' name='vehicle1' value='Bike' />
+                <TableInput
+                    type='checkbox'
+                    onChange={() => {
+                        user.isMultisport = !user.isMultisport;
+                        setUser({ ...user });
+                    }}
+                    name='isMultisport'
+                    disabled={!isEditing}
+                    checked={user.isMultisport}
+                />
             </TableData>
             <TableData>
-                <TableInput type='checkbox' name='vehicle1' value='Bike' />
+                <TableInput
+                    type='checkbox'
+                    onClick={() => {
+                        user.isGDPR = !user.isGDPR;
+                        setUser({ ...user });
+                    }}
+                    id='isGDPR'
+                    name='isGDPR'
+                    disabled={!isEditing}
+                    checked={user.isGDPR}
+                />
             </TableData>
             <TableData>
                 {isEditing ? (
@@ -58,7 +115,13 @@ function UserEntry(props: Props) {
                     </ToolTip>
                 ) : (
                     <ToolTip text='Vymazat klienta'>
-                        <ImageButton>
+                        <ImageButton
+                            onClick={() => {
+                                if (window.confirm(`Chcete vymazat klienta ${user.name}`)) {
+                                    window.alert(`DELETED ${user.name}`);
+                                }
+                            }}
+                        >
                             <ButtonIcon src={deleteIcon} alt='edit' />
                         </ImageButton>
                     </ToolTip>
