@@ -1,11 +1,13 @@
-[TOC]
+
 
 # Katalóg požiadaviek
+
+[TOC]
 
 ## 1 Úvod
 
 ### 1.1 Účel dokumentu
-Tento dokument slúži na opísanie požiadaviek ku projektu Rezervačný systém pre fitness centrum. Obsahuje požiadavky zadávateľa, školiteľa a je záväzný pre zadávateľa a realizátorov projektu.
+Tento dokument slúži na opísanie požiadaviek ku projektu Rezervačný systém pre fitness centrum. Obsahuje požiadavky zadávateľa, školiteľa a je záväzný pre zadávateľa a realizátorov projektu. Použije sa na vyhodnotenie správnosti implementácie. 
 
 ### 1.2 Rozsah využitia systému
 Účelom aplikácie je riešiť rezerváciu klientov fitness centra, pričom aplikácia má ponúkať možnosť ukladania rozličných informácii o klientoch, strojoch a procedúrach vo fitness centre. Aplikáciu bude určená len pre zamestnancov fitness centra, aby za jej pomoci mohli ponúkať služby fitness centra efektívnejšie.
@@ -54,17 +56,17 @@ Systém bude závislý na databáze, z ktorej bude získavať údaje o klientoch
 ### 3.1 Funkčné požiadavky
 
 #### R01 Možnosť vyhľadávať v klientoch
-Aplikácia umožňuje rýchle vyhľadávanie klientov v databáze podľa mena, priezviska alebo telefónneho čísla. Klienta je možné vyhľadať pomocou ktoréhokoľvek údaju a je možné vyhľadávať aj pomocou viacerých údajov naraz.
+Aplikácia umožňuje rýchle fulltextové vyhľadávanie klientov v databáze podľa mena, priezviska alebo telefónneho čísla. Klienta je možné vyhľadať pomocou ktoréhokoľvek údaju a je možné vyhľadávať aj pomocou viacerých údajov naraz. Klienta je možné vyhľadávať pri vytváraní rezervácii, alebo pri administrácii klientov.
 
 #### R02 Pridávanie klientov
 Aplikácia umožňuje pridávanie klientov, ktorí sa budú môcť následne dať nastaviť ako objednávatelia aktivít a vyhľadávať v systéme.
 
 #### R03 Odstraňovanie klientov
-Aplikácia umožňuje odstránenie klienta z databázy.
+Aplikácia umožňuje odstránenie klienta z databázy. Po odstránení klienta daný klient už nie je ďalej evidovaní prostredníctvom aplikácie a nie je možné ho v aplikácii vyhľadať.
 
 #### R04 Príznak o aktívnosti klienta
 
-Aplikácia umožňuje nastaviť klientovi príznak, či je aktívny alebo neaktívny.
+Aplikácia umožňuje nastaviť klientovi príznak, či je aktívny alebo neaktívny. Pri vyhľadávaní klientov sa najskôr zobrazujú klienti, ktorý majú príznak, že sú aktívny.
 
 #### R05 Príznak o podpísaní GDPR
 
@@ -75,11 +77,11 @@ Aplikácia umožňuje nastaviť klientovi príznak, či podpísal alebo nepodpí
 Aplikácia umožňuje nastaviť klientovi príznak, či využíva rekreačnú kartu.
 
 #### R07 Editovanie klientov
-Aplikácia umožňuje zmenu údajov o klientoch.
+Aplikácia umožňuje zmenu údajov o klientoch, čiže meno a priezvisko, telefónne číslo, príznak o podpísaní GDPR a vlastnení športovej kartičky a úpravu poznámky o klientovi.
 
 #### R08 Možnosť rezervácie aktivít pre klienta v danom čase
 
-Aplikácia umožňuje vytvoriť rezerváciu pre daného klienta na daný čas a na danú aktivitu.
+Aplikácia umožňuje vytvoriť rezerváciu pre daného klienta na dané časové okno a na danú aktivitu. Každej rezervácii prislúcha práve jedno okno času.
 
 #### R09 Pridávanie poznámok do objednávky aktivity
 Každá objednávka má klienta, aktivitu a ešte je k nej možné pridať poznámku.
@@ -97,13 +99,13 @@ Aplikácia umožňuje zmeniť klienta, pridať poznámku alebo zmeniť aktivitu 
 
 Aplikácia umožňuje odstránenie objednávky na danú aktivitu.
 
-#### R14 Prezeranie histórie objednávok pre používateľa
+#### R14 Prezeranie histórie objednávok pre klientov
 
-Aplikácia umožňuje prezeranie histórie objednávok pre používateľa.
+Aplikácia umožňuje prezeranie histórie objednávok klientov.
 
-#### R15 Prezeranie histórie objednávok pre aktivitu
+#### R15 Prezeranie histórie objednávok pre aktivity
 
-Aplikácia umožňuje prezeranie histórie objednávok pre aktivitu.
+Aplikácia umožňuje prezeranie histórie objednávok pre aktivity.
 
 #### R16 Pridanie stroja/procedúry
 
@@ -115,7 +117,11 @@ Aplikácia umožňuje odstránenie stroja/procedúry z databázy.
 
 #### R17 Prihlásenie do aplikácie
 
-Aplikácia umožňuje prihlásenie používateľa. Bez prihlásenia nie je možný prístup ku žiadnym informáciám o klientoch.
+Aplikácia umožňuje prihlásenie používateľa. Bez prihlásenia nie je možný prístup ku žiadnym informáciám o klientoch. Používateľ sa prihlasuje pomocou svojho používateľského mena a hesla.
+
+#### R18 Logovanie
+
+Aplikácia loguje udalosti, počas ktorých používateľ mení obsah tabuliek v databáze.
 
 ### 3.2 Požiadavky nevzťahujúce sa na funkcionalitu
 Systém bude dodaný ako webová aplikácia, ktorá sa bude spúšťať cez jeden z podporovaných webových prehliadačov, ktoré sú vyššie uvedené. Bude ju možne spustiť na rôznych platformách od mobilných telefónov po stolové počítače, čiže aplikácia bude plne responzívna.
