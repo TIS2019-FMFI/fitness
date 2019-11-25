@@ -14,14 +14,33 @@ use Illuminate\Support\Collection;
 class MachinesAndProceduresController extends Controller
 {
 
+    /**
+     * Display data of the resource.
+     *
+     * @param IndexMachinesAndProcedure $request
+     * @return Collection
+     */
     public function index(IndexMachinesAndProcedure $request): Collection {
         return MachinesAndProcedure::all();
     }
 
+    /**
+     * Display the specified resource history.
+     *
+     * @param IndexMachinesAndProcedure $request
+     * @return void
+     */
     public function showHistory(IndexMachinesAndProcedure $request) {
+        //TODO implement me pls
 
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param StoreMachinesAndProcedure $request
+     * @return Response
+     */
     public function store(StoreMachinesAndProcedure $request): Response {
         $sanitized = $request->validated();
         $machinesAndProcedure = MachinesAndProcedure::create($sanitized);
@@ -29,19 +48,40 @@ class MachinesAndProceduresController extends Controller
         return response()->json($machinesAndProcedure, 201);
     }
 
-    //TODO implement me pls
-    public function show() {}
 
-    public function update(UpdateMachinesAndProcedure $request, int $id): Response {
-        $machinesAndProcedure = MachinesAndProcedure::findOrFail($id);
+    /**
+     * Display the specified resource.
+     *
+     * @return void
+     */
+    public function show() {
+        //TODO implement me pls
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param UpdateMachinesAndProcedure $request
+     * @param int $machinesAndProcedureId
+     * @return Response
+     */
+    public function update(UpdateMachinesAndProcedure $request, int $machinesAndProcedureId): Response {
+        $machinesAndProcedure = MachinesAndProcedure::findOrFail($machinesAndProcedureId);
         $data = $request->validated();
         $machinesAndProcedure->update($data);
 
         return response()->json($machinesAndProcedure, 200);
     }
 
-    public function destroy(DestroyMachinesAndProcedure $request, int $id): Response {
-        $machinesAndProcedure = MachinesAndProcedure::findOrFail($id);
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param DestroyMachinesAndProcedure $request
+     * @param int $machinesAndProcedureId
+     * @return Response
+     */
+    public function destroy(DestroyMachinesAndProcedure $request, int $machinesAndProcedureId): Response {
+        $machinesAndProcedure = MachinesAndProcedure::findOrFail($machinesAndProcedureId);
         $machinesAndProcedure->delete();
 
         return response()->json(null, 204);
