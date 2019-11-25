@@ -13,7 +13,8 @@ class StoreClient extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        //TODO authorize for action
+        return true;
     }
 
     /**
@@ -24,7 +25,13 @@ class StoreClient extends FormRequest
     public function rules()
     {
         return [
-            //
+            'first_name' => ['required', 'string'],
+            'last_name' => ['required', 'string'],
+            'phone' => ['required', 'string'],
+            'active' => ['required', 'boolean'],
+            'has_multisport_card' => ['required', 'boolean'],
+            'note' => ['sometimes', 'string'],
+            'is_gdpr' => ['required', 'boolean']
         ];
     }
 }

@@ -13,7 +13,8 @@ class IndexClient extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        //TODO authorize for action
+        return true;
     }
 
     /**
@@ -24,7 +25,10 @@ class IndexClient extends FormRequest
     public function rules()
     {
         return [
-            //
+            'orderBy' => ['in:id', 'nullable'],
+            'orderDirection' => ['in:asc,desc', 'nullable'],
+            'page' => ['integer', 'nullable'],
+            'per_page' => ['integer', 'nullable'],
         ];
     }
 }

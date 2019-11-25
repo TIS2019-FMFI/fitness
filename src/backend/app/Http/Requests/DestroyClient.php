@@ -13,7 +13,8 @@ class DestroyClient extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        //TODO authorize for action
+        return true;
     }
 
     /**

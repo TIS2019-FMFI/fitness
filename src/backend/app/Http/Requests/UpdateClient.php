@@ -13,7 +13,8 @@ class UpdateClient extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        //TODO authorize for action
+        return true;
     }
 
     /**
@@ -24,7 +25,13 @@ class UpdateClient extends FormRequest
     public function rules()
     {
         return [
-            //
+            'first_name' => ['sometimes', 'string'],
+            'last_name' => ['sometimes', 'string'],
+            'phone' => ['sometimes', 'string'],
+            'active' => ['sometimes', 'boolean'],
+            'has_multisport_card' => ['sometimes', 'boolean'],
+            'note' => ['sometimes', 'string'],
+            'is_gdpr' => ['sometimes', 'boolean']
         ];
     }
 }
