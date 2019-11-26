@@ -123,6 +123,10 @@ Aplikácia umožňuje prihlásenie používateľa. Bez prihlásenia nie je možn
 
 Aplikácia loguje udalosti, počas ktorých používateľ mení obsah tabuliek v databáze.
 
+#### R19 Prezeranie obsadenosti
+
+Aplikácia umožňuje prezeranie obsadenosti časových okien na jeden týždeň. Túto funkcionalitu poskytuje aplikácia pre klientov a nie je potrebné sa kvôli nej prihlasovať. 
+
 ### 3.2 Požiadavky nevzťahujúce sa na funkcionalitu
 Systém bude dodaný ako webová aplikácia, ktorá sa bude spúšťať cez jeden z podporovaných webových prehliadačov, ktoré sú vyššie uvedené. Bude ju možne spustiť na rôznych platformách od mobilných telefónov po stolové počítače, čiže aplikácia bude plne responzívna.
 
