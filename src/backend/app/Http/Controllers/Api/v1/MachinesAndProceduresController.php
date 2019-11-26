@@ -9,8 +9,6 @@ use App\Http\Requests\Api\v1\MachinesAndProcedures\StoreMachinesAndProcedure;
 use App\Http\Requests\Api\v1\MachinesAndProcedures\UpdateMachinesAndProcedure;
 use App\Models\MachinesAndProcedure;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 
 class MachinesAndProceduresController extends Controller
