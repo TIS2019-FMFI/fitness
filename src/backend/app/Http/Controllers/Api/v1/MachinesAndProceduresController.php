@@ -8,6 +8,8 @@ use App\Http\Requests\Api\v1\MachinesAndProcedures\IndexMachinesAndProcedure;
 use App\Http\Requests\Api\v1\MachinesAndProcedures\StoreMachinesAndProcedure;
 use App\Http\Requests\Api\v1\MachinesAndProcedures\UpdateMachinesAndProcedure;
 use App\Models\MachinesAndProcedure;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 
@@ -41,7 +43,7 @@ class MachinesAndProceduresController extends Controller
      * @param StoreMachinesAndProcedure $request
      * @return Response
      */
-    public function store(StoreMachinesAndProcedure $request): Response {
+    public function store(StoreMachinesAndProcedure $request): JsonResponse {
         $sanitized = $request->validated();
         $machinesAndProcedure = MachinesAndProcedure::create($sanitized);
 
@@ -65,7 +67,7 @@ class MachinesAndProceduresController extends Controller
      * @param int $machinesAndProcedureId
      * @return Response
      */
-    public function update(UpdateMachinesAndProcedure $request, int $machinesAndProcedureId): Response {
+    public function update(UpdateMachinesAndProcedure $request, int $machinesAndProcedureId): JsonResponse {
         $machinesAndProcedure = MachinesAndProcedure::findOrFail($machinesAndProcedureId);
         $data = $request->validated();
         $machinesAndProcedure->update($data);
@@ -80,7 +82,7 @@ class MachinesAndProceduresController extends Controller
      * @param int $machinesAndProcedureId
      * @return Response
      */
-    public function destroy(DestroyMachinesAndProcedure $request, int $machinesAndProcedureId): Response {
+    public function destroy(DestroyMachinesAndProcedure $request, int $machinesAndProcedureId): JsonResponse {
         $machinesAndProcedure = MachinesAndProcedure::findOrFail($machinesAndProcedureId);
         $machinesAndProcedure->delete();
 
