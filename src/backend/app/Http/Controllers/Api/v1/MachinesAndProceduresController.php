@@ -41,7 +41,7 @@ class MachinesAndProceduresController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreMachinesAndProcedure $request
-     * @return Response
+     * @return JsonResponse
      */
     public function store(StoreMachinesAndProcedure $request): JsonResponse {
         $sanitized = $request->validated();
@@ -65,7 +65,7 @@ class MachinesAndProceduresController extends Controller
      *
      * @param UpdateMachinesAndProcedure $request
      * @param int $machinesAndProcedureId
-     * @return Response
+     * @return JsonResponse
      */
     public function update(UpdateMachinesAndProcedure $request, int $machinesAndProcedureId): JsonResponse {
         $machinesAndProcedure = MachinesAndProcedure::findOrFail($machinesAndProcedureId);
@@ -80,7 +80,7 @@ class MachinesAndProceduresController extends Controller
      *
      * @param DestroyMachinesAndProcedure $request
      * @param int $machinesAndProcedureId
-     * @return Response
+     * @return JsonResponse
      */
     public function destroy(DestroyMachinesAndProcedure $request, int $machinesAndProcedureId): JsonResponse {
         $machinesAndProcedure = MachinesAndProcedure::findOrFail($machinesAndProcedureId);
