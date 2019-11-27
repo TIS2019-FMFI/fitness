@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class IndexClient extends FormRequest
+class IndexOrder extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,7 +28,7 @@ class IndexClient extends FormRequest
             'orderBy' => ['in:id', 'nullable'],
             'orderDirection' => ['in:asc,desc', 'nullable'],
             'page' => ['integer', 'nullable'],
-            'per_page' => ['integer', 'nullable'],
+            'per_page' => ['integer', 'nullable']
         ];
     }
 }
