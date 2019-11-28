@@ -11,7 +11,7 @@ class DestroyClient extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize() : bool
     {
         //TODO authorize for action
         return true;

@@ -74,9 +74,10 @@ class ClientsController extends Controller
      * @return JsonResponse
      */
     public function findClient(String $string) : JsonResponse {
-        return response()->json(Client::with('clients')->where('first_name', 'LIKE', '%' . $string . '%')
-            ->orWhere('last_name', 'LIKE', '%' . $string . '%')
-            ->orWhere('phone', 'LIKE', '%' . $string . '%'));
+        $clients = Client::where('first_name', 'ILIKE', '%' . $string . '%')
+            ->orWhere('last_name', 'ILIKE', '%' . $string . '%')
+            ->orWhere('phone', 'ILIKE', '%' . $string . '%');
+        return response()->json($clients);
     }
 
 }
