@@ -22,7 +22,7 @@ class IndexOrder extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules() : array
     {
         return [
             'orderBy' => ['in:id', 'nullable'],
