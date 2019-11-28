@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DestroyClient;
-use App\Http\Requests\EditClient;
 use App\Http\Requests\IndexClient;
 use App\Http\Requests\StoreClient;
 use App\Http\Requests\UpdateClient;
@@ -20,17 +19,12 @@ class ClientsController extends Controller
      * @param IndexClient $request
      * @return Collection
      */
-    public function index(IndexClient $request) : Collection{
+    public function index(IndexClient $request) : Collection {
         return Client::all();
     }
 
     //TODO: implement me pls
-    public function create() : Response{
-        return Response::create();
-    }
-
-    //TODO: implement me pls
-    public function history(IndexClient $request) : Response{
+    public function history(IndexClient $request) : Response {
         return Response::create();
     }
 
@@ -40,15 +34,10 @@ class ClientsController extends Controller
      * @param StoreClient $request
      * @return JsonResponse
      */
-    public function store(StoreClient $request) : JsonResponse{
+    public function store(StoreClient $request) : JsonResponse {
         $sanitized = $request->validated();
         $client = Client::create($sanitized);
         return response()->json($client, 201);
-    }
-
-    //TODO: implement me pls
-    public function edit(EditClient $request, Client $client) : Response{
-        return Response::create();
     }
 
     /**
@@ -58,7 +47,7 @@ class ClientsController extends Controller
      * @param int $clientId
      * @return JsonResponse
      */
-    public function update(UpdateClient $request, int $clientId) : JsonResponse{
+    public function update(UpdateClient $request, int $clientId) : JsonResponse {
         $client = Client::findOrFail($clientId);
         $data = $request->validated();
         $client->update($data);
@@ -72,7 +61,7 @@ class ClientsController extends Controller
      * @param int $clientId
      * @return JsonResponse
      */
-    public function destroy(DestroyClient $request, int $clientId) : JsonResponse{
+    public function destroy(DestroyClient $request, int $clientId) : JsonResponse {
         $client = Client::findOrFail($clientId);
         $client->delete();
         return response()->json(null, 204);
@@ -84,7 +73,7 @@ class ClientsController extends Controller
      * @param String $string
      * @return JsonResponse
      */
-    public function findClient(String $string) : JsonResponse{
+    public function findClient(String $string) : JsonResponse {
         return response()->json(Client::with('clients')->where('first_name', 'LIKE', '%' . $string . '%')
             ->orWhere('last_name', 'LIKE', '%' . $string . '%')
             ->orWhere('phone', 'LIKE', '%' . $string . '%'));
