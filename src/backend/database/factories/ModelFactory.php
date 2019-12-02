@@ -14,8 +14,8 @@ $factory->define(Client::class, static function (Faker\Generator $faker) {
         'has_multisport_card' => $faker->boolean(),
         'is_gdpr' => $faker->boolean(),
         'note' => $faker->sentence,
-        'created_at' => $faker->dateTime,
-        'updated_at' => $faker->dateTime,
+        'created_at' => $faker->dateTimeBetween('+0 days', '+1 month'),
+        'updated_at' => $faker->dateTimeBetween('+0 days', '+1 month'),
     ];
 });
 
@@ -25,8 +25,8 @@ $factory->define(MachinesAndProcedure::class, static function (Faker\Generator $
         'name' => $faker->sentence,
         'active' => $faker->boolean(),
         'is_for_multisport_card' => $faker->boolean(),
-        'created_at' => $faker->dateTime,
-        'updated_at' => $faker->dateTime,
+        'created_at' => $faker->dateTimeBetween('+0 days', '+1 month'),
+        'updated_at' => $faker->dateTimeBetween('+0 days', '+1 month'),
     ];
 });
 
@@ -38,13 +38,16 @@ $factory->define(Order::class, static function (Faker\Generator $faker) {
         $machinesAndProcedures = MachinesAndProcedure::inRandomOrder()->first();
     }
 
+    $startTime = $faker->dateTimeBetween('+1 week', '+1 month');
+    $endTime = $faker->dateTimeBetween($startTime, $startTime->format('Y-m-d H:i:s').' +45 minutes');
+
     return [
-        'start_time' => $faker->dateTime,
-        'end_time' => $faker->dateTime,
+        'start_time' => $startTime,
+        'end_time' => $endTime,
         'note' => $faker->sentence,
         'client_id' => isset($client) ? $client->id : null,
         'machine_id' => isset($machinesAndProcedures) ? $machinesAndProcedures->id : null,
-        'created_at' => $faker->dateTime,
-        'updated_at' => $faker->dateTime,
+        'created_at' => $faker->dateTimeBetween('+1 week', '+1 month'),
+        'updated_at' => $faker->dateTimeBetween('+1 week', '+1 month'),
     ];
 });
