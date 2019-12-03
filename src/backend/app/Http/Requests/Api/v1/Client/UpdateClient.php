@@ -31,7 +31,7 @@ class UpdateClient extends FormRequest
             'active' => ['sometimes', 'boolean'],
             'has_multisport_card' => ['sometimes', 'boolean'],
             'note' => ['sometimes', 'string'],
-            'is_gdpr' => ['sometimes', 'boolean']
+            'is_gdpr' => ['sometimes', 'boolean'],
         ];
     }
 }

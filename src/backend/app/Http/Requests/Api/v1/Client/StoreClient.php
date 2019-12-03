@@ -31,7 +31,7 @@ class StoreClient extends FormRequest
             'active' => ['required', 'boolean'],
             'has_multisport_card' => ['required', 'boolean'],
             'note' => ['sometimes', 'string'],
-            'is_gdpr' => ['required', 'boolean']
+            'is_gdpr' => ['required', 'boolean'],
         ];
     }
 }

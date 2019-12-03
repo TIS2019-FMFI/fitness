@@ -3,17 +3,13 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\DestroyClient;
+use App\Http\Requests\DestroyOrder;
 use App\Http\Requests\IndexOrder;
-use App\Http\Requests\StoreClient;
 use App\Http\Requests\StoreOrder;
 use App\Http\Requests\UpdateOrder;
-use App\Models\Client;
 use App\Models\Order;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Psy\Util\Json;
 
 class OrdersController extends Controller
 {
@@ -65,7 +61,7 @@ class OrdersController extends Controller
      * @param int $orderId
      * @return JsonResponse
      */
-    public function destroy(DestroyClient $request, int $orderId) : JsonResponse {
+    public function destroy(DestroyOrder $request, int $orderId) : JsonResponse {
         $order = Order::findOrFail($orderId);
         $order->delete();
         return response()->json(null, 204);

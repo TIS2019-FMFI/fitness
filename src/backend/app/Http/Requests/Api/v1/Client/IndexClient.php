@@ -28,7 +28,7 @@ class IndexClient extends FormRequest
             'orderBy' => ['in:id', 'nullable'],
             'orderDirection' => ['in:asc,desc', 'nullable'],
             'page' => ['integer', 'nullable'],
-            'per_page' => ['integer', 'nullable']
+            'per_page' => ['integer', 'nullable'],
         ];
     }
 }
