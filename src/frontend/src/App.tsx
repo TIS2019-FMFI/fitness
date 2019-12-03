@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import Navigation from './navigation/navigation';
 import UserManagement from './user-management/user-management';
+import Home from './home/home';
 
 function App() {
     return (
@@ -16,7 +17,7 @@ function App() {
                             <UserManagement />
                         </Route>
                         <Route path='/reservation'>
-                            <p>reservation</p>
+                            <Home />
                         </Route>
                         <Route path='/procedures'>
                             <p>procedures</p>

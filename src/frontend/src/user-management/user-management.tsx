@@ -6,6 +6,12 @@ import leftArrow from 'images/left_arrow.svg';
 import rightArrow from 'images/right_arrow.svg';
 import UserEntry from './user-entry/user-entry';
 
+export interface Client {
+    id: number;
+    note: string;
+    name: string;
+}
+
 function UserManagement() {
     const location = useLocation();
     const history = useHistory();
