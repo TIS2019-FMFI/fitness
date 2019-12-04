@@ -27,11 +27,10 @@ class ClientsController extends Controller
      * Display the specified clients history.
      *
      * @param IndexClient $request
-     * @return Collection
+     * @return void
      */
-    public function history(IndexClient $request): Collection {
-        $clients = Client::with('orders')->get();
-        return $clients;
+    public function history(IndexClient $request) {
+        //TODO implement me pls
     }
 
     /**
