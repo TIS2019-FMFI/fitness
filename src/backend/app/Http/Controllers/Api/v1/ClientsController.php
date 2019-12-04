@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\DestroyClient;
-use App\Http\Requests\IndexClient;
-use App\Http\Requests\StoreClient;
-use App\Http\Requests\UpdateClient;
+use App\Http\Requests\Api\v1\Client\DestroyClient;
+use App\Http\Requests\Api\v1\Client\StoreClient;
+use App\Http\Requests\Api\v1\Client\UpdateClient;
+use App\Http\Requests\Api\v1\Client\IndexClient;
 use App\Models\Client;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
 class ClientsController extends Controller
@@ -19,13 +19,19 @@ class ClientsController extends Controller
      * @param IndexClient $request
      * @return Collection
      */
-    public function index(IndexClient $request) : Collection {
+    public function index(IndexClient $request): Collection {
         return Client::all();
     }
 
-    //TODO: implement me pls
-    public function history(IndexClient $request) : Response {
-        return Response::create();
+    /**
+     * Display the specified clients history.
+     *
+     * @param IndexClient $request
+     * @return Collection
+     */
+    public function history(IndexClient $request): Collection {
+        $clients = Client::with('orders')->get();
+        return $clients;
     }
 
     /**
@@ -34,7 +40,7 @@ class ClientsController extends Controller
      * @param StoreClient $request
      * @return JsonResponse
      */
-    public function store(StoreClient $request) : JsonResponse {
+    public function store(StoreClient $request): JsonResponse {
         $sanitized = $request->validated();
         $client = Client::create($sanitized);
         return response()->json($client, 201);
@@ -47,7 +53,7 @@ class ClientsController extends Controller
      * @param int $clientId
      * @return JsonResponse
      */
-    public function update(UpdateClient $request, int $clientId) : JsonResponse {
+    public function update(UpdateClient $request, int $clientId): JsonResponse {
         $client = Client::findOrFail($clientId);
         $data = $request->validated();
         $client->update($data);
@@ -61,7 +67,7 @@ class ClientsController extends Controller
      * @param int $clientId
      * @return JsonResponse
      */
-    public function destroy(DestroyClient $request, int $clientId) : JsonResponse {
+    public function destroy(DestroyClient $request, int $clientId): JsonResponse {
         $client = Client::findOrFail($clientId);
         $client->delete();
         return response()->json(null, 204);
@@ -71,13 +77,12 @@ class ClientsController extends Controller
      * Display the specified client.
      *
      * @param String $string
-     * @return JsonResponse
+     * @return Collection
      */
-    public function findClient(String $string) : JsonResponse {
+    public function findClient(String $string): Collection {
         $clients = Client::where('first_name', 'ILIKE', '%' . $string . '%')
             ->orWhere('last_name', 'ILIKE', '%' . $string . '%')
-            ->orWhere('phone', 'ILIKE', '%' . $string . '%');
-        return response()->json($clients);
+            ->orWhere('phone', 'ILIKE', '%' . $string . '%')->get();
+        return $clients;
     }
-
 }

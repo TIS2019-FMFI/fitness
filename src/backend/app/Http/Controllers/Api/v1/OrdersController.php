@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\DestroyOrder;
-use App\Http\Requests\IndexOrder;
-use App\Http\Requests\StoreOrder;
-use App\Http\Requests\UpdateOrder;
+use App\Http\Requests\Api\v1\Order\DestroyOrder;
+use App\Http\Requests\Api\v1\Order\IndexOrder;
+use App\Http\Requests\Api\v1\Order\StoreOrder;
+use App\Http\Requests\Api\v1\Order\UpdateOrder;
 use App\Models\Order;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 
 class OrdersController extends Controller
 {
@@ -19,13 +19,8 @@ class OrdersController extends Controller
      * @param IndexOrder $request
      * @return Collection
      */
-    public function index(IndexOrder $request) : Collection {
+    public function index(IndexOrder $request): Collection {
         return Order::all();
-    }
-
-    //TODO: implement me pls
-    public function history(IndexOrder $request) : Response {
-        return Response::create();
     }
 
     /**
@@ -34,7 +29,7 @@ class OrdersController extends Controller
      * @param StoreOrder $request
      * @return JsonResponse
      */
-    public function store(StoreOrder $request) : JsonResponse {
+    public function store(StoreOrder $request): JsonResponse {
         $sanitized = $request->validated();
         $order = Order::create($sanitized);
         return response()->json($order, 201);
@@ -47,7 +42,7 @@ class OrdersController extends Controller
      * @param int $orderId
      * @return JsonResponse
      */
-    public function update(UpdateOrder $request, int $orderId) : JsonResponse {
+    public function update(UpdateOrder $request, int $orderId): JsonResponse {
         $order = Order::findOrFail($orderId);
         $data = $request->validated();
         $order->update($data);
@@ -61,7 +56,7 @@ class OrdersController extends Controller
      * @param int $orderId
      * @return JsonResponse
      */
-    public function destroy(DestroyOrder $request, int $orderId) : JsonResponse {
+    public function destroy(DestroyOrder $request, int $orderId): JsonResponse {
         $order = Order::findOrFail($orderId);
         $order->delete();
         return response()->json(null, 204);

@@ -7,15 +7,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Order extends Model
 {
+
     protected $fillable = [
         "note",
         "client_id",
         "machine_id",
+        "start_time",
+        "end_time",
     ];
 
     protected $dates = [
-        "start_time",
-        "end_time",
         "created_at",
         "updated_at",
     ];

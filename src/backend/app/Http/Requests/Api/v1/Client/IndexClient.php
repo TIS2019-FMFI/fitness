@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api\v1\Client;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -11,7 +11,7 @@ class IndexClient extends FormRequest
      *
      * @return bool
      */
-    public function authorize() : bool
+    public function authorize(): bool
     {
         //TODO authorize for action
         return true;
@@ -22,7 +22,7 @@ class IndexClient extends FormRequest
      *
      * @return array
      */
-    public function rules() : array
+    public function rules(): array
     {
         return [
             'orderBy' => ['in:id', 'nullable'],

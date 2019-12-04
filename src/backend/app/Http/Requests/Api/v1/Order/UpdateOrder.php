@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api\v1\Order;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -11,7 +11,7 @@ class UpdateOrder extends FormRequest
      *
      * @return bool
      */
-    public function authorize() : bool
+    public function authorize(): bool
     {
         //TODO authorize for action
         return true;
@@ -22,14 +22,14 @@ class UpdateOrder extends FormRequest
      *
      * @return array
      */
-    public function rules() : array
+    public function rules(): array
     {
         return [
             'note' => ['sometimes', 'string'],
             'client_id' => ['sometimes', 'integer'],
             'machine_id' => ['sometimes', 'integer'],
-            'start_time' => ['sometimes', 'timestamp'],
-            'end_time' => ['sometimes', 'timestamp'],
+            'start_time' => ['sometimes', 'date_format:Y-m-d H:i:s'],
+            'end_time' => ['sometimes', 'date_format:Y-m-d H:i:s'],
         ];
     }
 }

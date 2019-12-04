@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Api\v1\Client;
+namespace App\Http\Requests\Api\v1\MachinesAndProcedure;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DestroyClient extends FormRequest
+class IndexMachinesAndProcedure extends FormRequest
 {
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -25,7 +26,10 @@ class DestroyClient extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'orderBy' => ['in:id', 'nullable'],
+            'orderDirection' => ['in:asc,desc', 'nullable'],
+            'page' => ['integer', 'nullable'],
+            'per_page' => ['integer', 'nullable'],
         ];
     }
 }
