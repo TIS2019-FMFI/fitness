@@ -21,7 +21,32 @@ class MachinesAndProceduresController extends Controller
      * @return Collection
      */
     public function index(IndexMachinesAndProcedure $request): Collection {
-        return MachinesAndProcedure::all();
+        //TODO refactor me
+        $orderDirection = 'asc';
+        $perPage = 10;
+        $page = 1;
+        $orderBy = 'id';
+
+        if($request->has('orderDirection')){
+            $orderDirection = $request->orderDirection;
+        }
+
+        if($request->has('perPage')) {
+            $perPage = $request->perPage;
+        }
+
+        if($request->has('page')){
+            $page = $request->page;
+        }
+
+        if($request->has('orderBy')){
+            $orderBy = $request->orderBy;
+        }
+
+        return MachinesAndProcedure::orderBy($orderBy, $orderDirection)
+            ->offset(($perPage * $page) - $perPage)
+            ->limit($perPage)
+            ->get();
     }
 
     /**
