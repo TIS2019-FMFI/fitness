@@ -56,7 +56,7 @@ class MachinesAndProceduresController extends Controller
      * @return void
      */
     public function history(IndexMachinesAndProcedure $request) {
-        $orders =  MachinesAndProcedure::join('orders', 'orders.machine_id', '=', 'machines_and_procedures.id')
+        $orders = MachinesAndProcedure::join('orders', 'orders.machine_id', '=', 'machines_and_procedures.id')
             ->where("end_time", "<", Carbon::now())
             ->orderByDesc("end_time")
             ->get();

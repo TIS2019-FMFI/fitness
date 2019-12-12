@@ -55,7 +55,7 @@ class ClientsController extends Controller
      * @return void
      */
     public function history(IndexClient $request): Collection {
-        $orders =  Client::join('orders', 'orders.client_id', '=', 'clients.id')
+        $orders = Client::join('orders', 'orders.client_id', '=', 'clients.id')
             ->where("end_time", "<", Carbon::now())
             ->orderByDesc("end_time")
             ->get();
