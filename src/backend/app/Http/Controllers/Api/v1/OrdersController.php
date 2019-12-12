@@ -41,6 +41,7 @@ class OrdersController extends Controller
         }
 
         $orders = Order::join('clients', 'clients.id', '=', 'orders.client_id')
+            ->join('machines_and_procedures', 'orders.machine_id', '=', 'machines_and_procedures.id')
             ->orderBy($orderBy, $orderDirection)
             ->offset(($perPage * $page) - $perPage)
             ->limit($perPage)
@@ -92,5 +93,13 @@ class OrdersController extends Controller
     }
 
     //TODO: implement me pls
-    public function findOrder(){}
+    public function findOrder(String $string): JsonResponse {
+        /*
+        $orders = Order::where('first_name', 'ILIKE', '%' . $string . '%')
+            ->orWhere('last_name', 'ILIKE', '%' . $string . '%')
+            ->orWhere('phone', 'ILIKE', '%' . $string . '%')->get();
+        */
+
+        return response()->json([], 200);
+    }
 }
