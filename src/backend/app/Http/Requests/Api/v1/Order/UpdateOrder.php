@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Api\v1\MachinesAndProcedure;
+namespace App\Http\Requests\Api\v1\Order;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateMachinesAndProcedure extends FormRequest
+class UpdateOrder extends FormRequest
 {
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -26,9 +25,11 @@ class UpdateMachinesAndProcedure extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'string'],
-            'active' => ['sometimes', 'boolean'],
-            'is_for_multisport_card' => ['sometimes', 'boolean'],
+            'note' => ['sometimes', 'string'],
+            'client_id' => ['sometimes', 'integer'],
+            'machine_id' => ['sometimes', 'integer'],
+            'start_time' => ['sometimes', 'date_format:Y-m-d H:i:s'],
+            'end_time' => ['sometimes', 'date_format:Y-m-d H:i:s'],
         ];
     }
 }
