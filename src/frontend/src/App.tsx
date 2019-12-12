@@ -13,16 +13,16 @@ function App() {
                 <Route>{({ location }) => <Navigation path={location.pathname} />}</Route>
                 <Switch>
                     <MainContent>
-                        <Route path='/users'>
+                        <Route path='/klienty'>
                             <UserManagement />
                         </Route>
-                        <Route path='/reservation'>
+                        <Route path='/rezervacie'>
                             <Home />
                         </Route>
-                        <Route path='/procedures'>
+                        <Route path='/procedury'>
                             <p>procedures</p>
                         </Route>
-                        <Route path='/history'>
+                        <Route path='/historia'>
                             <p>history</p>
                         </Route>
                         <Route exact={true} path='/'>
