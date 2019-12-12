@@ -8,8 +8,11 @@ use App\Http\Requests\Api\v1\Client\StoreClient;
 use App\Http\Requests\Api\v1\Client\UpdateClient;
 use App\Http\Requests\Api\v1\Client\IndexClient;
 use App\Models\Client;
+use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class ClientsController extends Controller
 {
@@ -24,13 +27,17 @@ class ClientsController extends Controller
     }
 
     /**
-     * Display the specified clients history.
+     * Display the clients history.
      *
      * @param IndexClient $request
      * @return void
      */
-    public function history(IndexClient $request) {
-        //TODO implement me pls
+    public function history(IndexClient $request): Collection {
+        $orders =  Client::join('orders', 'orders.client_id', '=', 'clients.id')
+            ->where("end_time", "<", Carbon::now())
+            ->orderByDesc("end_time")
+            ->get();
+        return $orders;
     }
 
     /**
