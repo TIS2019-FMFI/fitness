@@ -54,9 +54,96 @@ Akcia: Používateľ zmení údaje o klientovi a zvolí aktualizovať údaje o k
 
 Reakcia: Klient má aktualizované informácie a je to možné overiť cez krok 3.
 
+## 8. Vytvorenie rezervácie
 
+Kroky ktoré sa vykonajú predtým: 1, 2
 
+Akcia: Používateľ vyberie časové okno a vyplní dodatočné údaje k rezervácií. Následne potvrdí vytvorenie rezervácie.
 
+Reakcia: Klient má vytvorenú rezerváciu. Táto rezervácia sa zobrazuje po prihlásení v danom časovom okne.
 
+## 9. Prístup k dnešnému dňu v kalendári
 
+Kroky ktoré sa vykonajú predtým: 1
 
+Akcia: Používateľ prejde na vzdialený dátum niekedy v budúcnosti. Následne klikne na presunutie sa k dnešnému dňu.
+
+Reakcia: Klient je presmerovaný v kalendári na dnešný deň.
+
+## 10. Vytvorenie rezervácie klientovi na viacero aktivít
+
+Kroky ktoré sa vykonajú predtým: 8
+
+Akcia: Používateľ vyberie časové okno a vyplní dodatočné údaje k rezervácií. Následne potvrdí vytvorenie rezervácie. Tento krok je potrebné spraviť hneď po kroku 8, čiže rezervácia je vytváraná rovnakému klientov, ako v kroku 8.
+
+Reakcia: Klient má vytvorenú rezerváciu. Táto rezervácia sa zobrazuje po prihlásení v danom časovom okne.
+
+## 11. Editovanie objednávky
+
+Kroky ktoré sa vykonajú predtým: 1
+
+Akcia: Používateľ vyberie časové okno, na ktoré je vytvorená rezervácia a upraví informácie o rezervácií. Následne zmenu potvrdí.
+
+Reakcia: Rezervácia je zmenená. Táto zmena sa zobrazuje po prihlásení v danom časovom okne.
+
+## 12. Odstránenie objednávky
+
+Kroky ktoré sa vykonajú predtým: 1
+
+Akcia: Používateľ vyberie časové okno, na ktoré je vytvorená rezervácia a odstráni ju.
+
+Reakcia: Rezervácia je odstránená. Táto zmena sa zobrazuje po prihlásení v danom časovom okne.
+
+## 13. Prezeranie histórie objednávok pre klientov
+
+Kroky ktoré sa vykonajú predtým: 1
+
+Akcia: Používateľ v menu klikne na položku História objednávok a určí, že chce prezerať históriu pre klientov.
+
+Reakcia: Používateľovi sa zobrazí história objednávok pre všetkých klientov.
+
+## 14. Prezeranie histórie objednávok pre klienta
+
+Kroky ktoré sa vykonajú predtým: 13
+
+Akcia: Používateľ vyhľadá klienta.
+
+Reakcia: Používateľovi sa zobrazí história objednávok pre klienta, ktorého vybral.
+
+## 15. Prezeranie histórie objednávok pre aktivity
+
+Kroky ktoré sa vykonajú predtým: 1
+
+Akcia: Používateľ v menu klikne na položku História objednávok a určí, že chce prezerať históriu pre aktivity.
+
+Reakcia: Používateľovi sa zobrazí história objednávok pre všetky aktivity.
+
+## 16. Prezeranie histórie objednávok pre aktivitu
+
+Kroky ktoré sa vykonajú predtým: 15
+
+Akcia: Používateľ vyhľadá aktivity.
+
+Reakcia: Používateľovi sa zobrazí história objednávok pre aktivitu, ktorú vybral.
+
+## 17. Pridanie aktivity
+
+Kroky ktoré sa vykonajú predtým: 1
+
+Akcia: Používateľ na stránke administrácie aktivít vyplní informácie o aktivite zvolí pridať aktivitu.
+
+Reakcia: Aktivita sa uloží do databázy a je možné na ňu vytvárať objednávky.
+
+## 18. Odstránenie aktivity
+
+Kroky ktoré sa vykonajú predtým: 1
+
+Akcia: Používateľ na stránke administrácie aktivít vyhľadá aktivitu a zvolí možnosť odstrániť ju.
+
+Reakcia: Aktivita sa odstráni z databázy a už nie je možné na ňu vytvárať objednávky.
+
+## 18. Prezeranie obsadenosti
+
+Akcia: Klient prejde na stránku prezerania obsadenosti aktivít.
+
+Reakcia: Klientovi sa zobrazí kalendár s obsadenosťou časových okien.
