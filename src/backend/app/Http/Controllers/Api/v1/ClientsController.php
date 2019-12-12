@@ -10,7 +10,6 @@ use App\Http\Requests\Api\v1\Client\IndexClient;
 use App\Models\Client;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
 
 class ClientsController extends Controller
 {
@@ -18,9 +17,9 @@ class ClientsController extends Controller
      * Display data of all clients.
      *
      * @param IndexClient $request
-     * @return Collection
+     * @return JsonResponse
      */
-    public function index(IndexClient $request): Collection {
+    public function index(IndexClient $request): JsonResponse {
         $orderDirection = 'asc';
         $perPage = 10;
         $page = 1;
@@ -42,24 +41,27 @@ class ClientsController extends Controller
             $orderBy = $request->orderBy;
         }
 
-        return Client::orderBy($orderBy, $orderDirection)
+        $clients = Client::orderBy($orderBy, $orderDirection)
             ->offset(($perPage * $page) - $perPage)
             ->limit($perPage)
             ->get();
+
+        return response()->json($clients, 200);
     }
 
     /**
      * Display the clients history.
      *
      * @param IndexClient $request
-     * @return void
+     * @return JsonResponse
      */
-    public function history(IndexClient $request): Collection {
+    public function history(IndexClient $request): JsonResponse {
         $orders = Client::join('orders', 'orders.client_id', '=', 'clients.id')
             ->where("end_time", "<", Carbon::now())
             ->orderByDesc("end_time")
             ->get();
-        return $orders;
+
+        return response()->json($orders, 200);
     }
 
     /**
@@ -71,6 +73,7 @@ class ClientsController extends Controller
     public function store(StoreClient $request): JsonResponse {
         $sanitized = $request->validated();
         $client = Client::create($sanitized);
+
         return response()->json($client, 201);
     }
 
@@ -85,6 +88,7 @@ class ClientsController extends Controller
         $client = Client::findOrFail($clientId);
         $data = $request->validated();
         $client->update($data);
+
         return response()->json($client, 200);
     }
 
@@ -98,6 +102,7 @@ class ClientsController extends Controller
     public function destroy(DestroyClient $request, int $clientId): JsonResponse {
         $client = Client::findOrFail($clientId);
         $client->delete();
+
         return response()->json(null, 204);
     }
 
@@ -105,12 +110,13 @@ class ClientsController extends Controller
      * Display the specified client.
      *
      * @param String $string
-     * @return Collection
+     * @return JsonResponse
      */
-    public function findClient(String $string): Collection {
+    public function findClient(String $string): JsonResponse {
         $clients = Client::where('first_name', 'ILIKE', '%' . $string . '%')
             ->orWhere('last_name', 'ILIKE', '%' . $string . '%')
             ->orWhere('phone', 'ILIKE', '%' . $string . '%')->get();
-        return $clients;
+
+        return response()->json($clients, 200);
     }
 }
