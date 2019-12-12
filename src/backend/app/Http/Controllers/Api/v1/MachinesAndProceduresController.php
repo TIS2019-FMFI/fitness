@@ -7,7 +7,6 @@ use App\Http\Requests\Api\v1\MachinesAndProcedure\DestroyMachinesAndProcedure;
 use App\Http\Requests\Api\v1\MachinesAndProcedure\IndexMachinesAndProcedure;
 use App\Http\Requests\Api\v1\MachinesAndProcedure\StoreMachinesAndProcedure;
 use App\Http\Requests\Api\v1\MachinesAndProcedure\UpdateMachinesAndProcedure;
-use App\Models\Client;
 use App\Models\MachinesAndProcedure;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
