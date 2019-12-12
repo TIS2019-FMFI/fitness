@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios';
 
 import leftArrow from 'images/left_arrow.svg';
 import rightArrow from 'images/right_arrow.svg';
@@ -10,6 +11,10 @@ export interface Client {
     id: number;
     note: string;
     name: string;
+    phone: string;
+    active: boolean;
+    hasMultisportCard: boolean;
+    isGDPR: boolean;
 }
 
 function UserManagement() {
@@ -19,6 +24,24 @@ function UserManagement() {
     const match = location.search.match(/page=([0-9]+)/);
     const page =
         match && match.length > 1 && Number(match[1]) > 0 && Number(match[1]) <= maxPage ? Number(match[1]) : 1;
+
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        axios
+            .get('http://localhost/api/v1/clients', {
+                headers: {
+                    'access-control-allow-origin': '*',
+                },
+            })
+            .then(res => {
+                console.log(res);
+                const json = JSON.parse(res.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    });
 
     return (
         <Wrapper>
@@ -36,6 +59,17 @@ function UserManagement() {
                         <TableDataHeader>GDPR</TableDataHeader>
                         <TableDataHeader></TableDataHeader>
                     </TableRow>
+                    {users.map(user => (
+                        <UserEntry
+                            key={user.id}
+                            id={user.id}
+                            name={user.name}
+                            phoneNumber={user.phone}
+                            isActive={true}
+                            isMultisport={true}
+                            isGDPR={false}
+                        />
+                    ))}
                     {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(v => (
                         <UserEntry
                             key={v}
