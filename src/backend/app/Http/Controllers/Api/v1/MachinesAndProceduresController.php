@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\v1\MachinesAndProcedures\DestroyMachinesAndProcedure;
-use App\Http\Requests\Api\v1\MachinesAndProcedures\IndexMachinesAndProcedure;
-use App\Http\Requests\Api\v1\MachinesAndProcedures\StoreMachinesAndProcedure;
-use App\Http\Requests\Api\v1\MachinesAndProcedures\UpdateMachinesAndProcedure;
+use App\Http\Requests\Api\v1\MachinesAndProcedure\DestroyMachinesAndProcedure;
+use App\Http\Requests\Api\v1\MachinesAndProcedure\IndexMachinesAndProcedure;
+use App\Http\Requests\Api\v1\MachinesAndProcedure\StoreMachinesAndProcedure;
+use App\Http\Requests\Api\v1\MachinesAndProcedure\UpdateMachinesAndProcedure;
 use App\Models\MachinesAndProcedure;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
@@ -21,7 +22,6 @@ class MachinesAndProceduresController extends Controller
      * @return Collection
      */
     public function index(IndexMachinesAndProcedure $request): Collection {
-        //TODO refactor me
         $orderDirection = 'asc';
         $perPage = 10;
         $page = 1;
@@ -55,9 +55,12 @@ class MachinesAndProceduresController extends Controller
      * @param IndexMachinesAndProcedure $request
      * @return void
      */
-    public function showHistory(IndexMachinesAndProcedure $request) {
-        //TODO implement me pls
-
+    public function history(IndexMachinesAndProcedure $request) {
+        $orders =  MachinesAndProcedure::join('orders', 'orders.machine_id', '=', 'machines_and_procedures.id')
+            ->where("end_time", "<", Carbon::now())
+            ->orderByDesc("end_time")
+            ->get();
+        return $orders;
     }
 
     /**

@@ -8,6 +8,7 @@ use App\Http\Requests\Api\v1\Client\StoreClient;
 use App\Http\Requests\Api\v1\Client\UpdateClient;
 use App\Http\Requests\Api\v1\Client\IndexClient;
 use App\Models\Client;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
@@ -20,17 +21,45 @@ class ClientsController extends Controller
      * @return Collection
      */
     public function index(IndexClient $request): Collection {
-        return Client::all();
+        $orderDirection = 'asc';
+        $perPage = 10;
+        $page = 1;
+        $orderBy = 'id';
+
+        if($request->has('orderDirection')){
+            $orderDirection = $request->orderDirection;
+        }
+
+        if($request->has('perPage')) {
+            $perPage = $request->perPage;
+        }
+
+        if($request->has('page')){
+            $page = $request->page;
+        }
+
+        if($request->has('orderBy')){
+            $orderBy = $request->orderBy;
+        }
+
+        return Client::orderBy($orderBy, $orderDirection)
+            ->offset(($perPage * $page) - $perPage)
+            ->limit($perPage)
+            ->get();
     }
 
     /**
-     * Display the specified clients history.
+     * Display the clients history.
      *
      * @param IndexClient $request
      * @return void
      */
-    public function history(IndexClient $request) {
-        //TODO implement me pls
+    public function history(IndexClient $request): Collection {
+        $orders =  Client::join('orders', 'orders.client_id', '=', 'clients.id')
+            ->where("end_time", "<", Carbon::now())
+            ->orderByDesc("end_time")
+            ->get();
+        return $orders;
     }
 
     /**
