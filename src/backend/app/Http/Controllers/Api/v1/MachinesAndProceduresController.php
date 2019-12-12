@@ -23,7 +23,6 @@ class MachinesAndProceduresController extends Controller
      * @return Collection
      */
     public function index(IndexMachinesAndProcedure $request): Collection {
-        //TODO refactor me
         $orderDirection = 'asc';
         $perPage = 10;
         $page = 1;

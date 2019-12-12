@@ -20,7 +20,31 @@ class OrdersController extends Controller
      * @return Collection
      */
     public function index(IndexOrder $request): Collection {
-        return Order::all();
+        $orderDirection = 'asc';
+        $perPage = 10;
+        $page = 1;
+        $orderBy = 'id';
+
+        if($request->has('orderDirection')){
+            $orderDirection = $request->orderDirection;
+        }
+
+        if($request->has('perPage')) {
+            $perPage = $request->perPage;
+        }
+
+        if($request->has('page')){
+            $page = $request->page;
+        }
+
+        if($request->has('orderBy')){
+            $orderBy = $request->orderBy;
+        }
+
+        return Order::orderBy($orderBy, $orderDirection)
+            ->offset(($perPage * $page) - $perPage)
+            ->limit($perPage)
+            ->get();
     }
 
     /**
