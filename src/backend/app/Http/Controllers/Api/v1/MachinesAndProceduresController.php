@@ -10,7 +10,6 @@ use App\Http\Requests\Api\v1\MachinesAndProcedure\UpdateMachinesAndProcedure;
 use App\Models\MachinesAndProcedure;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
 
 class MachinesAndProceduresController extends Controller
 {
@@ -19,9 +18,9 @@ class MachinesAndProceduresController extends Controller
      * Display data of the resource.
      *
      * @param IndexMachinesAndProcedure $request
-     * @return Collection
+     * @return JsonResponse
      */
-    public function index(IndexMachinesAndProcedure $request): Collection {
+    public function index(IndexMachinesAndProcedure $request): JsonResponse {
         $orderDirection = 'asc';
         $perPage = 10;
         $page = 1;
@@ -43,24 +42,27 @@ class MachinesAndProceduresController extends Controller
             $orderBy = $request->orderBy;
         }
 
-        return MachinesAndProcedure::orderBy($orderBy, $orderDirection)
+        $machinesAndProcedures = MachinesAndProcedure::orderBy($orderBy, $orderDirection)
             ->offset(($perPage * $page) - $perPage)
             ->limit($perPage)
             ->get();
+
+        return response()->json($machinesAndProcedures, 200);
     }
 
     /**
      * Display the specified resource history.
      *
      * @param IndexMachinesAndProcedure $request
-     * @return void
+     * @return JsonResponse
      */
-    public function history(IndexMachinesAndProcedure $request) {
+    public function history(IndexMachinesAndProcedure $request): JsonResponse {
         $orders = MachinesAndProcedure::join('orders', 'orders.machine_id', '=', 'machines_and_procedures.id')
             ->where("end_time", "<", Carbon::now())
             ->orderByDesc("end_time")
             ->get();
-        return $orders;
+
+        return response()->json($orders, 200);
     }
 
     /**
@@ -74,16 +76,6 @@ class MachinesAndProceduresController extends Controller
         $machinesAndProcedure = MachinesAndProcedure::create($sanitized);
 
         return response()->json($machinesAndProcedure, 201);
-    }
-
-
-    /**
-     * Display the specified resource.
-     *
-     * @return void
-     */
-    public function show() {
-        //TODO implement me pls
     }
 
     /**

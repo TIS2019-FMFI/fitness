@@ -9,7 +9,6 @@ use App\Http\Requests\Api\v1\Order\StoreOrder;
 use App\Http\Requests\Api\v1\Order\UpdateOrder;
 use App\Models\Order;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
 
 class OrdersController extends Controller
 {
@@ -17,13 +16,13 @@ class OrdersController extends Controller
      * Display data of all orders.
      *
      * @param IndexOrder $request
-     * @return Collection
+     * @return JsonResponse
      */
-    public function index(IndexOrder $request): Collection {
+    public function index(IndexOrder $request): JsonResponse {
         $orderDirection = 'asc';
         $perPage = 10;
         $page = 1;
-        $orderBy = 'id';
+        $orderBy = 'orders.id';
 
         if($request->has('orderDirection')){
             $orderDirection = $request->orderDirection;
@@ -41,10 +40,13 @@ class OrdersController extends Controller
             $orderBy = $request->orderBy;
         }
 
-        return Order::orderBy($orderBy, $orderDirection)
+        $orders = Order::join('clients', 'clients.id', '=', 'orders.client_id')
+            ->orderBy($orderBy, $orderDirection)
             ->offset(($perPage * $page) - $perPage)
             ->limit($perPage)
             ->get();
+
+        return response()->json($orders, 200);
     }
 
     /**
@@ -56,6 +58,7 @@ class OrdersController extends Controller
     public function store(StoreOrder $request): JsonResponse {
         $sanitized = $request->validated();
         $order = Order::create($sanitized);
+
         return response()->json($order, 201);
     }
 
@@ -70,6 +73,7 @@ class OrdersController extends Controller
         $order = Order::findOrFail($orderId);
         $data = $request->validated();
         $order->update($data);
+
         return response()->json($order, 200);
     }
 
@@ -83,6 +87,7 @@ class OrdersController extends Controller
     public function destroy(DestroyOrder $request, int $orderId): JsonResponse {
         $order = Order::findOrFail($orderId);
         $order->delete();
+
         return response()->json(null, 204);
     }
 
