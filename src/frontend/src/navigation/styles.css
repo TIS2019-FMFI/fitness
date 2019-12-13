@@ -1,7 +1,8 @@
-html,body{height:100%;}
+html,
+body {
+    height: 100%;
+}
 
-.iuRJVv {height:100%;}
-
-.disLHQ{width:75%;}
-
-#root{height:100%;}
+#root {
+    height: 100%;
+}
