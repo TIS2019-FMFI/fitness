@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\Api\v1\User\LoginUserOwn;
+use App\Http\Requests\Api\v1\User\RegisterUserOwn;
 use App\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use JWTAuth;
 use JWTAuthException;
@@ -37,7 +39,7 @@ class UserController extends Controller
         return $token;
     }
 
-    public function login(Request $request)
+    public function login(LoginUserOwn $request)
     {
         $user = User::where('email', $request->email)
             ->get()
@@ -67,9 +69,9 @@ class UserController extends Controller
         return response()->json($response, 201);
     }
 
-    public function register(Request $request)
-    {
-        print_r('ahoj');
+    public function register(RegisterUserOwn $request) {
+        $request->validated();
+
         $payload = [
             'password' => Hash::make($request->password),
             'email' => $request->email,
