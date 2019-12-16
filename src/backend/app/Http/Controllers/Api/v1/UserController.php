@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Hash;
 use JWTAuth;
 use JWTAuthException;
+use App\Http\Controllers\Controller;
 
 
 class UserController extends Controller
@@ -17,7 +18,10 @@ class UserController extends Controller
         $token = null;
 
         try {
-            if (!$token = JWTAuth::attempt( ['email'=>$email, 'password'=>$password])) {
+            if (!$token = JWTAuth::attempt([
+                'email'=>$email,
+                'password'=>$password
+            ])) {
                 return response()->json([
                     'response' => 'error',
                     'message' => 'Password or email is invalid',
@@ -65,10 +69,11 @@ class UserController extends Controller
 
     public function register(Request $request)
     {
+        print_r('ahoj');
         $payload = [
             'password' => Hash::make($request->password),
-            'email' =>$request->email,
-            'name' =>$request->name,
+            'email' => $request->email,
+            'name' => $request->name,
             'auth_token' => ''
         ];
 
@@ -92,17 +97,17 @@ class UserController extends Controller
             $response = [
                 'success'=>true,
                 'data'=> [
-                    'name'=>$user->name,
-                    'id'=>$user->id,
-                    'email'=>$request->email,
-                    'auth_token'=>$token
+                    'name' => $user->name,
+                    'id' => $user->id,
+                    'email' => $request->email,
+                    'auth_token' => $token
                 ]
             ];
         }
         else {
             $response = [
-                'success'=>false,
-                'data'=>'Couldnt register user'
+                'success' => false,
+                'data' => 'Couldnt register user'
             ];
         }
 

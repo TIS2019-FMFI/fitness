@@ -13,51 +13,39 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(['middleware' => 'api-header'], function () {
-
-    // The registration and login requests doesn't come with tokens
-    // as users at that point have not been authenticated yet
-    // Therefore the jwtMiddleware will be exclusive of them
-    Route::post('user/login', 'UserController@login');
-    Route::post('user/register', 'UserController@register');
-});
-
-//TODO: middleware
-
 Route::prefix('v1')->namespace('Api\v1')->group(static function () {
 
-    //TODO: implement me pls
-//    Route::prefix('login')->group(static function() {
-//        Route::post('/', '');
-//    });
+    Route::post('user/login', 'UserController@login');
+    Route::post('user/register', 'UserController@register');
 
-    Route::prefix('clients')->group(static function() {
-        Route::get('/',                                     'ClientsController@index');
-        Route::get('/history',                              'ClientsController@history');
-        Route::post('/',                                    'ClientsController@store');
-        Route::get('/{clientId}/edit',                      'ClientsController@edit')->name('edit');
-        Route::post('/{clientId}',                          'ClientsController@update')->name('update');
-        Route::delete('{clientId}',                         'ClientsController@destroy')->name('destroy');
-        Route::get('/findClient/{query?}',                  'ClientsController@findClient')->name('findClient');
+    Route::middleware(['jwt.auth'])->group(function () {
+        Route::prefix('clients')->group(static function() {
+            Route::get('/',                                     'ClientsController@index');
+            Route::get('/history',                              'ClientsController@history');
+            Route::post('/',                                    'ClientsController@store');
+            Route::get('/{clientId}/edit',                      'ClientsController@edit')->name('edit');
+            Route::post('/{clientId}',                          'ClientsController@update')->name('update');
+            Route::delete('{clientId}',                         'ClientsController@destroy')->name('destroy');
+            Route::get('/findClient/{query?}',                  'ClientsController@findClient')->name('findClient');
+        });
+
+        Route::prefix('machines-and-procedures')->group(static function() {
+            Route::get('/',                                     'MachinesAndProceduresController@index');
+            Route::get('/history',                              'MachinesAndProceduresController@history');
+            Route::post('/',                                    'MachinesAndProceduresController@store');
+            Route::get('/{machinesAndProcedureId}/edit',        'MachinesAndProceduresController@edit')->name('edit');
+            Route::post('/{machinesAndProcedureId}',            'MachinesAndProceduresController@update')->name('update');
+            Route::delete('{machinesAndProcedureId}',           'MachinesAndProceduresController@destroy')->name('destroy');
+        });
+
+        Route::prefix('orders')->group(static function() {
+            Route::get('/',                                     'OrdersController@index');
+            Route::post('/',                                    'OrdersController@store');
+            Route::get('/{orderId}/edit',                       'OrdersController@edit')->name('edit');
+            Route::post('/{orderId}',                           'OrdersController@update')->name('update');
+            Route::delete('{orderId}',                          'OrdersController@destroy')->name('destroy');
+            Route::get('/findOrder/{query?}',                   'OrdersController@findOrder')->name('findOrder');
+        });
     });
-
-    Route::prefix('machines-and-procedures')->group(static function() {
-        Route::get('/',                                     'MachinesAndProceduresController@index');
-        Route::get('/history',                              'MachinesAndProceduresController@history');
-        Route::post('/',                                    'MachinesAndProceduresController@store');
-        Route::get('/{machinesAndProcedureId}/edit',        'MachinesAndProceduresController@edit')->name('edit');
-        Route::post('/{machinesAndProcedureId}',            'MachinesAndProceduresController@update')->name('update');
-        Route::delete('{machinesAndProcedureId}',           'MachinesAndProceduresController@destroy')->name('destroy');
-    });
-
-    Route::prefix('orders')->group(static function() {
-        Route::get('/',                                     'OrdersController@index');
-        Route::post('/',                                    'OrdersController@store');
-        Route::get('/{orderId}/edit',                       'OrdersController@edit')->name('edit');
-        Route::post('/{orderId}',                           'OrdersController@update')->name('update');
-        Route::delete('{orderId}',                          'OrdersController@destroy')->name('destroy');
-        Route::get('/findOrder/{query?}',                   'OrdersController@findOrder')->name('findOrder');
-    });
-
 });
 
