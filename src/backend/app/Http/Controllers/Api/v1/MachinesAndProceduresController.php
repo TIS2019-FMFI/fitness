@@ -47,7 +47,15 @@ class MachinesAndProceduresController extends Controller
             ->limit($perPage)
             ->get();
 
-        return response()->json($machinesAndProcedures, 200);
+        $data = [
+            'items' => $machinesAndProcedures,
+            'total' => $machinesAndProcedures->count(),
+            'perPage' => $perPage,
+            'currentPage' => $page,
+            'lastPage' => $machinesAndProcedures->count() / $perPage,
+        ];
+
+        return response()->json($data, 200);
     }
 
     /**

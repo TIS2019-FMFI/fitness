@@ -29,6 +29,8 @@ class IndexOrder extends FormRequest
             'orderDirection' => ['in:asc,desc', 'nullable'],
             'page' => ['integer', 'nullable'],
             'per_page' => ['integer', 'nullable'],
+            'from' => ['sometime', 'date_format:Y-m-d H:i:s'],
+            'to' => ['sometime', 'date_format:Y-m-d H:i:s'],
         ];
     }
 }

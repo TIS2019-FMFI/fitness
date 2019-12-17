@@ -46,7 +46,15 @@ class ClientsController extends Controller
             ->limit($perPage)
             ->get();
 
-        return response()->json($clients, 200);
+        $data = [
+            'items' => $clients,
+            'total' => $clients->count(),
+            'perPage' => $perPage,
+            'currentPage' => $page,
+            'lastPage' => $clients->count() / $perPage,
+        ];
+
+        return response()->json($data, 200);
     }
 
     /**

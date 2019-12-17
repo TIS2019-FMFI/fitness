@@ -8,6 +8,7 @@ use App\Http\Requests\Api\v1\Order\IndexOrder;
 use App\Http\Requests\Api\v1\Order\StoreOrder;
 use App\Http\Requests\Api\v1\Order\UpdateOrder;
 use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 
 class OrdersController extends Controller
@@ -17,6 +18,7 @@ class OrdersController extends Controller
      *
      * @param IndexOrder $request
      * @return JsonResponse
+     * @throws \Exception
      */
     public function index(IndexOrder $request): JsonResponse {
         $orderDirection = 'asc';
@@ -40,14 +42,26 @@ class OrdersController extends Controller
             $orderBy = $request->orderBy;
         }
 
-        $orders = Order::join('clients', 'clients.id', '=', 'orders.client_id')
+        $from = new Carbon($request->input('from', Carbon::now()->subWeek()));
+        $to = new Carbon($request->input('to', Carbon::now()));
+
+        $orders = Order::whereBetween('start_time', [$from, $to])
+            ->join('clients', 'clients.id', '=', 'orders.client_id')
             ->join('machines_and_procedures', 'orders.machine_id', '=', 'machines_and_procedures.id')
             ->orderBy($orderBy, $orderDirection)
             ->offset(($perPage * $page) - $perPage)
             ->limit($perPage)
             ->get();
 
-        return response()->json($orders, 200);
+        $data = [
+            'items' => $orders,
+            'total' => $orders->count(),
+            'perPage' => $perPage,
+            'currentPage' => $page,
+            'lastPage' => $orders->count() / $perPage,
+        ];
+
+        return response()->json($data, 200);
     }
 
     /**
@@ -81,7 +95,7 @@ class OrdersController extends Controller
     /**
      * Remove the specified order from storage.
      *
-     * @param DestroyClient $request
+     * @param DestroyOrder $request
      * @param int $orderId
      * @return JsonResponse
      */
