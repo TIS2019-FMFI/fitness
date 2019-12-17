@@ -8,7 +8,7 @@ import ReservationCellFilled from './reservation-cell-filled';
 import ReservationCellEdit from './reservation-cell-edit';
 
 export interface Props {
-    reservation?: Reservation;
+    reservation: Reservation;
     saveReservation: (reservation: Reservation) => void;
 }
 
@@ -20,7 +20,7 @@ enum CellState {
 
 function ReservationCell(props: Props) {
     const { reservation, saveReservation } = props;
-    const [cellState, setCellState] = useState(reservation ? CellState.Filled : CellState.Empty);
+    const [cellState, setCellState] = useState(reservation.id ? CellState.Filled : CellState.Empty);
 
     if (cellState === CellState.Editing) {
         return (
