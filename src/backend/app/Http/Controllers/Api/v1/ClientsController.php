@@ -8,7 +8,7 @@ use App\Http\Requests\Api\v1\Client\StoreClient;
 use App\Http\Requests\Api\v1\Client\UpdateClient;
 use App\Http\Requests\Api\v1\Client\IndexClient;
 use App\Models\Client;
-use App\Services\PaginationService;
+use App\Services\Api\v1\PaginationService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 
@@ -46,12 +46,24 @@ class ClientsController extends Controller
      * @return JsonResponse
      */
     public function history(IndexClient $request): JsonResponse {
+        $paginationData = app(PaginationService::class)->getPagination($request);
+
         $orders = Client::join('orders', 'orders.client_id', '=', 'clients.id')
             ->where("end_time", "<", Carbon::now())
             ->orderByDesc("end_time")
+            ->offset($paginationData['offset'])
+            ->limit($paginationData['perPage'])
             ->get();
 
-        return response()->json($orders, 200);
+        $data = [
+            'items' => $orders,
+            'total' => $orders->count(),
+            'perPage' => $paginationData['perPage'],
+            'currentPage' => $paginationData['page'],
+            'lastPage' => $orders->count() / $paginationData['perPage'],
+        ];
+
+        return response()->json($data, 200);
     }
 
     /**
