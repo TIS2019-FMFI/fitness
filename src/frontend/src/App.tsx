@@ -36,14 +36,15 @@ function App() {
 }
 
 const Container = styled.div`
+    height: 100%;
     display: flex;
     flex-flow: row;
-
     background-color: #f4f5f9;
 `;
 
 const MainContent = styled.div`
     margin-left: 40px;
+    width: 75%;
 `;
 
 export default App;
