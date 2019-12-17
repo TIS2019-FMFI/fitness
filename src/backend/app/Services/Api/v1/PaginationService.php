@@ -3,14 +3,13 @@
 namespace App\Services\Api\v1;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 
 class PaginationService
 {
     /**
      * Get collection with pagination values
      * @param Request $request
-     * @return Collection
+     * @return array
      */
     public function getPagination(Request $request): array {
         $orderDirection = 'asc';
