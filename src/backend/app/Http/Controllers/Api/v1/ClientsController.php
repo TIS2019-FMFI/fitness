@@ -8,6 +8,7 @@ use App\Http\Requests\Api\v1\Client\StoreClient;
 use App\Http\Requests\Api\v1\Client\UpdateClient;
 use App\Http\Requests\Api\v1\Client\IndexClient;
 use App\Models\Client;
+use App\Services\PaginationService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 
@@ -20,38 +21,19 @@ class ClientsController extends Controller
      * @return JsonResponse
      */
     public function index(IndexClient $request): JsonResponse {
-        $orderDirection = 'asc';
-        $perPage = 10;
-        $page = 1;
-        $orderBy = 'id';
+        $paginationData = app(PaginationService::class)->getPagination($request);
 
-        if($request->has('orderDirection')){
-            $orderDirection = $request->orderDirection;
-        }
-
-        if($request->has('perPage')) {
-            $perPage = $request->perPage;
-        }
-
-        if($request->has('page')){
-            $page = $request->page;
-        }
-
-        if($request->has('orderBy')){
-            $orderBy = $request->orderBy;
-        }
-
-        $clients = Client::orderBy($orderBy, $orderDirection)
-            ->offset(($perPage * $page) - $perPage)
-            ->limit($perPage)
+        $clients = Client::orderBy($paginationData['orderBy'], $paginationData['orderDirection'])
+            ->offset($paginationData['offset'])
+            ->limit($paginationData['perPage'])
             ->get();
 
         $data = [
             'items' => $clients,
             'total' => $clients->count(),
-            'perPage' => $perPage,
-            'currentPage' => $page,
-            'lastPage' => $clients->count() / $perPage,
+            'perPage' => $paginationData['perPage'],
+            'currentPage' => $paginationData['page'],
+            'lastPage' => $clients->count() / $paginationData['perPage'],
         ];
 
         return response()->json($data, 200);
