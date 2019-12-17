@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import { User } from 'user-management/user-management';
@@ -41,7 +41,7 @@ function saveReservation(reservation: Reservation) {
     }
 }
 
-function ProcedureRow(props: Props) {
+function emptyReservations(): Reservation[] {
     let startTime = new Date();
     startTime.setHours(8);
     startTime.setMinutes(0);
@@ -49,30 +49,27 @@ function ProcedureRow(props: Props) {
     const endTime = new Date(startTime);
     endTime.setHours(15);
 
-    const reservationCells = [];
+    const emptyReservationCells: Reservation[] = [];
     while (startTime <= endTime) {
-        // Parse json data and figure out for each interval if it has a reservation
-        const client = {
-            id: reservationCells.length,
-            name: 'User Name',
-        } as User;
-
-        const reservation = {
-            id: reservationCells.length,
-            note: 'this is a note',
-            client,
+        emptyReservationCells.push({
+            endTime,
             startTime,
-            endTime: addInterval(startTime),
-        } as Reservation;
-
-        reservationCells.push(<ReservationCell saveReservation={saveReservation} reservation={reservation} />);
+        } as Reservation);
         startTime = addInterval(startTime);
     }
+
+    return emptyReservationCells;
+}
+
+function ProcedureRow(props: Props) {
+    const [reservationCells, setReservationCells] = useState(emptyReservations);
 
     return (
         <ProcedureRowWrapper>
             <p>{props.procedure.name}</p>
-            {reservationCells.map(reservationCell => reservationCell)}
+            {reservationCells.map(reservation => (
+                <ReservationCell reservation={reservation} saveReservation={saveReservation} />
+            ))}
         </ProcedureRowWrapper>
     );
 }
