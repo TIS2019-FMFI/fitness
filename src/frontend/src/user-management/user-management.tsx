@@ -7,15 +7,17 @@ import leftArrow from 'images/left_arrow.svg';
 import rightArrow from 'images/right_arrow.svg';
 import UserEntry from './user-entry/user-entry';
 
-export interface Client {
+export interface User {
     id: number;
     note: string;
     name: string;
     phone: string;
-    active: boolean;
+    isActive: boolean;
     hasMultisportCard: boolean;
     isGDPR: boolean;
 }
+
+const PER_PAGE = 10;
 
 function UserManagement() {
     const location = useLocation();
@@ -28,20 +30,53 @@ function UserManagement() {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
+        fetchUsers();
+    }, []);
+
+    async function fetchUsers() {
         axios
-            .get('http://localhost/api/v1/clients', {
-                headers: {
-                    'access-control-allow-origin': '*',
-                },
-            })
+            .get(`http://localhost/api/v1/clients?orderBy=id&page=${page}&perPage=${PER_PAGE}`)
             .then(res => {
-                console.log(res);
-                const json = JSON.parse(res.data);
+                setUsers(
+                    res.data.map(object => {
+                        return {
+                            id: object.id,
+                            note: object.note,
+                            name: `${object.first_name} ${object.last_name}`,
+                            phone: object.phone,
+                            isActive: object.active,
+                            hasMultisportCard: object.has_multisport_card,
+                            isGDPR: object.is_gdpr,
+                        };
+                    })
+                );
             })
             .catch(error => {
-                console.log(error);
+                window.alert('error fetching user data');
             });
-    });
+    }
+
+    async function updateUser(user: User) {
+        axios
+            .post(`http://localhost/api/v1/clients/${user.id}`, {
+                first_name: user.name.split(' ')[0],
+                last_name: user.name.split(' ')[1],
+                phone: user.phone,
+                active: user.isActive,
+                has_multisport_card: user.hasMultisportCard,
+                note: user.note,
+                is_gdpr: user.isGDPR,
+            })
+            .then(res => {
+                fetchUsers();
+            });
+    }
+
+    async function deleteUser(user: User) {
+        axios.delete(`http://localhost/api/v1/clients/${user.id}`).then(res => {
+            fetchUsers();
+        });
+    }
 
     return (
         <Wrapper>
@@ -60,26 +95,7 @@ function UserManagement() {
                         <TableDataHeader></TableDataHeader>
                     </TableRow>
                     {users.map(user => (
-                        <UserEntry
-                            key={user.id}
-                            id={user.id}
-                            name={user.name}
-                            phoneNumber={user.phone}
-                            isActive={true}
-                            isMultisport={true}
-                            isGDPR={false}
-                        />
-                    ))}
-                    {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(v => (
-                        <UserEntry
-                            key={v}
-                            id={v}
-                            name={'test'}
-                            phoneNumber={'0900 000 000'}
-                            isActive={true}
-                            isMultisport={true}
-                            isGDPR={false}
-                        />
+                        <UserEntry key={user.id} user={user} updateUser={updateUser} deleteUser={deleteUser} />
                     ))}
                 </tbody>
             </Table>
