@@ -7,25 +7,22 @@ import saveIcon from 'images/save.svg';
 import cancleIcon from 'images/cancel.svg';
 import ToolTip from 'ui/tool-tip/tool-tip';
 
-import { TableRow } from '../user-management';
+import { TableRow, User } from '../user-management';
 
 export interface Props {
-    id: number;
-    name: string;
-    phoneNumber: string;
-    isActive: boolean;
-    isMultisport: boolean;
-    isGDPR: boolean;
+    user: User;
+    updateUser: (user: User) => void;
+    deleteUser: (user: User) => void;
 }
 
 function UserEntry(props: Props) {
-    const { id, name, phoneNumber, isActive, isMultisport, isGDPR } = props;
-    const [user, setUser] = useState({ name, phoneNumber, isActive, isMultisport, isGDPR });
+    const { updateUser, deleteUser } = props;
+    const [user, setUser] = useState({ ...props.user });
     const [isEditing, setIsEditing] = useState(false);
 
     return (
-        <TableRow key={id}>
-            <TableData width='50px'>{id}</TableData>
+        <TableRow key={user.id}>
+            <TableData width='50px'>{user.id}</TableData>
             <TableData width='120px'>
                 {isEditing ? (
                     <TableInput
@@ -35,7 +32,7 @@ function UserEntry(props: Props) {
                         }}
                         type='text'
                         value={user.name}
-                        placeholder={name}
+                        placeholder={user.name}
                     />
                 ) : (
                     <span>{user.name}</span>
@@ -45,15 +42,15 @@ function UserEntry(props: Props) {
                 {isEditing ? (
                     <TableInput
                         onChange={event => {
-                            user.phoneNumber = event.target.value;
+                            user.phone = event.target.value;
                             setUser({ ...user });
                         }}
-                        value={user.phoneNumber}
+                        value={user.phone}
                         type='text'
-                        placeholder={phoneNumber}
+                        placeholder={user.phone}
                     />
                 ) : (
-                    <span>{user.phoneNumber}</span>
+                    <span>{user.phone}</span>
                 )}
             </TableData>
             <TableData>
@@ -72,12 +69,12 @@ function UserEntry(props: Props) {
                 <TableInput
                     type='checkbox'
                     onChange={() => {
-                        user.isMultisport = !user.isMultisport;
+                        user.hasMultisportCard = !user.hasMultisportCard;
                         setUser({ ...user });
                     }}
-                    name='isMultisport'
+                    name='hasMultisportCard'
                     disabled={!isEditing}
-                    checked={user.isMultisport}
+                    checked={user.hasMultisportCard}
                 />
             </TableData>
             <TableData>
@@ -96,7 +93,12 @@ function UserEntry(props: Props) {
             <TableData>
                 {isEditing ? (
                     <ToolTip text='Ulozit zmeny'>
-                        <ImageButton onClick={() => setIsEditing(false)}>
+                        <ImageButton
+                            onClick={() => {
+                                setIsEditing(false);
+                                updateUser(user);
+                            }}
+                        >
                             <ButtonIcon src={saveIcon} alt='edit' />
                         </ImageButton>
                     </ToolTip>
@@ -109,7 +111,12 @@ function UserEntry(props: Props) {
                 )}
                 {isEditing ? (
                     <ToolTip text='Zrusit editovanie'>
-                        <ImageButton onClick={() => setIsEditing(false)}>
+                        <ImageButton
+                            onClick={() => {
+                                setIsEditing(false);
+                                setUser({ ...props.user });
+                            }}
+                        >
                             <ButtonIcon src={cancleIcon} alt='edit' />
                         </ImageButton>
                     </ToolTip>
@@ -118,7 +125,7 @@ function UserEntry(props: Props) {
                         <ImageButton
                             onClick={() => {
                                 if (window.confirm(`Chcete vymazat klienta ${user.name}`)) {
-                                    window.alert(`DELETED ${user.name}`);
+                                    deleteUser(user);
                                 }
                             }}
                         >

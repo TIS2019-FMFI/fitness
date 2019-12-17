@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Client } from 'user-management/user-management';
+import { User } from 'user-management/user-management';
 import { Procedure } from 'procedures-management/procedures-management';
 
 import ReservationCell from './reservation-cell/reservation-cell';
@@ -9,7 +9,7 @@ import ReservationCell from './reservation-cell/reservation-cell';
 export interface Reservation {
     id?: number;
     note: string;
-    client: Client;
+    client: User;
     endTime: Date;
     startTime: Date;
     procedure: Procedure;
@@ -55,7 +55,7 @@ function ProcedureRow(props: Props) {
         const client = {
             id: reservationCells.length,
             name: 'User Name',
-        } as Client;
+        } as User;
 
         const reservation = {
             id: reservationCells.length,
