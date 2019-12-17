@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Modal from 'react-modal';
 import styled from 'styled-components';
 
 import editIcon from 'images/edit.svg';
@@ -19,135 +20,190 @@ function UserEntry(props: Props) {
     const { updateUser, deleteUser } = props;
     const [user, setUser] = useState({ ...props.user });
     const [isEditing, setIsEditing] = useState(false);
+    const [noteIsOpen, setNoteIsOpen] = useState(false);
 
     return (
-        <TableRow key={user.id}>
-            <TableData width='50px'>{user.id}</TableData>
-            <TableData width='120px'>
-                {isEditing ? (
+        <React.Fragment>
+            <TableRow key={user.id}>
+                <TableData width='50px' hideOnMobile={true}>
+                    {user.id}
+                </TableData>
+                <TableData width='180px' align='left'>
+                    {isEditing ? (
+                        <TableInput
+                            onChange={event => {
+                                user.name = event.target.value;
+                                setUser({ ...user });
+                            }}
+                            type='text'
+                            value={user.name}
+                            placeholder={user.name}
+                        />
+                    ) : (
+                        <span>{user.name}</span>
+                    )}
+                </TableData>
+                <TableData width='150px' align='left'>
+                    {isEditing ? (
+                        <TableInput
+                            onChange={event => {
+                                user.phone = event.target.value;
+                                setUser({ ...user });
+                            }}
+                            value={user.phone}
+                            type='text'
+                            placeholder={user.phone}
+                        />
+                    ) : (
+                        <span>{user.phone}</span>
+                    )}
+                </TableData>
+                <TableData hideOnMobile={true}>
                     <TableInput
-                        onChange={event => {
-                            user.name = event.target.value;
+                        type='checkbox'
+                        name='isActive'
+                        onChange={() => {
+                            user.isActive = !user.isActive;
                             setUser({ ...user });
                         }}
-                        type='text'
-                        value={user.name}
-                        placeholder={user.name}
+                        disabled={!isEditing}
+                        checked={user.isActive}
                     />
-                ) : (
-                    <span>{user.name}</span>
-                )}
-            </TableData>
-            <TableData width='120px'>
-                {isEditing ? (
+                </TableData>
+                <TableData hideOnMobile={true}>
                     <TableInput
-                        onChange={event => {
-                            user.phone = event.target.value;
+                        type='checkbox'
+                        onChange={() => {
+                            user.hasMultisportCard = !user.hasMultisportCard;
                             setUser({ ...user });
                         }}
-                        value={user.phone}
-                        type='text'
-                        placeholder={user.phone}
+                        name='hasMultisportCard'
+                        disabled={!isEditing}
+                        checked={user.hasMultisportCard}
                     />
-                ) : (
-                    <span>{user.phone}</span>
-                )}
-            </TableData>
-            <TableData>
-                <TableInput
-                    type='checkbox'
-                    name='isActive'
-                    onChange={() => {
-                        user.isActive = !user.isActive;
-                        setUser({ ...user });
-                    }}
-                    disabled={!isEditing}
-                    checked={user.isActive}
-                />
-            </TableData>
-            <TableData>
-                <TableInput
-                    type='checkbox'
-                    onChange={() => {
-                        user.hasMultisportCard = !user.hasMultisportCard;
-                        setUser({ ...user });
-                    }}
-                    name='hasMultisportCard'
-                    disabled={!isEditing}
-                    checked={user.hasMultisportCard}
-                />
-            </TableData>
-            <TableData>
-                <TableInput
-                    type='checkbox'
-                    onClick={() => {
-                        user.isGDPR = !user.isGDPR;
-                        setUser({ ...user });
-                    }}
-                    id='isGDPR'
-                    name='isGDPR'
-                    disabled={!isEditing}
-                    checked={user.isGDPR}
-                />
-            </TableData>
-            <TableData>
+                </TableData>
+                <TableData hideOnMobile={true}>
+                    <TableInput
+                        type='checkbox'
+                        onClick={() => {
+                            user.isGDPR = !user.isGDPR;
+                            setUser({ ...user });
+                        }}
+                        id='isGDPR'
+                        name='isGDPR'
+                        disabled={!isEditing}
+                        checked={user.isGDPR}
+                    />
+                </TableData>
+                <TableData width='200px' hideOnMobile={true} onClick={() => setNoteIsOpen(true)}>
+                    <UserNote>{user.note}</UserNote>
+                </TableData>
+                <TableData hideOnMobile={true}>
+                    {isEditing ? (
+                        <ToolTip text='Ulozit zmeny'>
+                            <ImageButton
+                                onClick={() => {
+                                    setIsEditing(false);
+                                    updateUser(user);
+                                }}
+                            >
+                                <ButtonIcon src={saveIcon} alt='edit' />
+                            </ImageButton>
+                        </ToolTip>
+                    ) : (
+                        <ToolTip text='Editovat'>
+                            <ImageButton onClick={() => setIsEditing(true)}>
+                                <ButtonIcon src={editIcon} alt='edit' />
+                            </ImageButton>
+                        </ToolTip>
+                    )}
+                    {isEditing ? (
+                        <ToolTip text='Zrusit editovanie'>
+                            <ImageButton
+                                onClick={() => {
+                                    setIsEditing(false);
+                                    setUser({ ...props.user });
+                                }}
+                            >
+                                <ButtonIcon src={cancleIcon} alt='edit' />
+                            </ImageButton>
+                        </ToolTip>
+                    ) : (
+                        <ToolTip text='Vymazat klienta'>
+                            <ImageButton
+                                onClick={() => {
+                                    if (window.confirm(`Chcete vymazat klienta ${user.name}`)) {
+                                        deleteUser(user);
+                                    }
+                                }}
+                            >
+                                <ButtonIcon src={deleteIcon} alt='edit' />
+                            </ImageButton>
+                        </ToolTip>
+                    )}
+                </TableData>
+            </TableRow>
+            <Modal
+                isOpen={noteIsOpen}
+                onRequestClose={() => setNoteIsOpen(false)}
+                style={ModalStyles}
+                contentLabel='Example Modal'
+            >
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                    <h2 style={{ margin: 0 }}>Poznamka</h2>
+                    <img src={cancleIcon} onClick={() => setNoteIsOpen(false)} />
+                </div>
                 {isEditing ? (
-                    <ToolTip text='Ulozit zmeny'>
-                        <ImageButton
-                            onClick={() => {
-                                setIsEditing(false);
-                                updateUser(user);
-                            }}
-                        >
-                            <ButtonIcon src={saveIcon} alt='edit' />
-                        </ImageButton>
-                    </ToolTip>
+                    <textarea
+                        style={{ width: '100%' }}
+                        value={user.note}
+                        onChange={event => {
+                            user.note = event.target.value;
+                            setUser({ ...user });
+                        }}
+                    ></textarea>
                 ) : (
-                    <ToolTip text='Editovat'>
-                        <ImageButton onClick={() => setIsEditing(true)}>
-                            <ButtonIcon src={editIcon} alt='edit' />
-                        </ImageButton>
-                    </ToolTip>
+                    <span>{user.note}</span>
                 )}
-                {isEditing ? (
-                    <ToolTip text='Zrusit editovanie'>
-                        <ImageButton
-                            onClick={() => {
-                                setIsEditing(false);
-                                setUser({ ...props.user });
-                            }}
-                        >
-                            <ButtonIcon src={cancleIcon} alt='edit' />
-                        </ImageButton>
-                    </ToolTip>
-                ) : (
-                    <ToolTip text='Vymazat klienta'>
-                        <ImageButton
-                            onClick={() => {
-                                if (window.confirm(`Chcete vymazat klienta ${user.name}`)) {
-                                    deleteUser(user);
-                                }
-                            }}
-                        >
-                            <ButtonIcon src={deleteIcon} alt='edit' />
-                        </ImageButton>
-                    </ToolTip>
-                )}
-            </TableData>
-        </TableRow>
+            </Modal>
+        </React.Fragment>
     );
 }
 
-const TableData = styled.td<{ width?: string }>`
+const ModalStyles = {
+    content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        minWidth: '400px',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+    },
+};
+
+const TableData = styled.td<{ width?: string; align?: string; hideOnMobile?: boolean }>`
     width: ${props => (props.width ? props.width : 'auto')};
-    max-width: ${props => (props.width ? props.width : 'auto')};
+    max-width: ${props => (props.width ? props.width : 'unset')};
     padding: 10px;
 
-    text-align: center;
+    text-align: ${props => (props.align ? props.align : 'center')};
+
+    @media (max-width: 100rem) {
+        display: ${props => (props.hideOnMobile ? 'none' : 'table-cell')};
+    }
 `;
 
 const TableInput = styled.input`
     width: inherit;
+`;
+
+const UserNote = styled.p`
+    margin: 0;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 `;
 
 const ImageButton = styled.button`

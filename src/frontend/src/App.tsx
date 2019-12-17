@@ -44,7 +44,7 @@ const Container = styled.div`
 
 const MainContent = styled.div`
     margin-left: 40px;
-    width: 75%;
+    width: 100%;
 `;
 
 export default App;

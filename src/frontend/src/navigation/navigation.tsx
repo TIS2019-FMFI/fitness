@@ -1,6 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+
+import proceduresImage from 'images/procedures.svg';
+import inboxImage from 'images/inbox.svg';
+import historyImage from 'images/history.svg';
+import peopleOutlinedImage from 'images/people_outline.svg';
+
 import './styles.css';
 
 export interface Props {
@@ -13,16 +19,28 @@ class Navigation extends React.PureComponent<Props> {
         return (
             <NavigationContainer>
                 <StyledLink to='/rezervacie' isActive={'/rezervacie' === path}>
-                    <span>Rezervacie</span>
+                    <LinkDiv>
+                        <LinkImage src={inboxImage} />
+                        <span>Rezervacie</span>
+                    </LinkDiv>
                 </StyledLink>
                 <StyledLink to='/historia' isActive={'/historia' === path}>
-                    <span>Historia objednavok</span>
+                    <LinkDiv>
+                        <LinkImage src={historyImage} />
+                        <span>Historia objednavok</span>
+                    </LinkDiv>
                 </StyledLink>
                 <StyledLink to='/klienty' isActive={'/klienty' === path}>
-                    <span>Sprava klientov</span>
+                    <LinkDiv>
+                        <LinkImage src={peopleOutlinedImage} />
+                        <span>Sprava klientov</span>
+                    </LinkDiv>
                 </StyledLink>
                 <StyledLink to='/procedury' isActive={'/procedury' === path}>
-                    <span>Stroje a procedury</span>
+                    <LinkDiv>
+                        <LinkImage src={proceduresImage} />
+                        <span>Stroje a procedury</span>
+                    </LinkDiv>
                 </StyledLink>
             </NavigationContainer>
         );
@@ -30,20 +48,37 @@ class Navigation extends React.PureComponent<Props> {
 }
 
 const NavigationContainer = styled.div`
-    padding-top: 15%;
+    padding-top: 200px;
+
     display: flex;
     flex-flow: column;
-    height: 100%;
-    background-color: blue;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+
+    background-color: #0063ff;
 `;
 
 const StyledLink = styled(Link)<{ isActive: boolean }>`
-    padding: 3px;
-    background-color: ${props => (props.isActive ? 'white' : 'blue')};
-    color: ${props => (props.isActive ? 'blue' : 'white')};
+    padding: 5px;
+    margin: 5px 0 5px 10px;
+
     display: flex;
     flex-flow: column;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+
     text-decoration: none;
+
+    background-color: ${props => (props.isActive ? '#f4f5f9' : '#0063ff')};
+    color: ${props => (props.isActive ? '#0063ff' : 'white')};
+`;
+
+const LinkDiv = styled.div`
+    display: flex;
+`;
+
+const LinkImage = styled.img`
+    margin: 0 10px;
 `;
 
 export default Navigation;
