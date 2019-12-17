@@ -3,8 +3,10 @@ import { useLocation, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 
-import leftArrow from 'images/left_arrow.svg';
-import rightArrow from 'images/right_arrow.svg';
+import leftArrowImage from 'images/left_arrow.svg';
+import rightArrowImage from 'images/right_arrow.svg';
+import linesImage from 'images/reorder.svg';
+
 import UserEntry from './user-entry/user-entry';
 
 export interface User {
@@ -81,18 +83,20 @@ function UserManagement() {
     return (
         <Wrapper>
             <Header>
-                <span>Sprava klientov</span>
+                <img style={{ margin: '5px', paddingTop: '4px' }} src={linesImage} />
+                <HeaderText>Sprava klientov</HeaderText>
             </Header>
             <Table>
                 <tbody>
                     <TableRow>
-                        <TableDataHeader>ID</TableDataHeader>
-                        <TableDataHeader>Meno a priezviso</TableDataHeader>
+                        <TableDataHeader hideOnMobile={true}>ID</TableDataHeader>
+                        <TableDataHeader>Meno a priezvisko</TableDataHeader>
                         <TableDataHeader>Telefonne cislo</TableDataHeader>
-                        <TableDataHeader>Aktivny</TableDataHeader>
-                        <TableDataHeader>Multisport</TableDataHeader>
-                        <TableDataHeader>GDPR</TableDataHeader>
-                        <TableDataHeader></TableDataHeader>
+                        <TableDataHeader hideOnMobile={true}>Aktivny</TableDataHeader>
+                        <TableDataHeader hideOnMobile={true}>Multisport</TableDataHeader>
+                        <TableDataHeader hideOnMobile={true}>GDPR</TableDataHeader>
+                        <TableDataHeader hideOnMobile={true}>Poznamka</TableDataHeader>
+                        <TableDataHeader hideOnMobile={true}></TableDataHeader>
                     </TableRow>
                     {users.map(user => (
                         <UserEntry key={user.id} user={user} updateUser={updateUser} deleteUser={deleteUser} />
@@ -106,7 +110,7 @@ function UserManagement() {
                         history.push(`/users?page=${page - 1}`);
                     }}
                 >
-                    <img src={leftArrow} alt={'back arrow'} />
+                    <img src={leftArrowImage} alt={'back arrow'} />
                 </PagingButton>
                 {page > 1 ? (
                     <PagingButton>
@@ -127,7 +131,7 @@ function UserManagement() {
                         history.push(`/users?page=${page + 1}`);
                     }}
                 >
-                    <img src={rightArrow} alt={'forward arrow'} />
+                    <img src={rightArrowImage} alt={'forward arrow'} />
                 </PagingButton>
             </PagingDiv>
         </Wrapper>
@@ -135,37 +139,43 @@ function UserManagement() {
 }
 
 const Wrapper = styled.div`
-    width: 100%;
-
-    border: 1px solid grey;
+    margin-top: 80px;
+    border: 1px solid #e6e6e6;
 
     background-color: white;
 `;
 
 const Header = styled.div`
     height: 50px;
-    width: 100%;
     padding: 5px;
 
     display: flex;
     align-items: center;
 
-    border-bottom: 1px solid grey;
+    border-bottom: 1px solid #e6e6e6;
+`;
+
+const HeaderText = styled.span`
+    color: #0063ff;
 `;
 
 const Table = styled.table`
-    margin: 10px;
-    margin-left: 40px;
+    margin: 20px 0 20px 40px;
 
+    border-top: 1px solid #d5dee3;
     border-collapse: collapse;
 `;
 
 export const TableRow = styled.tr`
-    border-bottom: 1px solid grey;
+    border-bottom: 1px solid #d5dee3;
 `;
 
-const TableDataHeader = styled.th`
-    padding: 16px;
+const TableDataHeader = styled.th<{ hideOnMobile?: boolean }>`
+    padding: 6px;
+
+    @media (max-width: 100rem) {
+        display: ${props => (props.hideOnMobile ? 'none' : 'table-cell')};
+    }
 `;
 
 const PagingDiv = styled.div`
@@ -177,8 +187,10 @@ const PagingButton = styled.button<{ selected?: boolean }>`
     min-width: 35px;
     padding: 0;
     margin: 0;
-    border: 1px solid #bdc3c7;
-    background: ${props => (props.selected ? '#3498db' : props.disabled ? '#bdc3c7' : 'unset')}
+    border: 1px solid ${props => (props.selected ? '#0063ff' : '#e6e6e6')};
+
+    background: ${props => (props.selected ? '#0063ff' : props.disabled ? '#e6e6e6' : 'unset')}
+    color: ${props => (props.selected ? 'white' : '#0063ff')}
 
     display: flex;
     justify-content: center;
