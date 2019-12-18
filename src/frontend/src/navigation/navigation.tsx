@@ -21,25 +21,25 @@ class Navigation extends React.PureComponent<Props> {
                 <StyledLink to='/rezervacie' isActive={'/rezervacie' === path}>
                     <LinkDiv>
                         <LinkImage src={inboxImage} />
-                        <span>Rezervacie</span>
+                        <LinkText>Rezervacie</LinkText>
                     </LinkDiv>
                 </StyledLink>
                 <StyledLink to='/historia' isActive={'/historia' === path}>
                     <LinkDiv>
                         <LinkImage src={historyImage} />
-                        <span>Historia objednavok</span>
+                        <LinkText>Historia objednavok</LinkText>
                     </LinkDiv>
                 </StyledLink>
                 <StyledLink to='/klienty' isActive={'/klienty' === path}>
                     <LinkDiv>
                         <LinkImage src={peopleOutlinedImage} />
-                        <span>Sprava klientov</span>
+                        <LinkText>Sprava klientov</LinkText>
                     </LinkDiv>
                 </StyledLink>
                 <StyledLink to='/procedury' isActive={'/procedury' === path}>
                     <LinkDiv>
                         <LinkImage src={proceduresImage} />
-                        <span>Stroje a procedury</span>
+                        <LinkText>Stroje a procedury</LinkText>
                     </LinkDiv>
                 </StyledLink>
             </NavigationContainer>
@@ -48,6 +48,7 @@ class Navigation extends React.PureComponent<Props> {
 }
 
 const NavigationContainer = styled.div`
+    width: 240px;
     padding-top: 200px;
 
     display: flex;
@@ -79,6 +80,10 @@ const LinkDiv = styled.div`
 
 const LinkImage = styled.img`
     margin: 0 10px;
+`;
+
+const LinkText = styled.span`
+    white-space: nowrap;
 `;
 
 export default Navigation;
