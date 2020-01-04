@@ -28,12 +28,14 @@ class ClientsController extends Controller
             ->limit($paginationData['perPage'])
             ->get();
 
+        $clientsCount = Client::count();
+
         $data = [
             'items' => $clients,
             'total' => $clients->count(),
             'perPage' => $paginationData['perPage'],
             'currentPage' => $paginationData['page'],
-            'lastPage' => $clients->count() / $paginationData['perPage'],
+            'lastPage' => (int) ceil( $clientsCount / $paginationData['perPage']),
         ];
 
         return response()->json($data, 200);
@@ -55,12 +57,16 @@ class ClientsController extends Controller
             ->limit($paginationData['perPage'])
             ->get();
 
+        $ordersCount =  Client::join('orders', 'orders.client_id', '=', 'clients.id')
+            ->where("end_time", "<", Carbon::now())
+            ->count();
+
         $data = [
             'items' => $orders,
             'total' => $orders->count(),
             'perPage' => $paginationData['perPage'],
             'currentPage' => $paginationData['page'],
-            'lastPage' => $orders->count() / $paginationData['perPage'],
+            'lastPage' => (int) ceil( $ordersCount / $paginationData['perPage']),
         ];
 
         return response()->json($data, 200);

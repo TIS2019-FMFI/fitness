@@ -34,12 +34,17 @@ class OrdersController extends Controller
             ->limit($paginationData['perPage'])
             ->get();
 
+        $ordersCount = Order::whereBetween('start_time', [$from, $to])
+            ->join('clients', 'clients.id', '=', 'orders.client_id')
+            ->join('machines_and_procedures', 'orders.machine_id', '=', 'machines_and_procedures.id')
+            ->count();
+
         $data = [
             'items' => $orders,
             'total' => $orders->count(),
             'perPage' => $paginationData['perPage'],
             'currentPage' => $paginationData['page'],
-            'lastPage' => $orders->count() / $paginationData['perPage'],
+            'lastPage' => (int) ceil($ordersCount / $paginationData['perPage']),
         ];
 
         return response()->json($data, 200);
