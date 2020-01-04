@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\v1\Order;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreOrder extends FormRequest
@@ -28,8 +29,22 @@ class StoreOrder extends FormRequest
             'note' => ['required', 'string'],
             'client_id' => ['required', 'integer'],
             'machine_id' => ['required', 'integer'],
-            'start_time' => ['required', 'date_format:Y-m-d H:i:s'],
-            'end_time' => ['required', 'date_format:Y-m-d H:i:s'],
+            'start_time' => ['required', 'date_format:d/m/Y H:i'],
+            'end_time' => ['required', 'date_format:d/m/Y H:i'],
         ];
+    }
+
+    /**
+     * Modify input data
+     *
+     * @return array
+     */
+    public function getSanitized(): array
+    {
+        $sanitized = $this->validated();
+        $sanitized['start_time'] = Carbon::createFromFormat('d/m/Y H:i', $this->get('start_time'));
+        $sanitized['end_time'] = Carbon::createFromFormat('d/m/Y H:i', $this->get('end_time'));
+
+        return $sanitized;
     }
 }
