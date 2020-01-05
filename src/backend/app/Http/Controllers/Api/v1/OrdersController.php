@@ -26,12 +26,13 @@ class OrdersController extends Controller
         $from = $request->input('from') ? Carbon::createFromFormat('d/m/Y H:i', $request->input('from')) : Carbon::now()->subWeek();
         $to = $request->input('to') ?  Carbon::createFromFormat('d/m/Y H:i', $request->input('to')) : Carbon::now();
 
-        $orders = Order::whereBetween('start_time', [$from, $to])
-            ->join('clients', 'clients.id', '=', 'orders.client_id')
+        $orders = Order::join('clients', 'clients.id', '=', 'orders.client_id')
             ->join('machines_and_procedures', 'orders.machine_id', '=', 'machines_and_procedures.id')
             ->orderBy('orders.id', $paginationData['orderDirection'])
             ->offset($paginationData['offset'])
             ->limit($paginationData['perPage'])
+            ->select('machines_and_procedures.*', 'clients.*', 'orders.end_time as order_end_time', 'orders.start_time as order_start_time',
+                'orders.note as order_note', 'orders.client_id as order_client_id', 'orders.machine_id as order_machine_id')
             ->get();
 
         $ordersCount = Order::whereBetween('start_time', [$from, $to])
