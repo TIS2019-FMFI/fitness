@@ -31,7 +31,7 @@ class OrdersController extends Controller
             ->orderBy('orders.id', $paginationData['orderDirection'])
             ->offset($paginationData['offset'])
             ->limit($paginationData['perPage'])
-            ->select('machines_and_procedures.*', 'clients.*', 'orders.end_time as order_end_time', 'orders.start_time as order_start_time',
+            ->select('machines_and_procedures.*', 'clients.*', 'orders.id as order_id', 'orders.end_time as order_end_time', 'orders.start_time as order_start_time',
                 'orders.note as order_note', 'orders.client_id as order_client_id', 'orders.machine_id as order_machine_id')
             ->get();
 
