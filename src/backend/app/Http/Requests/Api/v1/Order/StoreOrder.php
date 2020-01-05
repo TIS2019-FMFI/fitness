@@ -26,7 +26,7 @@ class StoreOrder extends FormRequest
     public function rules(): array
     {
         return [
-            'note' => ['required', 'string'],
+            'note' => ['sometimes', 'string'],
             'client_id' => ['required', 'integer'],
             'machine_id' => ['required', 'integer'],
             'start_time' => ['required', 'date_format:d/m/Y H:i'],
