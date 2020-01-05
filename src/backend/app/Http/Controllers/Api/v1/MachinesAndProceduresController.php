@@ -29,12 +29,14 @@ class MachinesAndProceduresController extends Controller
             ->limit($paginationData['perPage'])
             ->get();
 
+        $machinesAndProceduresCount = MachinesAndProcedure::count();
+
         $data = [
             'items' => $machinesAndProcedures,
             'total' => $machinesAndProcedures->count(),
             'perPage' => $paginationData['perPage'],
             'currentPage' => $paginationData['page'],
-            'lastPage' => $machinesAndProcedures->count() / $paginationData['perPage'],
+            'lastPage' => (int) ceil($machinesAndProceduresCount / $paginationData['perPage']),
         ];
 
         return response()->json($data, 200);
@@ -56,12 +58,16 @@ class MachinesAndProceduresController extends Controller
             ->limit($paginationData['perPage'])
             ->get();
 
+        $ordersCount = MachinesAndProcedure::join('orders', 'orders.machine_id', '=', 'machines_and_procedures.id')
+            ->where("end_time", "<", Carbon::now())
+            ->count();
+
         $data = [
             'items' => $orders,
             'total' => $orders->count(),
             'perPage' => $paginationData['perPage'],
             'currentPage' => $paginationData['page'],
-            'lastPage' => $orders->count() / $paginationData['perPage'],
+            'lastPage' => (int) ceil($ordersCount / $paginationData['perPage']),
         ];
 
         return response()->json($data, 200);

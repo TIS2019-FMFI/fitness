@@ -3,6 +3,7 @@
 use App\Models\Client;
 use App\Models\MachinesAndProcedure;
 use App\Models\Order;
+use Illuminate\Support\Arr;
 
 /** @var  \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(Client::class, static function (Faker\Generator $faker) {
@@ -22,7 +23,27 @@ $factory->define(Client::class, static function (Faker\Generator $faker) {
 /** @var  \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(MachinesAndProcedure::class, static function (Faker\Generator $faker) {
     return [
-        'name' => $faker->sentence,
+        'name' => Arr::random(
+            [
+                'Prístroj Vacu Therm',
+                'Prístroj Vacu shape',
+                'Prístroj Rolletic',
+                'Prístroj SUN 400XL',
+                'Vibračná plošina',
+                'Kryolipolýza',
+                'Kavitácia 3v1',
+                'Lipo Laser',
+                'Prístrojová lymfodrenáž',
+                'Anticelulitídny škoricový zábal ',
+                'Odstránenie pigmentových škvŕn a cievok prístrojom IPL',
+                'Odstránenie akné prístrojom IPL',
+                'Fotorejuvenizácia – fotoomladenie',
+                'Trvalá IPL epilácia pre ženy',
+                'Depilácia voskom pre ženy',
+                'Kozmetika',
+                'Nechtové štúdio'
+            ]
+        ),
         'active' => $faker->boolean(),
         'is_for_multisport_card' => $faker->boolean(),
         'created_at' => $faker->dateTimeBetween('+0 days', '+1 month'),

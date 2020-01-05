@@ -23,8 +23,8 @@ class OrdersController extends Controller
      */
     public function index(IndexOrder $request): JsonResponse {
         $paginationData = app(PaginationService::class)->getPagination($request);
-        $from = new Carbon($request->input('from', Carbon::now()->subWeek()));
-        $to = new Carbon($request->input('to', Carbon::now()));
+        $from = $request->input('from') ? Carbon::createFromFormat('d/m/Y H:i', $request->input('from')) : Carbon::now()->subWeek();
+        $to = $request->input('to') ?  Carbon::createFromFormat('d/m/Y H:i', $request->input('to')) : Carbon::now();
 
         $orders = Order::whereBetween('start_time', [$from, $to])
             ->join('clients', 'clients.id', '=', 'orders.client_id')
@@ -34,12 +34,17 @@ class OrdersController extends Controller
             ->limit($paginationData['perPage'])
             ->get();
 
+        $ordersCount = Order::whereBetween('start_time', [$from, $to])
+            ->join('clients', 'clients.id', '=', 'orders.client_id')
+            ->join('machines_and_procedures', 'orders.machine_id', '=', 'machines_and_procedures.id')
+            ->count();
+
         $data = [
             'items' => $orders,
             'total' => $orders->count(),
             'perPage' => $paginationData['perPage'],
             'currentPage' => $paginationData['page'],
-            'lastPage' => $orders->count() / $paginationData['perPage'],
+            'lastPage' => (int) ceil($ordersCount / $paginationData['perPage']),
         ];
 
         return response()->json($data, 200);
@@ -52,7 +57,7 @@ class OrdersController extends Controller
      * @return JsonResponse
      */
     public function store(StoreOrder $request): JsonResponse {
-        $sanitized = $request->validated();
+        $sanitized = $request->getSanitized();
         $order = Order::create($sanitized);
 
         return response()->json($order, 201);
@@ -67,7 +72,7 @@ class OrdersController extends Controller
      */
     public function update(UpdateOrder $request, int $orderId): JsonResponse {
         $order = Order::findOrFail($orderId);
-        $data = $request->validated();
+        $data = $request->getSanitized();
         $order->update($data);
 
         return response()->json($order, 200);
