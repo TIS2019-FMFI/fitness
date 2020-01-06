@@ -1,54 +1,99 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import axios from 'axios';
+import debounce from 'lodash.debounce';
 
 import saveIcon from 'images/save.svg';
 import cancelIcon from 'images/cancel.svg';
 import { Reservation } from 'home/procedure-row/procedure-row';
 
-import { CellBody, ButtonsDiv } from './reservation-cell-filled';
-import { CellWrapper } from './reservation-cell';
-
 export interface Props {
-    reservation?: Reservation;
+    reservation: Reservation;
     saveReservation: (reservation: Reservation) => void;
     cancelEdit: () => void;
 }
 
-function getClientId(clientName: string): number | null {
-    return 1;
-}
+const dateOptions = { hour: '2-digit', minute: '2-digit' };
 
 function ReservationCellEdit(props: Props) {
     const { reservation, saveReservation, cancelEdit } = props;
-    const [clientName, setClientName] = useState(reservation ? reservation.client.name : '');
-    const [note, setNote] = useState(reservation && reservation.note ? reservation.note : '');
+    const [clients, setClients] = useState([reservation.client]);
+    const [name, setName] = useState(reservation.client.name);
+    const [note, setNote] = useState(reservation.note);
+
+    const validateName = debounce(async (value: string) => {
+        const clients = await axios.get(`http://localhost/api/v1/clients/findClient/${value}`);
+        if (clients.data.length === 0) {
+            return 'No client found';
+        }
+
+        setClients(clients.data);
+    }, 1000);
+
+    const handleSubmit = () => {
+        if (clients.length !== 1) {
+            return;
+        }
+
+        let shouldUpdate = false;
+
+        if (reservation.note !== note) {
+            shouldUpdate = true;
+            reservation.note = note;
+        }
+
+        if (reservation.client.name !== name) {
+            shouldUpdate = true;
+            const newClient = clients[0];
+            reservation.client.id = newClient.id;
+            reservation.client.name = newClient.name;
+        }
+
+        if (shouldUpdate) {
+            saveReservation(reservation);
+        }
+    };
 
     return (
-        <CellWrapper>
-            <CellBody>
-                <ClientNameEdit type='text' value={clientName} onChange={event => setClientName(event.target.value)} />
-                <NoteEdit value={note} onChange={event => setNote(event.target.value)} />
-                <ButtonsDiv>
-                    <img
-                        onClick={() => {
-                            const clientId = getClientId(clientName);
-                            if (clientId) {
-                                saveReservation(reservation);
-                            } else {
-                                window.alert('Zle zadane meno zakaznika');
-                            }
+        <div>
+            <h2>Vytvor objednavku</h2>
+            <h3>{`${reservation.startTime.toLocaleString('en-GB', dateOptions)} - ${reservation.endTime.toLocaleString(
+                'en-GB',
+                dateOptions
+            )}`}</h3>
+            <h3>{reservation.procedure.name}</h3>
+            <form>
+                <div>
+                    <label htmlFor='clientName'>Meno klienta</label>
+                    <input
+                        type='text'
+                        value={name}
+                        onChange={event => {
+                            validateName(event.target.value);
+                            setName(event.target.value);
                         }}
-                        src={saveIcon}
                     />
-                    <img onClick={cancelEdit} src={cancelIcon} />
-                </ButtonsDiv>
-            </CellBody>
-        </CellWrapper>
+                </div>
+                <div>
+                    <label htmlFor='note'>Poznamka</label>
+                    <input type='text' value={note} onChange={event => setNote(event.target.value)} />
+                </div>
+                <button
+                    type='button'
+                    onClick={event => {
+                        event.preventDefault();
+                        handleSubmit();
+                    }}
+                >
+                    Ulozit
+                    <img src={saveIcon} />
+                </button>
+                <button type='reset' onClick={cancelEdit}>
+                    Cancel
+                    <img src={cancelIcon} />
+                </button>
+            </form>
+        </div>
     );
 }
-
-const ClientNameEdit = styled.input``;
-
-const NoteEdit = styled.textarea``;
 
 export default ReservationCellEdit;

@@ -20,7 +20,6 @@ function ReservationCellFilled(props: Props) {
         <CellWrapper>
             <CellBody>
                 <ClientName>{reservation.client.name}</ClientName>
-                {reservation.note !== '' ? <Note>{reservation.note}</Note> : null}
                 <ButtonsDiv>
                     <img onClick={editReservation} src={editIcon} />
                     <img onClick={deleteReservation} src={deleteIcon} />
@@ -32,14 +31,16 @@ function ReservationCellFilled(props: Props) {
 
 export const CellBody = styled.div`
     height: 100%;
-    width: 100%;
-    margin: 2px;
+    width: auto;
+    margin: 4px;
+    padding: 5px;
 
     display: flex;
     position: relative;
     flex-flow: column;
+
+    border-radius: 5px;
     background: white;
-    box-shadow: 1px 4px #888888;
 `;
 
 export const ClientName = styled.p`

@@ -24,23 +24,26 @@ const PER_PAGE = 10;
 function UserManagement() {
     const location = useLocation();
     const history = useHistory();
-    const maxPage = 13;
+    const [maxPage, setMaxPage] = useState(999);
     const match = location.search.match(/page=([0-9]+)/);
-    const page =
-        match && match.length > 1 && Number(match[1]) > 0 && Number(match[1]) <= maxPage ? Number(match[1]) : 1;
-
+    const matchedNumber = (match && match.length > 1 && Number(match[1])) || null;
+    const [page, setPage] = useState(matchedNumber > 0 && matchedNumber <= maxPage ? matchedNumber : 1);
     const [users, setUsers] = useState([]);
 
+    if (match === null || matchedNumber !== page) {
+        history.push(`/klienty?page=${page}`);
+    }
+
     useEffect(() => {
-        fetchUsers();
+        fetchUsers(page);
     }, []);
 
-    async function fetchUsers() {
+    async function fetchUsers(page: number) {
         axios
             .get(`http://localhost/api/v1/clients?orderBy=id&page=${page}&perPage=${PER_PAGE}`)
             .then(res => {
                 setUsers(
-                    res.data.map(object => {
+                    res.data.items.map((object: any) => {
                         return {
                             id: object.id,
                             note: object.note,
@@ -52,9 +55,11 @@ function UserManagement() {
                         };
                     })
                 );
+                setMaxPage(res.data.lastPage);
             })
-            .catch(error => {
-                window.alert('error fetching user data');
+            .catch((error: any) => {
+                window.alert('Error v nacitavany zakaznikov');
+                console.log(error);
             });
     }
 
@@ -69,15 +74,27 @@ function UserManagement() {
                 note: user.note,
                 is_gdpr: user.isGDPR,
             })
-            .then(res => {
-                fetchUsers();
+            .then(() => {
+                fetchUsers(page);
             });
     }
 
     async function deleteUser(user: User) {
-        axios.delete(`http://localhost/api/v1/clients/${user.id}`).then(res => {
-            fetchUsers();
-        });
+        axios
+            .delete(`http://localhost/api/v1/clients/${user.id}`)
+            .then(() => {
+                fetchUsers(page);
+            })
+            .catch((error: any) => {
+                window.alert('Error pri mazany zakaznika');
+                console.log(error);
+            });
+    }
+
+    function changePage(newPage: number) {
+        setPage(newPage);
+        history.push(`/klienty?page=${page}`);
+        fetchUsers(newPage);
     }
 
     return (
@@ -107,28 +124,28 @@ function UserManagement() {
                 <PagingButton
                     disabled={page < 2}
                     onClick={() => {
-                        history.push(`/users?page=${page - 1}`);
+                        changePage(page - 1);
                     }}
                 >
                     <img src={leftArrowImage} alt={'back arrow'} />
                 </PagingButton>
                 {page > 1 ? (
-                    <PagingButton>
-                        <span onClick={() => history.push(`/users?page=${1}`)}>{1}</span>
+                    <PagingButton onClick={() => changePage(1)}>
+                        <span>{1}</span>
                     </PagingButton>
                 ) : null}
                 <PagingButton selected={true}>
                     <span>{page}</span>
                 </PagingButton>
                 {page !== maxPage ? (
-                    <PagingButton>
-                        <span onClick={() => history.push(`/users?page=${maxPage}`)}>{maxPage}</span>
+                    <PagingButton onClick={() => changePage(maxPage)}>
+                        <span>{maxPage}</span>
                     </PagingButton>
                 ) : null}
                 <PagingButton
                     disabled={page >= maxPage}
                     onClick={() => {
-                        history.push(`/users?page=${page + 1}`);
+                        changePage(page + 1);
                     }}
                 >
                     <img src={rightArrowImage} alt={'forward arrow'} />
