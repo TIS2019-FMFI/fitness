@@ -4,10 +4,12 @@ import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { User } from 'user-management/user-management';
+import { Client } from 'client-management/client-management';
 import { Procedure } from 'procedures-management/procedures-management';
 import { OrderReservation } from './procedure-row/reservation-cell/reservation-cell-create';
 import ProcedureRow, { addInterval, Reservation } from './procedure-row/procedure-row';
+
+export const ClientsContext = React.createContext([]);
 
 function fetchProcedures(setProcedures: (procedures: Procedure[]) => void) {
     axios.get(`http://localhost/api/v1/machines-and-procedures?orderBy=id&perPage=-1`).then(res => {
@@ -22,6 +24,33 @@ function fetchProcedures(setProcedures: (procedures: Procedure[]) => void) {
             })
         );
     });
+}
+
+function fetchAllClients(setAllClients: (clients: Client[]) => void) {
+    axios
+        .get(`http://localhost/api/v1/clients?perPage=-1`)
+        .then(res => {
+            setAllClients(
+                res.data.items.map((object: any) => {
+                    return {
+                        id: object.id,
+                        note: object.note,
+                        name: `${object.first_name} ${object.last_name}`,
+                        phone: object.phone,
+                        isActive: object.active,
+                        hasMultisportCard: object.has_multisport_card,
+                        isGDPR: object.is_gdpr,
+                    };
+                })
+            );
+        })
+        .catch(error => {
+            console.error(error);
+            const answer = window.confirm('Error pri nacitavany pouzivateov');
+            if (answer) {
+                this.forceUpdate();
+            }
+        });
 }
 
 function fetchOrders(startTime: Date, endTime: Date, setOrders: any): void {
@@ -57,7 +86,7 @@ function fetchOrders(startTime: Date, endTime: Date, setOrders: any): void {
                         isActive: object.active,
                         hasMultisportCard: object.has_multisport_card,
                         isGDPR: object.is_gdpr,
-                    } as User,
+                    } as Client,
                     endTime: new Date(object.order_end_time),
                     startTime: new Date(object.order_start_time),
                     procedure: {
@@ -76,6 +105,7 @@ function Home() {
     const [procedures, setProcedures] = useState([]);
     const [orders, setOrders] = useState({});
     const [date, setDate] = useState(new Date());
+    const [allClients, setAllClients] = useState([]);
 
     let startTime = new Date(date);
     startTime.setHours(8);
@@ -167,6 +197,10 @@ function Home() {
         fetchOrders(reservationTimes[0], endTime, setOrders);
     }, [date]);
 
+    useEffect(() => {
+        fetchAllClients(setAllClients);
+    }, []);
+
     const dateOptions = { hour: '2-digit', minute: '2-digit' };
 
     return (
@@ -180,19 +214,21 @@ function Home() {
                             <th key={time.toString()}>{time.toLocaleString('en-GB', dateOptions)}</th>
                         ))}
                     </tr>
-                    {procedures.map((procedure: Procedure) => {
-                        return (
-                            <ProcedureRow
-                                date={date}
-                                procedure={procedure}
-                                reservations={orders.hasOwnProperty(procedure.id) ? orders[procedure.id] : []}
-                                saveReservation={saveReservation}
-                                removeReservation={removeReservation}
-                                createReservation={createReservation}
-                                key={procedure.id}
-                            />
-                        );
-                    })}
+                    <ClientsContext.Provider value={allClients}>
+                        {procedures.map((procedure: Procedure) => {
+                            return (
+                                <ProcedureRow
+                                    date={date}
+                                    procedure={procedure}
+                                    reservations={orders.hasOwnProperty(procedure.id) ? orders[procedure.id] : []}
+                                    saveReservation={saveReservation}
+                                    removeReservation={removeReservation}
+                                    createReservation={createReservation}
+                                    key={procedure.id}
+                                />
+                            );
+                        })}
+                    </ClientsContext.Provider>
                 </tbody>
             </table>
         </HomeWrapper>

@@ -8,54 +8,54 @@ import saveIcon from 'images/save.svg';
 import cancleIcon from 'images/cancel.svg';
 import ToolTip from 'ui/tool-tip/tool-tip';
 
-import { TableRow, User } from '../user-management';
+import { TableRow, Client } from '../client-management';
 
 export interface Props {
-    user: User;
-    updateUser: (user: User) => void;
-    deleteUser: (user: User) => void;
+    client: Client;
+    updateClient: (client: Client) => void;
+    deleteClient: (client: Client) => void;
 }
 
-function UserEntry(props: Props) {
-    const { updateUser, deleteUser } = props;
-    const [user, setUser] = useState({ ...props.user });
+function ClientEntry(props: Props) {
+    const { updateClient, deleteClient } = props;
+    const [client, setClient] = useState({ ...props.client });
     const [isEditing, setIsEditing] = useState(false);
     const [noteIsOpen, setNoteIsOpen] = useState(false);
 
     return (
         <React.Fragment>
-            <TableRow key={user.id}>
+            <TableRow key={client.id}>
                 <TableData width='50px' hideOnMobile={true}>
-                    {user.id}
+                    {client.id}
                 </TableData>
                 <TableData width='180px' align='left'>
                     {isEditing ? (
                         <TableInput
                             onChange={event => {
-                                user.name = event.target.value;
-                                setUser({ ...user });
+                                client.name = event.target.value;
+                                setClient({ ...client });
                             }}
                             type='text'
-                            value={user.name}
-                            placeholder={user.name}
+                            value={client.name}
+                            placeholder={client.name}
                         />
                     ) : (
-                        <span>{user.name}</span>
+                        <span>{client.name}</span>
                     )}
                 </TableData>
                 <TableData width='150px' align='left'>
                     {isEditing ? (
                         <TableInput
                             onChange={event => {
-                                user.phone = event.target.value;
-                                setUser({ ...user });
+                                client.phone = event.target.value;
+                                setClient({ ...client });
                             }}
-                            value={user.phone}
+                            value={client.phone}
                             type='text'
-                            placeholder={user.phone}
+                            placeholder={client.phone}
                         />
                     ) : (
-                        <span>{user.phone}</span>
+                        <span>{client.phone}</span>
                     )}
                 </TableData>
                 <TableData hideOnMobile={true}>
@@ -63,40 +63,40 @@ function UserEntry(props: Props) {
                         type='checkbox'
                         name='isActive'
                         onChange={() => {
-                            user.isActive = !user.isActive;
-                            setUser({ ...user });
+                            client.isActive = !client.isActive;
+                            setClient({ ...client });
                         }}
                         disabled={!isEditing}
-                        checked={user.isActive}
+                        checked={client.isActive}
                     />
                 </TableData>
                 <TableData hideOnMobile={true}>
                     <TableInput
                         type='checkbox'
                         onChange={() => {
-                            user.hasMultisportCard = !user.hasMultisportCard;
-                            setUser({ ...user });
+                            client.hasMultisportCard = !client.hasMultisportCard;
+                            setClient({ ...client });
                         }}
                         name='hasMultisportCard'
                         disabled={!isEditing}
-                        checked={user.hasMultisportCard}
+                        checked={client.hasMultisportCard}
                     />
                 </TableData>
                 <TableData hideOnMobile={true}>
                     <TableInput
                         type='checkbox'
                         onClick={() => {
-                            user.isGDPR = !user.isGDPR;
-                            setUser({ ...user });
+                            client.isGDPR = !client.isGDPR;
+                            setClient({ ...client });
                         }}
                         id='isGDPR'
                         name='isGDPR'
                         disabled={!isEditing}
-                        checked={user.isGDPR}
+                        checked={client.isGDPR}
                     />
                 </TableData>
                 <TableData width='200px' hideOnMobile={true} onClick={() => setNoteIsOpen(true)}>
-                    <UserNote>{user.note}</UserNote>
+                    <ClientNote>{client.note}</ClientNote>
                 </TableData>
                 <TableData hideOnMobile={true}>
                     {isEditing ? (
@@ -104,7 +104,7 @@ function UserEntry(props: Props) {
                             <ImageButton
                                 onClick={() => {
                                     setIsEditing(false);
-                                    updateUser(user);
+                                    updateClient(client);
                                 }}
                             >
                                 <ButtonIcon src={saveIcon} alt='edit' />
@@ -122,7 +122,7 @@ function UserEntry(props: Props) {
                             <ImageButton
                                 onClick={() => {
                                     setIsEditing(false);
-                                    setUser({ ...props.user });
+                                    setClient({ ...props.client });
                                 }}
                             >
                                 <ButtonIcon src={cancleIcon} alt='edit' />
@@ -132,8 +132,8 @@ function UserEntry(props: Props) {
                         <ToolTip text='Vymazat klienta'>
                             <ImageButton
                                 onClick={() => {
-                                    if (window.confirm(`Chcete vymazat klienta ${user.name}`)) {
-                                        deleteUser(user);
+                                    if (window.confirm(`Chcete vymazat klienta ${client.name}`)) {
+                                        deleteClient(client);
                                     }
                                 }}
                             >
@@ -156,14 +156,14 @@ function UserEntry(props: Props) {
                 {isEditing ? (
                     <textarea
                         style={{ width: '100%' }}
-                        value={user.note}
+                        value={client.note}
                         onChange={event => {
-                            user.note = event.target.value;
-                            setUser({ ...user });
+                            client.note = event.target.value;
+                            setClient({ ...client });
                         }}
                     ></textarea>
                 ) : (
-                    <span>{user.note}</span>
+                    <span>{client.note}</span>
                 )}
             </Modal>
         </React.Fragment>
@@ -198,7 +198,7 @@ const TableInput = styled.input`
     width: inherit;
 `;
 
-const UserNote = styled.p`
+const ClientNote = styled.p`
     margin: 0;
 
     white-space: nowrap;
@@ -215,4 +215,4 @@ const ButtonIcon = styled.img`
     color: ${props => (props.color ? props.color : 'black')};
 `;
 
-export default UserEntry;
+export default ClientEntry;

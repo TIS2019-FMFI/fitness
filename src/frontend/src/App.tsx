@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import Navigation from './navigation/navigation';
-import UserManagement from './user-management/user-management';
+import ClientManagement from './client-management/client-management';
 import Home from './home/home';
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
                 <Switch>
                     <MainContent>
                         <Route path='/klienty'>
-                            <UserManagement />
+                            <ClientManagement />
                         </Route>
                         <Route path='/rezervacie'>
                             <Home />

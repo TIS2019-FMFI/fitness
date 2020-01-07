@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import debounce from 'lodash.debounce';
+import React, { useState, useContext } from 'react';
+import Select from 'react-select';
 
 import saveIcon from 'images/save.svg';
 import cancelIcon from 'images/cancel.svg';
+import { ClientsContext } from 'home/home';
+import { Client } from 'client-management/client-management';
 import { Reservation } from 'home/procedure-row/procedure-row';
 
 export interface Props {
@@ -16,41 +17,22 @@ const dateOptions = { hour: '2-digit', minute: '2-digit' };
 
 function ReservationCellEdit(props: Props) {
     const { reservation, saveReservation, cancelEdit } = props;
-    const [clients, setClients] = useState([reservation.client]);
-    const [name, setName] = useState(reservation.client.name);
+    const [client, setClient] = useState(reservation.client);
     const [note, setNote] = useState(reservation.note);
+    const clients = useContext(ClientsContext);
 
-    const validateName = debounce(async (value: string) => {
-        const clients = await axios.get(`http://localhost/api/v1/clients/findClient/${value}`);
-        if (clients.data.length === 0) {
-            return 'No client found';
-        }
-
-        setClients(clients.data);
-    }, 1000);
+    const canUpdate = reservation.note !== note || reservation.client.id !== client.id;
 
     const handleSubmit = () => {
-        if (clients.length !== 1) {
-            return;
-        }
-
-        let shouldUpdate = false;
-
         if (reservation.note !== note) {
-            shouldUpdate = true;
             reservation.note = note;
         }
 
-        if (reservation.client.name !== name) {
-            shouldUpdate = true;
-            const newClient = clients[0];
-            reservation.client.id = newClient.id;
-            reservation.client.name = newClient.name;
+        if (reservation.client.id !== client.id) {
+            reservation.client = client;
         }
 
-        if (shouldUpdate) {
-            saveReservation(reservation);
-        }
+        saveReservation(reservation);
     };
 
     return (
@@ -63,14 +45,16 @@ function ReservationCellEdit(props: Props) {
             <h3>{reservation.procedure.name}</h3>
             <form>
                 <div>
-                    <label htmlFor='clientName'>Meno klienta</label>
-                    <input
-                        type='text'
-                        value={name}
-                        onChange={event => {
-                            validateName(event.target.value);
-                            setName(event.target.value);
-                        }}
+                    <span>Meno</span>
+                    <Select
+                        value={{ value: client, label: client.name }}
+                        options={clients.map(client => {
+                            return {
+                                value: client,
+                                label: client.name,
+                            };
+                        })}
+                        onChange={(option: { value: Client; label: string }) => setClient(option.value)}
                     />
                 </div>
                 <div>
@@ -79,6 +63,7 @@ function ReservationCellEdit(props: Props) {
                 </div>
                 <button
                     type='button'
+                    disabled={!canUpdate}
                     onClick={event => {
                         event.preventDefault();
                         handleSubmit();

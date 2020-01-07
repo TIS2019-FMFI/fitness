@@ -7,9 +7,9 @@ import leftArrowImage from 'images/left_arrow.svg';
 import rightArrowImage from 'images/right_arrow.svg';
 import linesImage from 'images/reorder.svg';
 
-import UserEntry from './user-entry/user-entry';
+import ClientEntry from './client-entry/client-entry';
 
-export interface User {
+export interface Client {
     id: number;
     note: string;
     name: string;
@@ -21,28 +21,28 @@ export interface User {
 
 const PER_PAGE = 10;
 
-function UserManagement() {
+function ClientManagement() {
     const location = useLocation();
     const history = useHistory();
     const [maxPage, setMaxPage] = useState(999);
     const match = location.search.match(/page=([0-9]+)/);
     const matchedNumber = (match && match.length > 1 && Number(match[1])) || null;
     const [page, setPage] = useState(matchedNumber > 0 && matchedNumber <= maxPage ? matchedNumber : 1);
-    const [users, setUsers] = useState([]);
+    const [clients, setClients] = useState([]);
 
     if (match === null || matchedNumber !== page) {
         history.push(`/klienty?page=${page}`);
     }
 
     useEffect(() => {
-        fetchUsers(page);
+        fetchClients(page);
     }, []);
 
-    async function fetchUsers(page: number) {
+    async function fetchClients(page: number) {
         axios
             .get(`http://localhost/api/v1/clients?orderBy=id&page=${page}&perPage=${PER_PAGE}`)
             .then(res => {
-                setUsers(
+                setClients(
                     res.data.items.map((object: any) => {
                         return {
                             id: object.id,
@@ -63,27 +63,27 @@ function UserManagement() {
             });
     }
 
-    async function updateUser(user: User) {
+    async function updateClient(client: Client) {
         axios
-            .post(`http://localhost/api/v1/clients/${user.id}`, {
-                first_name: user.name.split(' ')[0],
-                last_name: user.name.split(' ')[1],
-                phone: user.phone,
-                active: user.isActive,
-                has_multisport_card: user.hasMultisportCard,
-                note: user.note,
-                is_gdpr: user.isGDPR,
+            .post(`http://localhost/api/v1/clients/${client.id}`, {
+                first_name: client.name.split(' ')[0],
+                last_name: client.name.split(' ')[1],
+                phone: client.phone,
+                active: client.isActive,
+                has_multisport_card: client.hasMultisportCard,
+                note: client.note,
+                is_gdpr: client.isGDPR,
             })
             .then(() => {
-                fetchUsers(page);
+                fetchClients(page);
             });
     }
 
-    async function deleteUser(user: User) {
+    async function deleteClient(client: Client) {
         axios
-            .delete(`http://localhost/api/v1/clients/${user.id}`)
+            .delete(`http://localhost/api/v1/clients/${client.id}`)
             .then(() => {
-                fetchUsers(page);
+                fetchClients(page);
             })
             .catch((error: any) => {
                 window.alert('Error pri mazany zakaznika');
@@ -94,7 +94,7 @@ function UserManagement() {
     function changePage(newPage: number) {
         setPage(newPage);
         history.push(`/klienty?page=${page}`);
-        fetchUsers(newPage);
+        fetchClients(newPage);
     }
 
     return (
@@ -115,8 +115,13 @@ function UserManagement() {
                         <TableDataHeader hideOnMobile={true}>Poznamka</TableDataHeader>
                         <TableDataHeader hideOnMobile={true}></TableDataHeader>
                     </TableRow>
-                    {users.map(user => (
-                        <UserEntry key={user.id} user={user} updateUser={updateUser} deleteUser={deleteUser} />
+                    {clients.map(client => (
+                        <ClientEntry
+                            key={client.id}
+                            client={client}
+                            updateClient={updateClient}
+                            deleteClient={deleteClient}
+                        />
                     ))}
                 </tbody>
             </Table>
@@ -214,4 +219,4 @@ const PagingButton = styled.button<{ selected?: boolean }>`
     align-items: center;
 `;
 
-export default UserManagement;
+export default ClientManagement;

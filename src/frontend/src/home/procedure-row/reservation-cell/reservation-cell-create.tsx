@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import debounce from 'lodash.debounce';
-import { Formik, Field, Form } from 'formik';
+import React, { useState, useContext } from 'react';
+import Select from 'react-select';
+import saveIcon from 'images/save.svg';
 
+import { ClientsContext } from 'home/home';
+import { Client } from 'client-management/client-management';
 import { Procedure } from 'procedures-management/procedures-management';
 
 export interface Props {
@@ -24,16 +25,21 @@ const dateOptions = { hour: '2-digit', minute: '2-digit' };
 
 function ReservationCellCreate(props: Props) {
     const { startTime, endTime, procedure, createReservation } = props;
-    const [clients, setClients] = useState(Array());
+    const [client, setClient] = useState(null);
+    const [note, setNote] = useState('');
+    const clients = useContext(ClientsContext);
 
-    const validateName = debounce(async (value: string) => {
-        const clients = await axios.get(`http://localhost/api/v1/clients/findClient/${value}`);
-        if (clients.data.length === 0) {
-            return 'No client found';
-        }
+    const handleSubmit = () => {
+        const newReservation = {
+            note,
+            client_id: client.id,
+            machine_id: procedure.id,
+            start_time: startTime,
+            end_time: endTime,
+        } as OrderReservation;
 
-        setClients(clients.data);
-    }, 1000);
+        createReservation(newReservation);
+    };
 
     return (
         <div>
@@ -43,49 +49,35 @@ function ReservationCellCreate(props: Props) {
                 dateOptions
             )}`}</h3>
             <h3>{procedure.name}</h3>
-            <Formik
-                initialValues={{ clientName: '', note: '' }}
-                onSubmit={values => {
-                    if (clients.length !== 1) {
-                        return;
-                    }
-
-                    const newReservation = {
-                        note: values.note,
-                        client_id: clients[0].id,
-                        machine_id: procedure.id,
-                        start_time: startTime,
-                        end_time: endTime,
-                    } as OrderReservation;
-
-                    createReservation(newReservation);
-                }}
-            >
-                {() => {
-                    return (
-                        <Form translate=''>
-                            <div>
-                                <label htmlFor='clientName'>Meno klienta</label>
-                                <Field name='clientName' input='text' validate={validateName} />
-                            </div>
-                            <div>
-                                <label htmlFor='note'>Poznamka</label>
-                                <Field name='note'>
-                                    {({ field }) => (
-                                        <input
-                                            type='text'
-                                            name={field.name}
-                                            value={field.value}
-                                            onChange={field.onChange}
-                                        />
-                                    )}
-                                </Field>
-                            </div>
-                            <button type='submit'>Vytvor</button>
-                        </Form>
-                    );
-                }}
-            </Formik>
+            <form>
+                <div>
+                    <span>Meno</span>
+                    <Select
+                        options={clients.map(client => {
+                            return {
+                                value: client,
+                                label: client.name,
+                            };
+                        })}
+                        onChange={(option: { value: Client; label: string }) => setClient(option.value)}
+                    />
+                </div>
+                <div>
+                    <label htmlFor='note'>Poznamka</label>
+                    <input type='text' value={note} onChange={event => setNote(event.target.value)} />
+                </div>
+                <button
+                    type='button'
+                    disabled={client === null}
+                    onClick={event => {
+                        event.preventDefault();
+                        handleSubmit();
+                    }}
+                >
+                    Ulozit
+                    <img src={saveIcon} />
+                </button>
+            </form>
         </div>
     );
 }

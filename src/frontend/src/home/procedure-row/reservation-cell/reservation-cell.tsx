@@ -79,6 +79,7 @@ const ModalStyles = {
         bottom: 'auto',
         minWidth: '400px',
         marginRight: '-50%',
+        overflow: 'visible',
         transform: 'translate(-50%, -50%)',
     },
 };

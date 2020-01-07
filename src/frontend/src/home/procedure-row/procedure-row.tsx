@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { User } from 'user-management/user-management';
+import { Client } from 'client-management/client-management';
 import { Procedure } from 'procedures-management/procedures-management';
 import { OrderReservation } from './reservation-cell/reservation-cell-create';
 import ReservationCell from './reservation-cell/reservation-cell';
@@ -9,7 +9,7 @@ import ReservationCell from './reservation-cell/reservation-cell';
 export interface Reservation {
     id?: number;
     note: string;
-    client: User;
+    client: Client;
     endTime: Date;
     startTime: Date;
     procedure: Procedure;
