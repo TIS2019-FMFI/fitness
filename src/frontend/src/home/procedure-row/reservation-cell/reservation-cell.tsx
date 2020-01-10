@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Modal from 'react-modal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import AddCircle from 'images/add_circle.svg';
 import { Reservation } from 'home/procedure-row/procedure-row';
 
 import ReservationCellFilled from './reservation-cell-filled';
@@ -34,7 +34,7 @@ function ReservationCell(props: Props) {
                 editReservation={() => setViewModal(true)}
             />
         ) : (
-            <img onClick={() => setViewModal(true)} src={AddCircle} />
+            <Icon icon='plus-circle' size='2x' onClick={() => setViewModal(true)} />
         );
 
     return (
@@ -89,6 +89,10 @@ export const CellWrapper = styled.td`
     height: 80px;
 
     text-align: center;
+`;
+
+const Icon = styled(FontAwesomeIcon)`
+    color: #0063ff;
 `;
 
 export default ReservationCell;

@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import leftArrowImage from 'images/left_arrow.svg';
 import rightArrowImage from 'images/right_arrow.svg';
-import linesImage from 'images/reorder.svg';
 
 import ClientEntry from './client-entry/client-entry';
 
@@ -36,7 +36,7 @@ function ClientManagement() {
 
     useEffect(() => {
         fetchClients(page);
-    }, []);
+    }, [page]);
 
     async function fetchClients(page: number) {
         axios
@@ -100,7 +100,7 @@ function ClientManagement() {
     return (
         <Wrapper>
             <Header>
-                <img style={{ margin: '5px', paddingTop: '4px' }} src={linesImage} />
+                <Icon icon='bars' color='#0063ff' />
                 <HeaderText>Sprava klientov</HeaderText>
             </Header>
             <Table>
@@ -175,6 +175,11 @@ const Header = styled.div`
     align-items: center;
 
     border-bottom: 1px solid #e6e6e6;
+`;
+
+const Icon = styled(FontAwesomeIcon)<{ color: string }>`
+    padding: 0 10px;
+    color = ${props => props.color}
 `;
 
 const HeaderText = styled.span`

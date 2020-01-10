@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import editIcon from 'images/edit.svg';
-import deleteIcon from 'images/delete.svg';
-import saveIcon from 'images/save.svg';
-import cancleIcon from 'images/cancel.svg';
 import ToolTip from 'ui/tool-tip/tool-tip';
 
 import { TableRow, Client } from '../client-management';
+import Checkbox from './checkbox';
 
 export interface Props {
     client: Client;
@@ -59,40 +57,33 @@ function ClientEntry(props: Props) {
                     )}
                 </TableData>
                 <TableData hideOnMobile={true}>
-                    <TableInput
-                        type='checkbox'
-                        name='isActive'
-                        onChange={() => {
+                    <Checkbox
+                        disabled={!isEditing}
+                        checked={client.isActive}
+                        onClick={() => {
                             client.isActive = !client.isActive;
                             setClient({ ...client });
                         }}
-                        disabled={!isEditing}
-                        checked={client.isActive}
                     />
                 </TableData>
                 <TableData hideOnMobile={true}>
-                    <TableInput
-                        type='checkbox'
-                        onChange={() => {
+                    <Checkbox
+                        disabled={!isEditing}
+                        checked={client.hasMultisportCard}
+                        onClick={() => {
                             client.hasMultisportCard = !client.hasMultisportCard;
                             setClient({ ...client });
                         }}
-                        name='hasMultisportCard'
-                        disabled={!isEditing}
-                        checked={client.hasMultisportCard}
                     />
                 </TableData>
                 <TableData hideOnMobile={true}>
-                    <TableInput
-                        type='checkbox'
+                    <Checkbox
+                        disabled={!isEditing}
+                        checked={client.isGDPR}
                         onClick={() => {
                             client.isGDPR = !client.isGDPR;
                             setClient({ ...client });
                         }}
-                        id='isGDPR'
-                        name='isGDPR'
-                        disabled={!isEditing}
-                        checked={client.isGDPR}
                     />
                 </TableData>
                 <TableData width='200px' hideOnMobile={true} onClick={() => setNoteIsOpen(true)}>
@@ -107,13 +98,13 @@ function ClientEntry(props: Props) {
                                     updateClient(client);
                                 }}
                             >
-                                <ButtonIcon src={saveIcon} alt='edit' />
+                                <Icon size='lg' icon='save' color={'#0063ff'} />
                             </ImageButton>
                         </ToolTip>
                     ) : (
                         <ToolTip text='Editovat'>
                             <ImageButton onClick={() => setIsEditing(true)}>
-                                <ButtonIcon src={editIcon} alt='edit' />
+                                <Icon size='lg' icon='edit' color={'#0063ff'} />
                             </ImageButton>
                         </ToolTip>
                     )}
@@ -125,7 +116,7 @@ function ClientEntry(props: Props) {
                                     setClient({ ...props.client });
                                 }}
                             >
-                                <ButtonIcon src={cancleIcon} alt='edit' />
+                                <Icon size='lg' icon='window-close' color={'#d32f2f'} />
                             </ImageButton>
                         </ToolTip>
                     ) : (
@@ -137,7 +128,7 @@ function ClientEntry(props: Props) {
                                     }
                                 }}
                             >
-                                <ButtonIcon src={deleteIcon} alt='edit' />
+                                <Icon size='lg' icon='trash' color={'#d32f2f'} />
                             </ImageButton>
                         </ToolTip>
                     )}
@@ -151,7 +142,7 @@ function ClientEntry(props: Props) {
             >
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
                     <h2 style={{ margin: 0 }}>Poznamka</h2>
-                    <img src={cancleIcon} onClick={() => setNoteIsOpen(false)} />
+                    <FontAwesomeIcon icon='window-close' onClick={() => setNoteIsOpen(false)} />
                 </div>
                 {isEditing ? (
                     <textarea
@@ -211,8 +202,8 @@ const ImageButton = styled.button`
     background: unset;
 `;
 
-const ButtonIcon = styled.img`
-    color: ${props => (props.color ? props.color : 'black')};
+const Icon = styled(FontAwesomeIcon)<{ color: string }>`
+    color: ${props => props.color};
 `;
 
 export default ClientEntry;

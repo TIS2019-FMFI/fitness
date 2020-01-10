@@ -1,8 +1,7 @@
 import React, { useState, useContext } from 'react';
 import Select from 'react-select';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import saveIcon from 'images/save.svg';
-import cancelIcon from 'images/cancel.svg';
 import { ClientsContext } from 'home/home';
 import { Client } from 'client-management/client-management';
 import { Reservation } from 'home/procedure-row/procedure-row';
@@ -70,11 +69,11 @@ function ReservationCellEdit(props: Props) {
                     }}
                 >
                     Ulozit
-                    <img src={saveIcon} />
+                    <FontAwesomeIcon icon='save' />
                 </button>
                 <button type='reset' onClick={cancelEdit}>
                     Cancel
-                    <img src={cancelIcon} />
+                    <FontAwesomeIcon icon='window-close' />
                 </button>
             </form>
         </div>

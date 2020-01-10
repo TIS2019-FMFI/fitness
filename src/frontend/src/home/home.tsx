@@ -46,10 +46,7 @@ function fetchAllClients(setAllClients: (clients: Client[]) => void) {
         })
         .catch(error => {
             console.error(error);
-            const answer = window.confirm('Error pri nacitavany pouzivateov');
-            if (answer) {
-                this.forceUpdate();
-            }
+            window.alert('Error pri nacitavany pouzivateov');
         });
 }
 

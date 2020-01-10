@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import Select from 'react-select';
-import saveIcon from 'images/save.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { ClientsContext } from 'home/home';
 import { Client } from 'client-management/client-management';
@@ -75,7 +75,7 @@ function ReservationCellCreate(props: Props) {
                     }}
                 >
                     Ulozit
-                    <img src={saveIcon} />
+                    <FontAwesomeIcon icon='save' />
                 </button>
             </form>
         </div>
