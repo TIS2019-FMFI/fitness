@@ -39,7 +39,7 @@ class UserController extends Controller
         return $token;
     }
 
-    public function login(LoginUserOwn $request)
+    public function login(Request $request)
     {
         $user = User::where('email', $request->email)
             ->get()
@@ -69,9 +69,7 @@ class UserController extends Controller
         return response()->json($response, 201);
     }
 
-    public function register(RegisterUserOwn $request) {
-        $request->validated();
-
+    public function register(Request $request) {
         $payload = [
             'password' => Hash::make($request->password),
             'email' => $request->email,
