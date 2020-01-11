@@ -20,6 +20,7 @@ import { faUser, faBookmark, faCircle } from '@fortawesome/free-regular-svg-icon
 import Navigation from './navigation/navigation';
 import ClientManagement from './client-management/client-management';
 import Home from './home/home';
+import Procedures from './procedures-management/procedures-management';
 
 library.add(
     fas,
@@ -52,7 +53,7 @@ function App() {
                             <Home />
                         </Route>
                         <Route path='/procedury'>
-                            <p>procedures</p>
+                            <Procedures />
                         </Route>
                         <Route path='/historia'>
                             <p>history</p>

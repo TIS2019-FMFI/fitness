@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import leftArrowImage from 'images/left_arrow.svg';
-import rightArrowImage from 'images/right_arrow.svg';
+//import leftArrowImage from '/images/left_arrow.svg';
+//import rightArrowImage from '/images/right_arrow.svg';
 
 import ClientEntry from './client-entry/client-entry';
 
@@ -132,7 +132,7 @@ function ClientManagement() {
                         changePage(page - 1);
                     }}
                 >
-                    <img src={leftArrowImage} alt={'back arrow'} />
+                    <img alt={'back arrow'} />
                 </PagingButton>
                 {page > 1 ? (
                     <PagingButton onClick={() => changePage(1)}>
@@ -153,7 +153,7 @@ function ClientManagement() {
                         changePage(page + 1);
                     }}
                 >
-                    <img src={rightArrowImage} alt={'forward arrow'} />
+                    <img alt={'forward arrow'} />
                 </PagingButton>
             </PagingDiv>
         </Wrapper>

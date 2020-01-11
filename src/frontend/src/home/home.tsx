@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { Client } from 'client-management/client-management';
-import { Procedure } from 'procedures-management/procedures-management';
+import { Client } from '../client-management/client-management';
+import { Procedure } from '../procedures-management/procedures-management';
 import { OrderReservation } from './procedure-row/reservation-cell/reservation-cell-create';
 import ProcedureRow, { addInterval, Reservation } from './procedure-row/procedure-row';
 
@@ -86,11 +86,11 @@ function fetchOrders(startTime: Date, endTime: Date, setOrders: any): void {
                     } as Client,
                     endTime: new Date(object.order_end_time),
                     startTime: new Date(object.order_start_time),
-                    procedure: {
+                    procedure: ({
                         id: object.order_machine_id,
                         active: object.active,
                         isForMultisportCard: object.is_for_multisport_card,
-                    } as Procedure,
+                    } as unknown) as Procedure,
                 } as Reservation);
             });
 
