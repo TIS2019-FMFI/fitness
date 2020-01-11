@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -8,6 +8,7 @@ import leftArrowImage from 'images/left_arrow.svg';
 import rightArrowImage from 'images/right_arrow.svg';
 
 import ClientEntry from './client-entry/client-entry';
+import { TokenContext } from '../App';
 
 export interface Client {
     id: number;
@@ -29,6 +30,7 @@ function ClientManagement() {
     const matchedNumber = (match && match.length > 1 && Number(match[1])) || null;
     const [page, setPage] = useState(matchedNumber > 0 && matchedNumber <= maxPage ? matchedNumber : 1);
     const [clients, setClients] = useState([]);
+    const token = useContext(TokenContext);
 
     if (match === null || matchedNumber !== page) {
         history.push(`/klienty?page=${page}`);
@@ -40,7 +42,7 @@ function ClientManagement() {
 
     async function fetchClients(page: number) {
         axios
-            .get(`http://localhost/api/v1/clients?orderBy=id&page=${page}&perPage=${PER_PAGE}`)
+            .get(`http://localhost/api/v1/clients?orderBy=id&token=${token}&page=${page}&perPage=${PER_PAGE}`)
             .then(res => {
                 setClients(
                     res.data.items.map((object: any) => {
@@ -65,7 +67,7 @@ function ClientManagement() {
 
     async function updateClient(client: Client) {
         axios
-            .post(`http://localhost/api/v1/clients/${client.id}`, {
+            .post(`http://localhost/api/v1/clients/${client.id}&token=${token}`, {
                 first_name: client.name.split(' ')[0],
                 last_name: client.name.split(' ')[1],
                 phone: client.phone,
@@ -81,7 +83,7 @@ function ClientManagement() {
 
     async function deleteClient(client: Client) {
         axios
-            .delete(`http://localhost/api/v1/clients/${client.id}`)
+            .delete(`http://localhost/api/v1/clients/${client.id}&token=${token}`)
             .then(() => {
                 fetchClients(page);
             })

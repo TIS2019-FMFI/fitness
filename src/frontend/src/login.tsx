@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
 import axios from 'axios';
+import styled from 'styled-components';
+import React, { useState } from 'react';
 import { Input, Button } from 'reactstrap';
 
 export interface Props {
@@ -8,25 +8,28 @@ export interface Props {
 }
 
 function Login(props: Props) {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     function postCredentials() {
         const object = {
-            username,
+            email,
             password,
         };
 
         axios
-            .post('localhost/login', object)
-            .then(props => {
-                console.log(props);
+            .post('http://localhost/api/v1/user/login', object)
+            .then(response => {
+                if (response.data.success) {
+                    const d = new Date();
+                    d.setMonth(10);
+                    props.setLogin(response.data.data.auth_token, d);
+                } else {
+                    window.alert('Zle heslo');
+                }
             })
             .catch(() => {
                 window.alert('Zle heslo');
-                const date = new Date();
-                date.setMonth(4);
-                props.setLogin('test', date);
             });
     }
 
@@ -35,11 +38,7 @@ function Login(props: Props) {
             <h1>Prihlasenie</h1>
             <br />
             <br />
-            <Input
-                placeholder='Pouzivatelske meno'
-                value={username}
-                onChange={event => setUsername(event.target.value)}
-            />
+            <Input placeholder='Email' value={email} onChange={event => setEmail(event.target.value)} />
             <br />
             <Input
                 placeholder='Heslo'

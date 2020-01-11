@@ -1,6 +1,6 @@
 import React from 'react';
-import { useCookies } from 'react-cookie';
 import { Route } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 
 import Home from 'home/home';
 import App from './App';
@@ -31,12 +31,13 @@ function Welcome() {
                 if (token === '') {
                     return (
                         <Login
-                            setLogin={(token: string, endDate: Date) =>
+                            setLogin={(token: string, endDate: Date) => {
                                 setCookie('token-object', {
                                     token,
                                     endDate,
-                                })
-                            }
+                                });
+                                window.location.reload(false);
+                            }}
                         />
                     );
                 } else {

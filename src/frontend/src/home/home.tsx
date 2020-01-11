@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
@@ -9,11 +9,12 @@ import { Procedure } from 'procedures-management/procedures-management';
 import { OrderReservation } from './procedure-row/reservation-cell/reservation-cell-create';
 import ProcedureRow, { addInterval, Reservation } from './procedure-row/procedure-row';
 import { startHour, endHour } from './clock';
+import { TokenContext } from '../App';
 
 export const ClientsContext = React.createContext([]);
 
-function fetchProcedures(setProcedures: (procedures: Procedure[]) => void) {
-    axios.get(`http://localhost/api/v1/machines-and-procedures?orderBy=id&perPage=-1`).then(res => {
+function fetchProcedures(setProcedures: (procedures: Procedure[]) => void, token: string) {
+    axios.get(`http://localhost/api/v1/machines-and-procedures?token=${token}&orderBy=id&perPage=-1`).then(res => {
         setProcedures(
             res.data.items.map(object => {
                 return {
@@ -27,9 +28,9 @@ function fetchProcedures(setProcedures: (procedures: Procedure[]) => void) {
     });
 }
 
-function fetchAllClients(setAllClients: (clients: Client[]) => void) {
+function fetchAllClients(setAllClients: (clients: Client[]) => void, token: string) {
     axios
-        .get(`http://localhost/api/v1/clients?perPage=-1`)
+        .get(`http://localhost/api/v1/clients?token=${token}&perPage=-1`)
         .then(res => {
             setAllClients(
                 res.data.items.map((object: any) => {
@@ -51,7 +52,7 @@ function fetchAllClients(setAllClients: (clients: Client[]) => void) {
         });
 }
 
-function fetchOrders(startTime: Date, endTime: Date, setOrders: any): void {
+function fetchOrders(startTime: Date, endTime: Date, setOrders: any, token: string): void {
     const dateOptions = {
         year: 'numeric',
         month: '2-digit',
@@ -62,7 +63,7 @@ function fetchOrders(startTime: Date, endTime: Date, setOrders: any): void {
 
     axios
         .get(
-            `http://localhost/api/v1/orders?from=${startTime
+            `http://localhost/api/v1/orders?token=${token}&from=${startTime
                 .toLocaleString('en-GB', dateOptions)
                 .replace(',', '')}&to=${endTime.toLocaleString('en-GB', dateOptions).replace(',', '')}&perPage=-1`
         )
@@ -108,6 +109,7 @@ function Home(props: Props) {
     const [orders, setOrders] = useState({});
     const [date, setDate] = useState(new Date());
     const [allClients, setAllClients] = useState([]);
+    const token = useContext(TokenContext);
 
     let startTime = new Date(date);
     startTime.setHours(startHour);
@@ -140,9 +142,9 @@ function Home(props: Props) {
         };
 
         axios
-            .post(`http://localhost/api/v1/orders/${reservation.id}`, orderObject)
+            .post(`http://localhost/api/v1/orders/${reservation.id}?token=${token}`, orderObject)
             .then(res => {
-                fetchOrders(reservationTimes[0], endTime, setOrders);
+                fetchOrders(reservationTimes[0], endTime, setOrders, token);
             })
             .catch(error => {
                 window.alert('Order failed');
@@ -172,9 +174,9 @@ function Home(props: Props) {
         }
 
         axios
-            .post(`http://localhost/api/v1/orders`, orderObject)
+            .post(`http://localhost/api/v1/orders?token=${token}`, orderObject)
             .then(res => {
-                fetchOrders(reservationTimes[0], endTime, setOrders);
+                fetchOrders(reservationTimes[0], endTime, setOrders, token);
             })
             .catch(error => {
                 window.alert('Order failed');
@@ -184,9 +186,9 @@ function Home(props: Props) {
 
     function removeReservation(reservation: Reservation) {
         axios
-            .delete(`http://localhost/api/v1/orders/${reservation.id}`)
+            .delete(`http://localhost/api/v1/orders/${reservation.id}?token=${token}`)
             .then(() => {
-                fetchOrders(reservationTimes[0], endTime, setOrders);
+                fetchOrders(reservationTimes[0], endTime, setOrders, token);
             })
             .catch((error: any) => {
                 window.alert('Error pri mazany rezervacie');
@@ -195,13 +197,13 @@ function Home(props: Props) {
     }
 
     useEffect(() => {
-        fetchProcedures(setProcedures);
-        fetchOrders(reservationTimes[0], endTime, setOrders);
+        fetchProcedures(setProcedures, token);
+        fetchOrders(reservationTimes[0], endTime, setOrders, token);
     }, [date]);
 
     useEffect(() => {
         if (!props.isPublic) {
-            fetchAllClients(setAllClients);
+            fetchAllClients(setAllClients, token);
         }
     }, []);
 
