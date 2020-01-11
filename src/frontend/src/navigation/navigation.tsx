@@ -14,9 +14,9 @@ class Navigation extends React.PureComponent<Props> {
         const { path } = this.props;
         return (
             <NavigationContainer>
-                <StyledLink to='/rezervacie' isActive={'/rezervacie' === path}>
+                <StyledLink to='/' isActive={'/' === path}>
                     <LinkDiv>
-                        <LinkImage icon={'/rezervacie' === path ? 'bookmark' : ['far', 'bookmark']} />
+                        <LinkImage icon={'/' === path ? 'bookmark' : ['far', 'bookmark']} />
                         <LinkText>Rezervacie</LinkText>
                     </LinkDiv>
                 </StyledLink>
@@ -72,11 +72,11 @@ const StyledLink = styled(Link)<{ isActive: boolean }>`
 
 const LinkDiv = styled.div`
     display: flex;
+    align-items: center;
 `;
 
 const LinkImage = styled(FontAwesomeIcon)`
     margin: 0 10px;
-    padding: 2px;
 `;
 
 const LinkText = styled.span`

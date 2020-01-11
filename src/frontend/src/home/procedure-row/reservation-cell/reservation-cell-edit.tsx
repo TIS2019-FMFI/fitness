@@ -1,6 +1,8 @@
 import React, { useState, useContext } from 'react';
 import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Input } from 'reactstrap';
+import styled from 'styled-components';
 
 import { ClientsContext } from 'home/home';
 import { Client } from 'client-management/client-management';
@@ -42,10 +44,10 @@ function ReservationCellEdit(props: Props) {
                 dateOptions
             )}`}</h3>
             <h3>{reservation.procedure.name}</h3>
-            <form>
-                <div>
+            <div style={{ display: 'flex', flexFlow: 'column' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
                     <span>Meno</span>
-                    <Select
+                    <StyledSelect
                         value={{ value: client, label: client.name }}
                         options={clients.map(client => {
                             return {
@@ -56,28 +58,49 @@ function ReservationCellEdit(props: Props) {
                         onChange={(option: { value: Client; label: string }) => setClient(option.value)}
                     />
                 </div>
-                <div>
-                    <label htmlFor='note'>Poznamka</label>
-                    <input type='text' value={note} onChange={event => setNote(event.target.value)} />
+                <div style={{ display: 'flex', alignItems: 'center', marginTop: '5px', marginBottom: '10px' }}>
+                    <span>Poznamka</span>
+                    <StyledInput type='text' value={note} onChange={event => setNote(event.target.value)} />
                 </div>
-                <button
-                    type='button'
-                    disabled={!canUpdate}
-                    onClick={event => {
-                        event.preventDefault();
-                        handleSubmit();
-                    }}
-                >
-                    Ulozit
-                    <FontAwesomeIcon icon='save' />
-                </button>
-                <button type='reset' onClick={cancelEdit}>
-                    Cancel
-                    <FontAwesomeIcon icon='window-close' />
-                </button>
-            </form>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <StyledButton
+                        type='button'
+                        color={canUpdate ? 'success' : 'secondary'}
+                        disabled={!canUpdate}
+                        onClick={event => {
+                            event.preventDefault();
+                            handleSubmit();
+                        }}
+                    >
+                        Ulozit
+                        <Icon icon='save' />
+                    </StyledButton>
+                    <StyledButton outline type='reset' onClick={cancelEdit}>
+                        Zrusit
+                        <Icon icon='window-close' />
+                    </StyledButton>
+                </div>
+            </div>
         </div>
     );
 }
+
+const StyledSelect = styled(Select)`
+    width: 100%;
+    margin-left: 10px;
+`;
+
+const StyledInput = styled(Input)`
+    margin-left: 10px;
+`;
+
+const StyledButton = styled(Button)`
+    width: 100%;
+    margin: 0 5px;
+`;
+
+const Icon = styled(FontAwesomeIcon)`
+    margin: 0 5px;
+`;
 
 export default ReservationCellEdit;

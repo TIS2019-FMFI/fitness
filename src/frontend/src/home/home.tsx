@@ -8,6 +8,7 @@ import { Client } from 'client-management/client-management';
 import { Procedure } from 'procedures-management/procedures-management';
 import { OrderReservation } from './procedure-row/reservation-cell/reservation-cell-create';
 import ProcedureRow, { addInterval, Reservation } from './procedure-row/procedure-row';
+import { startHour, endHour } from './clock';
 
 export const ClientsContext = React.createContext([]);
 
@@ -98,18 +99,22 @@ function fetchOrders(startTime: Date, endTime: Date, setOrders: any): void {
         });
 }
 
-function Home() {
+export interface Props {
+    isPublic: boolean;
+}
+
+function Home(props: Props) {
     const [procedures, setProcedures] = useState([]);
     const [orders, setOrders] = useState({});
     const [date, setDate] = useState(new Date());
     const [allClients, setAllClients] = useState([]);
 
     let startTime = new Date(date);
-    startTime.setHours(8);
+    startTime.setHours(startHour);
     startTime.setMinutes(0);
     startTime.setSeconds(0);
     const endTime = new Date(startTime);
-    endTime.setHours(15);
+    endTime.setHours(endHour);
 
     const reservationTimes: Date[] = [];
     while (startTime <= endTime) {
@@ -195,7 +200,9 @@ function Home() {
     }, [date]);
 
     useEffect(() => {
-        fetchAllClients(setAllClients);
+        if (!props.isPublic) {
+            fetchAllClients(setAllClients);
+        }
     }, []);
 
     const dateOptions = { hour: '2-digit', minute: '2-digit' };
@@ -203,12 +210,14 @@ function Home() {
     return (
         <HomeWrapper>
             <DatePicker todayButton='Dnes' selected={date} onChange={(date: Date) => setDate(date)} />
-            <table>
+            <Table>
                 <tbody>
                     <tr>
                         <th>&nbsp;</th>
                         {reservationTimes.map(time => (
-                            <th key={time.toString()}>{time.toLocaleString('en-GB', dateOptions)}</th>
+                            <TableHead style={{ textAlign: 'center', padding: '10px 0' }} key={time.toString()}>
+                                {time.toLocaleString('en-GB', dateOptions)}
+                            </TableHead>
                         ))}
                     </tr>
                     <ClientsContext.Provider value={allClients}>
@@ -216,28 +225,45 @@ function Home() {
                             return (
                                 <ProcedureRow
                                     date={date}
+                                    key={procedure.id}
                                     procedure={procedure}
-                                    reservations={orders.hasOwnProperty(procedure.id) ? orders[procedure.id] : []}
+                                    isPublic={props.isPublic}
                                     saveReservation={saveReservation}
                                     removeReservation={removeReservation}
                                     createReservation={createReservation}
-                                    key={procedure.id}
+                                    reservations={orders.hasOwnProperty(procedure.id) ? orders[procedure.id] : []}
                                 />
                             );
                         })}
                     </ClientsContext.Provider>
                 </tbody>
-            </table>
+            </Table>
         </HomeWrapper>
     );
 }
 
 const HomeWrapper = styled.div`
+    width: max-content;
+    padding-top: 10px;
     margin: 20px;
 
+    border-radius: 10px;
     display: flex;
     align-items: center;
     flex-flow: column;
+
+    background-color: white;
+`;
+
+const Table = styled.table`
+    margin-top: 10px;
+
+    border-collapse: collapse;
+    border-top: 1px black dashed;
+`;
+
+const TableHead = styled.th`
+    border-left: 1px black dashed;
 `;
 
 export default Home;

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Modal from 'react-modal';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Input } from 'reactstrap';
 
 import ToolTip from 'ui/tool-tip/tool-tip';
 
@@ -185,7 +186,7 @@ const TableData = styled.td<{ width?: string; align?: string; hideOnMobile?: boo
     }
 `;
 
-const TableInput = styled.input`
+const TableInput = styled(Input)`
     width: inherit;
 `;
 

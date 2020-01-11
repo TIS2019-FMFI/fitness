@@ -4,8 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { Reservation } from 'home/procedure-row/procedure-row';
 
-import { CellWrapper } from './reservation-cell';
-
 export interface Props {
     reservation: Reservation;
     deleteReservation: () => void;
@@ -16,18 +14,16 @@ function ReservationCellFilled(props: Props) {
     const { reservation, editReservation, deleteReservation } = props;
 
     return (
-        <CellWrapper>
-            <CellBody>
-                <ClientName>{reservation.client.name}</ClientName>
-                <BottomDiv>
-                    <ButtonsDiv>
-                        <Icon onClick={editReservation} icon='edit' color={'#0063ff'} />
-                        <Icon onClick={deleteReservation} icon='trash' color={'#d32f2f'} />
-                    </ButtonsDiv>
-                    {reservation.note ? <Icon icon='comment-dots' color={'#0063ff'} /> : null}
-                </BottomDiv>
-            </CellBody>
-        </CellWrapper>
+        <CellBody>
+            <ClientName>{reservation.client.name}</ClientName>
+            <BottomDiv>
+                <ButtonsDiv>
+                    <Icon onClick={editReservation} icon='edit' color={'#0063ff'} />
+                    <Icon onClick={deleteReservation} icon='trash' color={'#d32f2f'} />
+                </ButtonsDiv>
+                {reservation.note ? <Icon icon='comment-dots' color={'#0063ff'} /> : null}
+            </BottomDiv>
+        </CellBody>
     );
 }
 
@@ -62,7 +58,7 @@ const ButtonsDiv = styled.div`
 `;
 
 const Icon = styled(FontAwesomeIcon)<{ color: string }>`
-    padding: 4px;
+    margin: 2px;
     color: ${props => props.color};
 `;
 

@@ -1,6 +1,8 @@
 import React, { useState, useContext } from 'react';
 import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Input } from 'reactstrap';
+import styled from 'styled-components';
 
 import { ClientsContext } from 'home/home';
 import { Client } from 'client-management/client-management';
@@ -49,10 +51,10 @@ function ReservationCellCreate(props: Props) {
                 dateOptions
             )}`}</h3>
             <h3>{procedure.name}</h3>
-            <form>
-                <div>
+            <div style={{ display: 'flex', flexFlow: 'column' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
                     <span>Meno</span>
-                    <Select
+                    <StyledSelect
                         options={clients.map(client => {
                             return {
                                 value: client,
@@ -62,12 +64,14 @@ function ReservationCellCreate(props: Props) {
                         onChange={(option: { value: Client; label: string }) => setClient(option.value)}
                     />
                 </div>
-                <div>
-                    <label htmlFor='note'>Poznamka</label>
-                    <input type='text' value={note} onChange={event => setNote(event.target.value)} />
+                <div style={{ display: 'flex', alignItems: 'center', marginTop: '5px', marginBottom: '10px' }}>
+                    <span>Poznamka</span>
+                    <StyledInput type='text' value={note} onChange={event => setNote(event.target.value)} />
                 </div>
-                <button
+                <Button
                     type='button'
+                    style={{}}
+                    color={client === null ? 'secondary' : 'success'}
                     disabled={client === null}
                     onClick={event => {
                         event.preventDefault();
@@ -75,11 +79,24 @@ function ReservationCellCreate(props: Props) {
                     }}
                 >
                     Ulozit
-                    <FontAwesomeIcon icon='save' />
-                </button>
-            </form>
+                    <Icon icon='save' />
+                </Button>
+            </div>
         </div>
     );
 }
+
+const StyledSelect = styled(Select)`
+    width: 100%;
+    margin-left: 10px;
+`;
+
+const StyledInput = styled(Input)`
+    margin-left: 10px;
+`;
+
+const Icon = styled(FontAwesomeIcon)`
+    margin-left: 5px;
+`;
 
 export default ReservationCellCreate;

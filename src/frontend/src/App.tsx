@@ -38,31 +38,36 @@ library.add(
     faCircle
 );
 
-function App() {
+export const TokenContext = React.createContext('');
+
+export interface Props {
+    token: string;
+}
+
+function App(props: Props) {
     return (
         <Router>
-            <Container>
-                <Route>{({ location }) => <Navigation path={location.pathname} />}</Route>
-                <Switch>
-                    <MainContent>
-                        <Route path='/klienty'>
-                            <ClientManagement />
-                        </Route>
-                        <Route path='/rezervacie'>
-                            <Home />
-                        </Route>
-                        <Route path='/procedury'>
-                            <p>procedures</p>
-                        </Route>
-                        <Route path='/historia'>
-                            <p>history</p>
-                        </Route>
-                        <Route exact={true} path='/'>
-                            <p>Main</p>
-                        </Route>
-                    </MainContent>
-                </Switch>
-            </Container>
+            <TokenContext.Provider value={props.token}>
+                <Container>
+                    <Route>{({ location }) => <Navigation path={location.pathname} />}</Route>
+                    <Switch>
+                        <MainContent>
+                            <Route path='/klienty'>
+                                <ClientManagement />
+                            </Route>
+                            <Route path='/procedury'>
+                                <p>procedures</p>
+                            </Route>
+                            <Route path='/historia'>
+                                <p>history</p>
+                            </Route>
+                            <Route exact path='/'>
+                                <Home isPublic={false} />
+                            </Route>
+                        </MainContent>
+                    </Switch>
+                </Container>
+            </TokenContext.Provider>
         </Router>
     );
 }
