@@ -8,9 +8,9 @@ use App\Http\Requests\Api\v1\Client\StoreClient;
 use App\Http\Requests\Api\v1\Client\UpdateClient;
 use App\Http\Requests\Api\v1\Client\IndexClient;
 use App\Models\Client;
+use App\Services\Api\v1\PaginationService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
 
 class ClientsController extends Controller
 {
@@ -18,48 +18,52 @@ class ClientsController extends Controller
      * Display data of all clients.
      *
      * @param IndexClient $request
-     * @return Collection
+     * @return JsonResponse
      */
-    public function index(IndexClient $request): Collection {
-        $orderDirection = 'asc';
-        $perPage = 10;
-        $page = 1;
-        $orderBy = 'id';
+    public function index(IndexClient $request): JsonResponse {
+        $paginationData = app(PaginationService::class)->getPagination($request);
 
-        if($request->has('orderDirection')){
-            $orderDirection = $request->orderDirection;
-        }
-
-        if($request->has('perPage')) {
-            $perPage = $request->perPage;
-        }
-
-        if($request->has('page')){
-            $page = $request->page;
-        }
-
-        if($request->has('orderBy')){
-            $orderBy = $request->orderBy;
-        }
-
-        return Client::orderBy($orderBy, $orderDirection)
-            ->offset(($perPage * $page) - $perPage)
-            ->limit($perPage)
+        $clients = Client::orderBy($paginationData['orderBy'], $paginationData['orderDirection'])
+            ->offset($paginationData['offset'])
+            ->limit($paginationData['perPage'])
             ->get();
+
+        $data = [
+            'items' => $clients,
+            'total' => $clients->count(),
+            'perPage' => $paginationData['perPage'],
+            'currentPage' => $paginationData['page'],
+            'lastPage' => $clients->count() / $paginationData['perPage'],
+        ];
+
+        return response()->json($data, 200);
     }
 
     /**
      * Display the clients history.
      *
      * @param IndexClient $request
-     * @return void
+     * @return JsonResponse
      */
-    public function history(IndexClient $request): Collection {
+    public function history(IndexClient $request): JsonResponse {
+        $paginationData = app(PaginationService::class)->getPagination($request);
+
         $orders = Client::join('orders', 'orders.client_id', '=', 'clients.id')
             ->where("end_time", "<", Carbon::now())
             ->orderByDesc("end_time")
+            ->offset($paginationData['offset'])
+            ->limit($paginationData['perPage'])
             ->get();
-        return $orders;
+
+        $data = [
+            'items' => $orders,
+            'total' => $orders->count(),
+            'perPage' => $paginationData['perPage'],
+            'currentPage' => $paginationData['page'],
+            'lastPage' => $orders->count() / $paginationData['perPage'],
+        ];
+
+        return response()->json($data, 200);
     }
 
     /**
@@ -71,6 +75,7 @@ class ClientsController extends Controller
     public function store(StoreClient $request): JsonResponse {
         $sanitized = $request->validated();
         $client = Client::create($sanitized);
+
         return response()->json($client, 201);
     }
 
@@ -85,6 +90,7 @@ class ClientsController extends Controller
         $client = Client::findOrFail($clientId);
         $data = $request->validated();
         $client->update($data);
+
         return response()->json($client, 200);
     }
 
@@ -98,6 +104,7 @@ class ClientsController extends Controller
     public function destroy(DestroyClient $request, int $clientId): JsonResponse {
         $client = Client::findOrFail($clientId);
         $client->delete();
+
         return response()->json(null, 204);
     }
 
@@ -105,12 +112,13 @@ class ClientsController extends Controller
      * Display the specified client.
      *
      * @param String $string
-     * @return Collection
+     * @return JsonResponse
      */
-    public function findClient(String $string): Collection {
+    public function findClient(String $string): JsonResponse {
         $clients = Client::where('first_name', 'ILIKE', '%' . $string . '%')
             ->orWhere('last_name', 'ILIKE', '%' . $string . '%')
             ->orWhere('phone', 'ILIKE', '%' . $string . '%')->get();
-        return $clients;
+
+        return response()->json($clients, 200);
     }
 }
