@@ -100,7 +100,7 @@ function ClientManagement() {
     return (
         <Wrapper>
             <Header>
-                <Icon icon='bars' color='#0063ff' />
+                <Icon size='3x' icon='bars' color='#0063ff' />
                 <HeaderText>Sprava klientov</HeaderText>
             </Header>
             <Table>
