@@ -17,11 +17,8 @@ Route::prefix('v1')->namespace('Api\v1')->group(static function () {
 
     Route::post('user/login', 'UserController@login');
     Route::post('user/register', 'UserController@register');
-
-    Route::prefix('public')->group(static function() {
-        Route::get('ordersTime', 'AvailabilityController@ordersTime');
-        Route::get('machinesAndProcedures', 'AvailabilityController@machinesAndProcedures');
-    });
+    Route::get('orders-time', 'AvailabilityController@ordersTime');
+    Route::get('machinesAndProcedures', 'AvailabilityController@machinesAndProcedures');
 
     Route::middleware(['jwt.auth'])->group(function () {
         Route::prefix('clients')->group(static function() {
