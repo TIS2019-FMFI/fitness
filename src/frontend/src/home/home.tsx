@@ -86,11 +86,11 @@ function fetchOrders(startTime: Date, endTime: Date, setOrders: any): void {
                     } as Client,
                     endTime: new Date(object.order_end_time),
                     startTime: new Date(object.order_start_time),
-                    procedure: ({
+                    procedure: {
                         id: object.order_machine_id,
-                        active: object.active,
+                        isActive: object.active,
                         isForMultisportCard: object.is_for_multisport_card,
-                    } as unknown) as Procedure,
+                    } as Procedure,
                 } as Reservation);
             });
 

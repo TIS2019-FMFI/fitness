@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import ToolTip from '../ui/tool-tip/tool-tip';
-
 import { TableRow, Procedure } from './procedures-management';
 import Checkbox from '../client-management/client-entry/checkbox';
 
@@ -19,90 +17,80 @@ function ProcedureEntry(props: Props) {
     const [isEditing, setIsEditing] = useState(false);
 
     return (
-        <React.Fragment>
-            <TableRow key={procedure.id}>
-                <TableData width='50px'>{procedure.id}</TableData>
-                <TableData width='180px' align='left'>
-                    {isEditing ? (
-                        <TableInput
-                            onChange={event => {
-                                procedure.name = event.target.value;
-                                setProcedure({ ...procedure });
-                            }}
-                            type='text'
-                            value={procedure.name}
-                            placeholder={procedure.name}
-                        />
-                    ) : (
-                        <span>{procedure.name}</span>
-                    )}
-                </TableData>
-                <TableData>
-                    <Checkbox
-                        disabled={!isEditing}
-                        checked={procedure.isActive}
-                        onClick={() => {
-                            procedure.isActive = !procedure.isActive;
+        <TableRow key={procedure.id}>
+            <TableData width='50px'>{procedure.id}</TableData>
+            <TableData width='180px' align='left'>
+                {isEditing ? (
+                    <TableInput
+                        onChange={event => {
+                            procedure.name = event.target.value;
                             setProcedure({ ...procedure });
                         }}
+                        type='text'
+                        value={procedure.name}
+                        placeholder={procedure.name}
                     />
-                </TableData>
-                <TableData>
-                    <Checkbox
-                        disabled={!isEditing}
-                        checked={procedure.isForMultisportCard}
+                ) : (
+                    <span>{procedure.name}</span>
+                )}
+            </TableData>
+            <TableData>
+                <Checkbox
+                    disabled={!isEditing}
+                    checked={procedure.isActive}
+                    onClick={() => {
+                        procedure.isActive = !procedure.isActive;
+                        setProcedure({ ...procedure });
+                    }}
+                />
+            </TableData>
+            <TableData>
+                <Checkbox
+                    disabled={!isEditing}
+                    checked={procedure.isForMultisportCard}
+                    onClick={() => {
+                        procedure.isForMultisportCard = !procedure.isForMultisportCard;
+                        setProcedure({ ...procedure });
+                    }}
+                />
+            </TableData>
+            <TableData>
+                {isEditing ? (
+                    <ImageButton
                         onClick={() => {
-                            procedure.isForMultisportCard = !procedure.isForMultisportCard;
-                            setProcedure({ ...procedure });
+                            setIsEditing(false);
+                            updateProcedure(procedure);
                         }}
-                    />
-                </TableData>
-                <TableData>
-                    {isEditing ? (
-                        <ToolTip text='Ulozit zmeny'>
-                            <ImageButton
-                                onClick={() => {
-                                    setIsEditing(false);
-                                    updateProcedure(procedure);
-                                }}
-                            >
-                                <Icon size='lg' icon='save' color={'#0063ff'} />
-                            </ImageButton>
-                        </ToolTip>
-                    ) : (
-                        <ToolTip text='Editovat'>
-                            <ImageButton onClick={() => setIsEditing(true)}>
-                                <Icon size='lg' icon='edit' color={'#0063ff'} />
-                            </ImageButton>
-                        </ToolTip>
-                    )}
-                    {isEditing ? (
-                        <ToolTip text='Zrusit editovanie'>
-                            <ImageButton
-                                onClick={() => {
-                                    setIsEditing(false);
-                                    setProcedure({ ...props.procedure });
-                                }}
-                            >
-                                <Icon size='lg' icon='window-close' color={'#d32f2f'} />
-                            </ImageButton>
-                        </ToolTip>
-                    ) : (
-                        <ToolTip text='Vymazat klienta'>
-                            <ImageButton
-                                onClick={() => {
-                                    if (window.confirm(`Chcete vymazat klienta ${procedure.name}`)) {
-                                        deleteProcedure(procedure);
-                                    }
-                                }}
-                            >
-                                <Icon size='lg' icon='trash' color={'#d32f2f'} />
-                            </ImageButton>
-                        </ToolTip>
-                    )}
-                </TableData>
-            </TableRow>
-        </React.Fragment>
+                    >
+                        <Icon size='lg' icon='save' color={'#0063ff'} />
+                    </ImageButton>
+                ) : (
+                    <ImageButton onClick={() => setIsEditing(true)}>
+                        <Icon size='lg' icon='edit' color={'#0063ff'} />
+                    </ImageButton>
+                )}
+                {isEditing ? (
+                    <ImageButton
+                        onClick={() => {
+                            setIsEditing(false);
+                            setProcedure({ ...props.procedure });
+                        }}
+                    >
+                        <Icon size='lg' icon='window-close' color={'#d32f2f'} />
+                    </ImageButton>
+                ) : (
+                    <ImageButton
+                        onClick={() => {
+                            if (window.confirm(`Chcete vymazat klienta ${procedure.name}`)) {
+                                deleteProcedure(procedure);
+                            }
+                        }}
+                    >
+                        <Icon size='lg' icon='trash' color={'#d32f2f'} />
+                    </ImageButton>
+                )}
+            </TableData>
+        </TableRow>
     );
 }
 
