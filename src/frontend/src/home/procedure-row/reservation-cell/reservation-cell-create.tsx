@@ -4,49 +4,55 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { ClientsContext } from 'home/home';
 import { Client } from 'client-management/client-management';
-import { Reservation } from 'home/procedure-row/procedure-row';
+import { Procedure } from 'procedures-management/procedures-management';
 
 export interface Props {
-    reservation: Reservation;
-    saveReservation: (reservation: Reservation) => void;
-    cancelEdit: () => void;
+    startTime: Date;
+    endTime: Date;
+    procedure: Procedure;
+    createReservation: (orderReservation: OrderReservation) => void;
+}
+
+export interface OrderReservation {
+    start_time: Date;
+    end_time: Date;
+    note: string;
+    client_id: number;
+    machine_id: number;
 }
 
 const dateOptions = { hour: '2-digit', minute: '2-digit' };
 
-function ReservationCellEdit(props: Props) {
-    const { reservation, saveReservation, cancelEdit } = props;
-    const [client, setClient] = useState(reservation.client);
-    const [note, setNote] = useState(reservation.note);
+function ReservationCellCreate(props: Props) {
+    const { startTime, endTime, procedure, createReservation } = props;
+    const [client, setClient] = useState(null);
+    const [note, setNote] = useState('');
     const clients = useContext(ClientsContext);
 
-    const canUpdate = reservation.note !== note || reservation.client.id !== client.id;
-
     const handleSubmit = () => {
-        if (reservation.note !== note) {
-            reservation.note = note;
-        }
+        const newReservation = {
+            note,
+            client_id: client.id,
+            machine_id: procedure.id,
+            start_time: startTime,
+            end_time: endTime,
+        } as OrderReservation;
 
-        if (reservation.client.id !== client.id) {
-            reservation.client = client;
-        }
-
-        saveReservation(reservation);
+        createReservation(newReservation);
     };
 
     return (
         <div>
             <h2>Vytvor objednavku</h2>
-            <h3>{`${reservation.startTime.toLocaleString('en-GB', dateOptions)} - ${reservation.endTime.toLocaleString(
+            <h3>{`${startTime.toLocaleString('en-GB', dateOptions)} - ${endTime.toLocaleString(
                 'en-GB',
                 dateOptions
             )}`}</h3>
-            <h3>{reservation.procedure.name}</h3>
+            <h3>{procedure.name}</h3>
             <form>
                 <div>
                     <span>Meno</span>
                     <Select
-                        value={{ value: client, label: client.name }}
                         options={clients.map(client => {
                             return {
                                 value: client,
@@ -62,7 +68,7 @@ function ReservationCellEdit(props: Props) {
                 </div>
                 <button
                     type='button'
-                    disabled={!canUpdate}
+                    disabled={client === null}
                     onClick={event => {
                         event.preventDefault();
                         handleSubmit();
@@ -71,13 +77,9 @@ function ReservationCellEdit(props: Props) {
                     Ulozit
                     <FontAwesomeIcon icon='save' />
                 </button>
-                <button type='reset' onClick={cancelEdit}>
-                    Cancel
-                    <FontAwesomeIcon icon='window-close' />
-                </button>
             </form>
         </div>
     );
 }
 
-export default ReservationCellEdit;
+export default ReservationCellCreate;

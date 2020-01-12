@@ -26,7 +26,7 @@ class UpdateOrder extends FormRequest
     public function rules(): array
     {
         return [
-            'note' => ['sometimes', 'string'],
+            'note' => ['nullable', 'string'],
             'client_id' => ['sometimes', 'integer'],
             'machine_id' => ['sometimes', 'integer'],
             'start_time' => ['sometimes', 'date_format:d/m/Y H:i'],

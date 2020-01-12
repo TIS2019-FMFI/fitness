@@ -1,10 +1,43 @@
 import React from 'react';
 import styled from 'styled-components';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import {
+    fas,
+    faHistory,
+    faDumbbell,
+    faEdit,
+    faTrash,
+    faSave,
+    faWindowClose,
+    faPlusCircle,
+    faBars,
+    faCommentDots,
+    faCheckCircle,
+} from '@fortawesome/free-solid-svg-icons';
+import { faUser, faBookmark, faCircle } from '@fortawesome/free-regular-svg-icons';
 
 import Navigation from './navigation/navigation';
-import UserManagement from './user-management/user-management';
+import ClientManagement from './client-management/client-management';
 import Home from './home/home';
+import Procedures from './procedures-management/procedures-management';
+
+library.add(
+    fas,
+    faUser,
+    faHistory,
+    faBookmark,
+    faDumbbell,
+    faEdit,
+    faTrash,
+    faSave,
+    faWindowClose,
+    faPlusCircle,
+    faBars,
+    faCommentDots,
+    faCheckCircle,
+    faCircle
+);
 
 function App() {
     return (
@@ -14,13 +47,13 @@ function App() {
                 <Switch>
                     <MainContent>
                         <Route path='/klienty'>
-                            <UserManagement />
+                            <ClientManagement />
                         </Route>
                         <Route path='/rezervacie'>
                             <Home />
                         </Route>
                         <Route path='/procedury'>
-                            <p>procedures</p>
+                            <Procedures />
                         </Route>
                         <Route path='/historia'>
                             <p>history</p>

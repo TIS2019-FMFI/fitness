@@ -1,11 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-
-import proceduresImage from 'images/procedures.svg';
-import inboxImage from 'images/inbox.svg';
-import historyImage from 'images/history.svg';
-import peopleOutlinedImage from 'images/people_outline.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import './styles.css';
 
@@ -20,25 +16,25 @@ class Navigation extends React.PureComponent<Props> {
             <NavigationContainer>
                 <StyledLink to='/rezervacie' isActive={'/rezervacie' === path}>
                     <LinkDiv>
-                        <LinkImage src={inboxImage} />
+                        <LinkImage icon={'/rezervacie' === path ? 'bookmark' : ['far', 'bookmark']} />
                         <LinkText>Rezervacie</LinkText>
                     </LinkDiv>
                 </StyledLink>
                 <StyledLink to='/historia' isActive={'/historia' === path}>
                     <LinkDiv>
-                        <LinkImage src={historyImage} />
+                        <LinkImage icon={'history'} />
                         <LinkText>Historia objednavok</LinkText>
                     </LinkDiv>
                 </StyledLink>
                 <StyledLink to='/klienty' isActive={'/klienty' === path}>
                     <LinkDiv>
-                        <LinkImage src={peopleOutlinedImage} />
+                        <LinkImage icon={'/klienty' === path ? 'user' : ['far', 'user']} />
                         <LinkText>Sprava klientov</LinkText>
                     </LinkDiv>
                 </StyledLink>
                 <StyledLink to='/procedury' isActive={'/procedury' === path}>
                     <LinkDiv>
-                        <LinkImage src={proceduresImage} />
+                        <LinkImage icon={'dumbbell'} />
                         <LinkText>Stroje a procedury</LinkText>
                     </LinkDiv>
                 </StyledLink>
@@ -78,8 +74,9 @@ const LinkDiv = styled.div`
     display: flex;
 `;
 
-const LinkImage = styled.img`
+const LinkImage = styled(FontAwesomeIcon)`
     margin: 0 10px;
+    padding: 2px;
 `;
 
 const LinkText = styled.span`
