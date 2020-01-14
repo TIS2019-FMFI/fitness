@@ -188,6 +188,8 @@ const HeaderText = styled.span`
 
 const Table = styled.table`
     margin: 20px 0 20px 40px;
+    min-width: 90%;
+    text-align: left;
 
     border-top: 1px solid #d5dee3;
     border-collapse: collapse;
@@ -195,12 +197,15 @@ const Table = styled.table`
 
 export const TableRow = styled.tr`
     border-bottom: 1px solid #d5dee3;
+    height: 50px;
+    text-align: left;
 `;
 
 const TableDataHeader = styled.th<{ hideOnMobile?: boolean }>`
     padding: 6px;
+    text-align: left;
 
-    @media (max-width: 100rem) {
+    @media (max-width: 1020px) {
         display: ${props => (props.hideOnMobile ? 'none' : 'table-cell')};
     }
 `;

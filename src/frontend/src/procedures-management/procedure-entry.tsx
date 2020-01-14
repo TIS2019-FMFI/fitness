@@ -99,7 +99,7 @@ const TableData = styled.td<{ width?: string; align?: string; hideOnMobile?: boo
     max-width: ${props => (props.width ? props.width : 'unset')};
     padding: 10px;
 
-    text-align: ${props => (props.align ? props.align : 'center')};
+    text-align: ${props => (props.align ? props.align : 'left')};
 
     @media (max-width: 100rem) {
         display: ${props => (props.hideOnMobile ? 'none' : 'table-cell')};
