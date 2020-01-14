@@ -69,7 +69,7 @@ function App() {
 }
 
 const Container = styled.div`
-    height: 100%;
+    min-height: 100%;
     display: flex;
     flex-flow: row;
     background-color: #f4f5f9;
