@@ -36,7 +36,7 @@ function ReservationCellEdit(props: Props) {
 
     return (
         <div>
-            <h2>Vytvor objednavku</h2>
+            <h2>Vytváranie objednávky</h2>
             <h3>{`${reservation.startTime.toLocaleString('en-GB', dateOptions)} - ${reservation.endTime.toLocaleString(
                 'en-GB',
                 dateOptions
@@ -57,7 +57,7 @@ function ReservationCellEdit(props: Props) {
                     />
                 </div>
                 <div>
-                    <label htmlFor='note'>Poznamka</label>
+                    <label htmlFor='note'>Poznámka</label>
                     <input type='text' value={note} onChange={event => setNote(event.target.value)} />
                 </div>
                 <button
@@ -68,11 +68,11 @@ function ReservationCellEdit(props: Props) {
                         handleSubmit();
                     }}
                 >
-                    Ulozit
+                    Uložiť
                     <FontAwesomeIcon icon='save' />
                 </button>
                 <button type='reset' onClick={cancelEdit}>
-                    Cancel
+                    Zrušiť
                     <FontAwesomeIcon icon='window-close' />
                 </button>
             </form>

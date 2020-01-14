@@ -31,7 +31,7 @@ function ClientManagement() {
     const [clients, setClients] = useState([]);
 
     if (match === null || matchedNumber !== page) {
-        history.push(`/klienty?page=${page}`);
+        history.push(`/klienti?page=${page}`);
     }
 
     useEffect(() => {
@@ -58,7 +58,7 @@ function ClientManagement() {
                 setMaxPage(res.data.lastPage);
             })
             .catch((error: any) => {
-                window.alert('Error v nacitavany zakaznikov');
+                window.alert('Nastala chyba pri načitávaní klientov');
                 console.log(error);
             });
     }
@@ -86,14 +86,14 @@ function ClientManagement() {
                 fetchClients(page);
             })
             .catch((error: any) => {
-                window.alert('Error pri mazany zakaznika');
+                window.alert('Nastala chyba pri vymazávaní klienta');
                 console.log(error);
             });
     }
 
     function changePage(newPage: number) {
         setPage(newPage);
-        history.push(`/klienty?page=${page}`);
+        history.push(`/klienti?page=${page}`);
         fetchClients(newPage);
     }
 
@@ -101,18 +101,18 @@ function ClientManagement() {
         <Wrapper>
             <Header>
                 <Icon icon='bars' color='#0063ff' />
-                <HeaderText>Sprava klientov</HeaderText>
+                <HeaderText>Správa klientov</HeaderText>
             </Header>
             <Table>
                 <tbody>
                     <TableRow>
                         <TableDataHeader hideOnMobile={true}>ID</TableDataHeader>
                         <TableDataHeader>Meno a priezvisko</TableDataHeader>
-                        <TableDataHeader>Telefonne cislo</TableDataHeader>
-                        <TableDataHeader hideOnMobile={true}>Aktivny</TableDataHeader>
+                        <TableDataHeader>Telefónne číslo</TableDataHeader>
+                        <TableDataHeader hideOnMobile={true}>Aktívny</TableDataHeader>
                         <TableDataHeader hideOnMobile={true}>Multisport</TableDataHeader>
                         <TableDataHeader hideOnMobile={true}>GDPR</TableDataHeader>
-                        <TableDataHeader hideOnMobile={true}>Poznamka</TableDataHeader>
+                        <TableDataHeader hideOnMobile={true}>Poznámka</TableDataHeader>
                         <TableDataHeader hideOnMobile={true}></TableDataHeader>
                     </TableRow>
                     {clients.map(client => (

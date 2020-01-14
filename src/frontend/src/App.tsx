@@ -46,7 +46,7 @@ function App() {
                 <Route>{({ location }) => <Navigation path={location.pathname} />}</Route>
                 <Switch>
                     <MainContent>
-                        <Route path='/klienty'>
+                        <Route path='/klienti'>
                             <ClientManagement />
                         </Route>
                         <Route path='/rezervacie'>

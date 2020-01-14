@@ -17,25 +17,25 @@ class Navigation extends React.PureComponent<Props> {
                 <StyledLink to='/rezervacie' isActive={'/rezervacie' === path}>
                     <LinkDiv>
                         <LinkImage icon={'/rezervacie' === path ? 'bookmark' : ['far', 'bookmark']} />
-                        <LinkText>Rezervacie</LinkText>
+                        <LinkText>Rezervácie</LinkText>
                     </LinkDiv>
                 </StyledLink>
                 <StyledLink to='/historia' isActive={'/historia' === path}>
                     <LinkDiv>
                         <LinkImage icon={'history'} />
-                        <LinkText>Historia objednavok</LinkText>
+                        <LinkText>História objednávok</LinkText>
                     </LinkDiv>
                 </StyledLink>
-                <StyledLink to='/klienty' isActive={'/klienty' === path}>
+                <StyledLink to='/klienti' isActive={'/klienti' === path}>
                     <LinkDiv>
-                        <LinkImage icon={'/klienty' === path ? 'user' : ['far', 'user']} />
-                        <LinkText>Sprava klientov</LinkText>
+                        <LinkImage icon={'/klienti' === path ? 'user' : ['far', 'user']} />
+                        <LinkText>Správa klientov</LinkText>
                     </LinkDiv>
                 </StyledLink>
                 <StyledLink to='/procedury' isActive={'/procedury' === path}>
                     <LinkDiv>
                         <LinkImage icon={'dumbbell'} />
-                        <LinkText>Stroje a procedury</LinkText>
+                        <LinkText>Stroje a procedúry</LinkText>
                     </LinkDiv>
                 </StyledLink>
             </NavigationContainer>

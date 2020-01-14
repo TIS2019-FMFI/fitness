@@ -46,7 +46,7 @@ function fetchAllClients(setAllClients: (clients: Client[]) => void) {
         })
         .catch(error => {
             console.error(error);
-            window.alert('Error pri nacitavany pouzivateov');
+            window.alert('Nastala chyba pri načitávaní klientov');
         });
 }
 
@@ -140,7 +140,7 @@ function Home() {
                 fetchOrders(reservationTimes[0], endTime, setOrders);
             })
             .catch(error => {
-                window.alert('Order failed');
+                window.alert('Aktualozácia objednávky zlyhala');
                 console.error(error);
             });
     }
@@ -172,7 +172,7 @@ function Home() {
                 fetchOrders(reservationTimes[0], endTime, setOrders);
             })
             .catch(error => {
-                window.alert('Order failed');
+                window.alert('Vytváranie objednávky zlyhalo');
                 console.error(error);
             });
     }
@@ -184,7 +184,7 @@ function Home() {
                 fetchOrders(reservationTimes[0], endTime, setOrders);
             })
             .catch((error: any) => {
-                window.alert('Error pri mazany rezervacie');
+                window.alert('Nastala chyba pri vymazávaní rezervácie');
                 console.log(error);
             });
     }
