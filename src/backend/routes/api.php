@@ -17,8 +17,10 @@ Route::prefix('v1')->namespace('Api\v1')->group(static function () {
 
     Route::post('user/login', 'UserController@login');
     Route::post('user/register', 'UserController@register');
+    Route::get('orders-time-public', 'AvailabilityController@ordersTime');
+    Route::get('machines-and-procedures-public', 'AvailabilityController@machinesAndProcedures');
 
-    Route::middleware(['jwt.auth'])->group(function (){
+    Route::middleware(['jwt.auth'])->group(function () {
         Route::prefix('clients')->group(static function() {
             Route::get('/',                                     'ClientsController@index');
             Route::get('/history',                              'ClientsController@history');
@@ -42,7 +44,6 @@ Route::prefix('v1')->namespace('Api\v1')->group(static function () {
             Route::post('/{orderId}',                           'OrdersController@update')->name('update');
             Route::delete('{orderId}',                          'OrdersController@destroy')->name('destroy');
             Route::get('/findOrder/{query?}',                   'OrdersController@findOrder')->name('findOrder');
-
         });
     });
 });
