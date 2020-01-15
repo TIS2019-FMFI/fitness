@@ -21,6 +21,7 @@ import Navigation from './navigation/navigation';
 import ClientManagement from './client-management/client-management';
 import Home from './home/home';
 import Procedures from './procedures-management/procedures-management';
+import History from './history/history-clients';
 
 library.add(
     fas,
@@ -56,7 +57,7 @@ function App() {
                             <Procedures />
                         </Route>
                         <Route path='/historia'>
-                            <p>history</p>
+                            <History />
                         </Route>
                         <Route exact={true} path='/'>
                             <p>Main</p>
