@@ -4,8 +4,6 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Input } from 'reactstrap';
 
-import ToolTip from 'ui/tool-tip/tool-tip';
-
 import { TableRow, Client } from '../client-management';
 import Checkbox from './checkbox';
 
@@ -92,46 +90,38 @@ function ClientEntry(props: Props) {
                 </TableData>
                 <TableData hideOnMobile={true}>
                     {isEditing ? (
-                        <ToolTip text='Ulozit zmeny'>
-                            <ImageButton
-                                onClick={() => {
-                                    setIsEditing(false);
-                                    updateClient(client);
-                                }}
-                            >
-                                <Icon size='lg' icon='save' color={'#0063ff'} />
-                            </ImageButton>
-                        </ToolTip>
+                        <ImageButton
+                            onClick={() => {
+                                setIsEditing(false);
+                                updateClient(client);
+                            }}
+                        >
+                            <Icon size='lg' icon='save' color={'#0063ff'} />
+                        </ImageButton>
                     ) : (
-                        <ToolTip text='Editovat'>
-                            <ImageButton onClick={() => setIsEditing(true)}>
-                                <Icon size='lg' icon='edit' color={'#0063ff'} />
-                            </ImageButton>
-                        </ToolTip>
+                        <ImageButton onClick={() => setIsEditing(true)}>
+                            <Icon size='lg' icon='edit' color={'#0063ff'} />
+                        </ImageButton>
                     )}
                     {isEditing ? (
-                        <ToolTip text='Zrusit editovanie'>
-                            <ImageButton
-                                onClick={() => {
-                                    setIsEditing(false);
-                                    setClient({ ...props.client });
-                                }}
-                            >
-                                <Icon size='lg' icon='window-close' color={'#d32f2f'} />
-                            </ImageButton>
-                        </ToolTip>
+                        <ImageButton
+                            onClick={() => {
+                                setIsEditing(false);
+                                setClient({ ...props.client });
+                            }}
+                        >
+                            <Icon size='lg' icon='window-close' color={'#d32f2f'} />
+                        </ImageButton>
                     ) : (
-                        <ToolTip text='Vymazat klienta'>
-                            <ImageButton
-                                onClick={() => {
-                                    if (window.confirm(`Chcete vymazat klienta ${client.name}`)) {
-                                        deleteClient(client);
-                                    }
-                                }}
-                            >
-                                <Icon size='lg' icon='trash' color={'#d32f2f'} />
-                            </ImageButton>
-                        </ToolTip>
+                        <ImageButton
+                            onClick={() => {
+                                if (window.confirm(`Chcete vymazat klienta ${client.name}`)) {
+                                    deleteClient(client);
+                                }
+                            }}
+                        >
+                            <Icon size='lg' icon='trash' color={'#d32f2f'} />
+                        </ImageButton>
                     )}
                 </TableData>
             </TableRow>

@@ -1,129 +1,89 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-//import leftArrowImage from '/images/left_arrow.svg';
-//import rightArrowImage from '/images/right_arrow.svg';
+import HistoryEntry from './history-entry';
 
-import ClientEntry from './client-entry/client-entry';
-import { TokenContext } from '../App';
-
-export interface Client {
+export interface ClientHistory {
     id: number;
-    note: string;
     name: string;
-    phone: string;
-    isActive: boolean;
-    hasMultisportCard: boolean;
-    isGDPR: boolean;
+    start: string;
+    end: string;
 }
 
 const PER_PAGE = 10;
 
-function ClientManagement() {
+function ClientHistory() {
     const location = useLocation();
     const history = useHistory();
     const [maxPage, setMaxPage] = useState(999);
     const match = location.search.match(/page=([0-9]+)/);
     const matchedNumber = (match && match.length > 1 && Number(match[1])) || null;
     const [page, setPage] = useState(matchedNumber > 0 && matchedNumber <= maxPage ? matchedNumber : 1);
-    const [clients, setClients] = useState([]);
-    const token = useContext(TokenContext);
+    const [clientHistory, setClientHistory] = useState([]);
+    const [site] = useState('people');
 
     if (match === null || matchedNumber !== page) {
-        history.push(`/klienty?page=${page}`);
+        history.push(`/historia/clients?page=${page}`);
     }
 
     useEffect(() => {
-        fetchClients(page);
+        fetchClientHistory(page);
     }, [page]);
 
-    async function fetchClients(page: number) {
+    async function fetchClientHistory(page: number) {
         axios
-            .get(`http://localhost/api/v1/clients?orderBy=id&token=${token}&page=${page}&perPage=${PER_PAGE}`)
+            .get(`http://localhost/api/v1/clients/history?orderBy=id&page=${page}&perPage=${PER_PAGE}`)
             .then(res => {
-                setClients(
+                setClientHistory(
                     res.data.items.map((object: any) => {
                         return {
                             id: object.id,
-                            note: object.note,
                             name: `${object.first_name} ${object.last_name}`,
-                            phone: object.phone,
-                            isActive: object.active,
-                            hasMultisportCard: object.has_multisport_card,
-                            isGDPR: object.is_gdpr,
+                            start: object.start_time,
+                            end: object.end_time,
                         };
                     })
                 );
                 setMaxPage(res.data.lastPage);
             })
             .catch((error: any) => {
-                window.alert('Error v nacitavany zakaznikov');
-                console.log(error);
-            });
-    }
-
-    async function updateClient(client: Client) {
-        axios
-            .post(`http://localhost/api/v1/clients/${client.id}&token=${token}`, {
-                first_name: client.name.split(' ')[0],
-                last_name: client.name.split(' ')[1],
-                phone: client.phone,
-                active: client.isActive,
-                has_multisport_card: client.hasMultisportCard,
-                note: client.note,
-                is_gdpr: client.isGDPR,
-            })
-            .then(() => {
-                fetchClients(page);
-            });
-    }
-
-    async function deleteClient(client: Client) {
-        axios
-            .delete(`http://localhost/api/v1/clients/${client.id}&token=${token}`)
-            .then(() => {
-                fetchClients(page);
-            })
-            .catch((error: any) => {
-                window.alert('Error pri mazany zakaznika');
+                window.alert('Error v nacitavani historie');
                 console.log(error);
             });
     }
 
     function changePage(newPage: number) {
         setPage(newPage);
-        history.push(`/klienty?page=${page}`);
-        fetchClients(newPage);
+        history.push(`/historia/clients?page=${page}`);
+        fetchClientHistory(newPage);
     }
 
     return (
         <Wrapper>
+            <StyledLink to='/historia/clients' isActive={'people' === site}>
+                Ludia
+            </StyledLink>
+            <StyledLink to='/historia/machines' isActive={'machines' === site}>
+                Stroje
+            </StyledLink>
             <Header>
-                <Icon size='3x' icon='bars' color='#0063ff' />
-                <HeaderText>Sprava klientov</HeaderText>
+                <Icon icon='bars' color='#0063ff' />
+                <HeaderText>Historia objednavok</HeaderText>
             </Header>
             <Table>
                 <tbody>
                     <TableRow>
-                        <TableDataHeader hideOnMobile={true}>ID</TableDataHeader>
+                        <TableDataHeader>ID</TableDataHeader>
                         <TableDataHeader>Meno a priezvisko</TableDataHeader>
-                        <TableDataHeader>Telefonne cislo</TableDataHeader>
-                        <TableDataHeader hideOnMobile={true}>Aktivny</TableDataHeader>
-                        <TableDataHeader hideOnMobile={true}>Multisport</TableDataHeader>
-                        <TableDataHeader hideOnMobile={true}>GDPR</TableDataHeader>
-                        <TableDataHeader hideOnMobile={true}>Poznamka</TableDataHeader>
-                        <TableDataHeader hideOnMobile={true}></TableDataHeader>
+                        <TableDataHeader>Zaciatok</TableDataHeader>
+                        <TableDataHeader>Koniec</TableDataHeader>
                     </TableRow>
-                    {clients.map(client => (
-                        <ClientEntry
-                            key={client.id}
-                            client={client}
-                            updateClient={updateClient}
-                            deleteClient={deleteClient}
-                        />
+                    {clientHistory.map(ClientHistory => (
+                        <HistoryEntry key={ClientHistory.id} clientHistory={ClientHistory} />
                     ))}
                 </tbody>
             </Table>
@@ -161,6 +121,16 @@ function ClientManagement() {
         </Wrapper>
     );
 }
+
+const StyledLink = styled(Link)<{ isActive: boolean }>`
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    text-decoration: none;
+
+    color: ${props => (props.isActive ? '#f4f5f9' : '#0063ff')};
+    background-color: ${props => (props.isActive ? '#0063ff' : 'white')};
+`;
 
 const Wrapper = styled.div`
     margin-top: 80px;
@@ -200,7 +170,9 @@ export const TableRow = styled.tr`
 `;
 
 const TableDataHeader = styled.th<{ hideOnMobile?: boolean }>`
-    padding: 6px;
+    padding: 10px;
+    padding-left: 25px;
+    padding-right: 25px;
 
     @media (max-width: 100rem) {
         display: ${props => (props.hideOnMobile ? 'none' : 'table-cell')};
@@ -226,4 +198,4 @@ const PagingButton = styled.button<{ selected?: boolean }>`
     align-items: center;
 `;
 
-export default ClientManagement;
+export default ClientHistory;

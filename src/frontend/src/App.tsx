@@ -20,6 +20,9 @@ import { faUser, faBookmark, faCircle } from '@fortawesome/free-regular-svg-icon
 import Navigation from './navigation/navigation';
 import ClientManagement from './client-management/client-management';
 import Home from './home/home';
+import Procedures from './procedures-management/procedures-management';
+import HistoryC from './history/history-clients';
+import HistoryM from './history/history-machines';
 
 library.add(
     fas,
@@ -56,10 +59,13 @@ function App(props: Props) {
                                 <ClientManagement />
                             </Route>
                             <Route path='/procedury'>
-                                <p>procedures</p>
+                                <Procedures />
                             </Route>
-                            <Route path='/historia'>
-                                <p>history</p>
+                            <Route path='/historia/machines'>
+                                <HistoryM />
+                            </Route>
+                            <Route path='/historia/clients'>
+                                <HistoryC />
                             </Route>
                             <Route exact path='/'>
                                 <Home isPublic={false} />
