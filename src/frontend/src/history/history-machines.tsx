@@ -16,7 +16,7 @@ export interface ClientHistory {
 
 const PER_PAGE = 10;
 
-function ClientHistory() {
+function ClientHistory2() {
     const location = useLocation();
     const history = useHistory();
     const [maxPage, setMaxPage] = useState(999);
@@ -24,10 +24,10 @@ function ClientHistory() {
     const matchedNumber = (match && match.length > 1 && Number(match[1])) || null;
     const [page, setPage] = useState(matchedNumber > 0 && matchedNumber <= maxPage ? matchedNumber : 1);
     const [clientHistory, setClientHistory] = useState([]);
-    const [site] = useState('people');
+    const [site] = useState('machines');
 
     if (match === null || matchedNumber !== page) {
-        history.push(`/historia/clients?page=${page}`);
+        history.push(`/historia/machines?page=${page}`);
     }
 
     useEffect(() => {
@@ -36,13 +36,13 @@ function ClientHistory() {
 
     async function fetchClientHistory(page: number) {
         axios
-            .get(`http://localhost/api/v1/clients/history?orderBy=id&page=${page}&perPage=${PER_PAGE}`)
+            .get(`http://localhost/api/v1/machines-and-procedures/history?orderBy=id&page=${page}&perPage=${PER_PAGE}`)
             .then(res => {
                 setClientHistory(
                     res.data.items.map((object: any) => {
                         return {
                             id: object.id,
-                            name: `${object.first_name} ${object.last_name}`,
+                            name: object.name,
                             start: object.start_time,
                             end: object.end_time,
                         };
@@ -58,7 +58,7 @@ function ClientHistory() {
 
     function changePage(newPage: number) {
         setPage(newPage);
-        history.push(`/historia/clients?page=${page}`);
+        history.push(`/historia/machines?page=${page}`);
         fetchClientHistory(newPage);
     }
 
@@ -78,7 +78,7 @@ function ClientHistory() {
                 <tbody>
                     <TableRow>
                         <TableDataHeader>ID</TableDataHeader>
-                        <TableDataHeader>Meno a priezvisko</TableDataHeader>
+                        <TableDataHeader>Nazov</TableDataHeader>
                         <TableDataHeader>Zaciatok</TableDataHeader>
                         <TableDataHeader>Koniec</TableDataHeader>
                     </TableRow>
@@ -198,4 +198,4 @@ const PagingButton = styled.button<{ selected?: boolean }>`
     align-items: center;
 `;
 
-export default ClientHistory;
+export default ClientHistory2;

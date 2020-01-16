@@ -20,7 +20,10 @@ class Navigation extends React.PureComponent<Props> {
                         <LinkText>Rezervacie</LinkText>
                     </LinkDiv>
                 </StyledLink>
-                <StyledLink to='/historia' isActive={'/historia' === path}>
+                <StyledLink
+                    to='/historia/machines'
+                    isActive={'/historia/clients' === path || '/historia/machines' === path}
+                >
                     <LinkDiv>
                         <LinkImage icon={'history'} />
                         <LinkText>Historia objednavok</LinkText>
