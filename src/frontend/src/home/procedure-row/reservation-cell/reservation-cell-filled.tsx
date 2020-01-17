@@ -1,11 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import editIcon from 'images/edit.svg';
-import deleteIcon from 'images/delete.svg';
 import { Reservation } from 'home/procedure-row/procedure-row';
-
-import { CellWrapper } from './reservation-cell';
 
 export interface Props {
     reservation: Reservation;
@@ -17,44 +14,52 @@ function ReservationCellFilled(props: Props) {
     const { reservation, editReservation, deleteReservation } = props;
 
     return (
-        <CellWrapper>
-            <CellBody>
-                <ClientName>{reservation.client.name}</ClientName>
-                {reservation.note !== '' ? <Note>{reservation.note}</Note> : null}
+        <CellBody>
+            <ClientName>{reservation.client.name}</ClientName>
+            <BottomDiv>
                 <ButtonsDiv>
-                    <img onClick={editReservation} src={editIcon} />
-                    <img onClick={deleteReservation} src={deleteIcon} />
+                    <Icon onClick={editReservation} icon='edit' color={'#0063ff'} />
+                    <Icon onClick={deleteReservation} icon='trash' color={'#d32f2f'} />
                 </ButtonsDiv>
-            </CellBody>
-        </CellWrapper>
+                {reservation.note ? <Icon icon='comment-dots' color={'#0063ff'} /> : null}
+            </BottomDiv>
+        </CellBody>
     );
 }
 
 export const CellBody = styled.div`
     height: 100%;
-    width: 100%;
-    margin: 2px;
+    width: auto;
+    margin: 4px;
+    padding: 5px;
 
     display: flex;
     position: relative;
     flex-flow: column;
+    justify-content: space-between;
+
+    border-radius: 5px;
     background: white;
-    box-shadow: 1px 4px #888888;
 `;
 
-export const ClientName = styled.p`
+const ClientName = styled.p`
     text-align: center;
     margin: 0;
 `;
 
-export const Note = styled.p`
-    margin: 0;
+const BottomDiv = styled.div`
+    display: flex;
+    flex-flow: row-reverse;
+    justify-content: space-between;
 `;
 
-export const ButtonsDiv = styled.div`
-    position: absolute;
-    bottom: 0;
+const ButtonsDiv = styled.div`
     align-self: flex-end;
+`;
+
+const Icon = styled(FontAwesomeIcon)<{ color: string }>`
+    margin: 2px;
+    color: ${props => props.color};
 `;
 
 export default ReservationCellFilled;
