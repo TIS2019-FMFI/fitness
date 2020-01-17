@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use JWTAuth;
 use JWTAuthException;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 
 class UserController extends Controller
@@ -56,7 +57,8 @@ class UserController extends Controller
                     'id' => $user->id,
                     'auth_token' => $user->auth_token,
                     'name' => $user->name,
-                    'email' => $user->email
+                    'email' => $user->email,
+                    'expires_in' => auth('api')->factory()->getTTL() * 60
                 ]
             ];
         } else {
@@ -100,7 +102,8 @@ class UserController extends Controller
                     'name' => $user->name,
                     'id' => $user->id,
                     'email' => $request->email,
-                    'auth_token' => $token
+                    'auth_token' => $token,
+                    'expires_in' => auth('api')->factory()->getTTL() * 60
                 ]
             ];
         }
