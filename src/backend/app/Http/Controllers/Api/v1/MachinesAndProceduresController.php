@@ -8,6 +8,7 @@ use App\Http\Requests\Api\v1\MachinesAndProcedure\IndexMachinesAndProcedure;
 use App\Http\Requests\Api\v1\MachinesAndProcedure\StoreMachinesAndProcedure;
 use App\Http\Requests\Api\v1\MachinesAndProcedure\UpdateMachinesAndProcedure;
 use App\Models\MachinesAndProcedure;
+use App\Services\Api\v1\PaginationService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 
@@ -21,33 +22,24 @@ class MachinesAndProceduresController extends Controller
      * @return JsonResponse
      */
     public function index(IndexMachinesAndProcedure $request): JsonResponse {
-        $orderDirection = 'asc';
-        $perPage = 10;
-        $page = 1;
-        $orderBy = 'id';
+        $paginationData = app(PaginationService::class)->getPagination($request);
 
-        if($request->has('orderDirection')){
-            $orderDirection = $request->orderDirection;
-        }
-
-        if($request->has('perPage')) {
-            $perPage = $request->perPage;
-        }
-
-        if($request->has('page')){
-            $page = $request->page;
-        }
-
-        if($request->has('orderBy')){
-            $orderBy = $request->orderBy;
-        }
-
-        $machinesAndProcedures = MachinesAndProcedure::orderBy($orderBy, $orderDirection)
-            ->offset(($perPage * $page) - $perPage)
-            ->limit($perPage)
+        $machinesAndProcedures = MachinesAndProcedure::orderBy($paginationData['orderBy'], $paginationData['orderDirection'])
+            ->offset($paginationData['offset'])
+            ->limit($paginationData['perPage'])
             ->get();
 
-        return response()->json($machinesAndProcedures, 200);
+        $machinesAndProceduresCount = MachinesAndProcedure::count();
+
+        $data = [
+            'items' => $machinesAndProcedures,
+            'total' => $machinesAndProcedures->count(),
+            'perPage' => $paginationData['perPage'],
+            'currentPage' => $paginationData['page'],
+            'lastPage' => (int) ceil($machinesAndProceduresCount / $paginationData['perPage']),
+        ];
+
+        return response()->json($data, 200);
     }
 
     /**
@@ -57,12 +49,28 @@ class MachinesAndProceduresController extends Controller
      * @return JsonResponse
      */
     public function history(IndexMachinesAndProcedure $request): JsonResponse {
+        $paginationData = app(PaginationService::class)->getPagination($request);
+
         $orders = MachinesAndProcedure::join('orders', 'orders.machine_id', '=', 'machines_and_procedures.id')
             ->where("end_time", "<", Carbon::now())
             ->orderByDesc("end_time")
+            ->offset($paginationData['offset'])
+            ->limit($paginationData['perPage'])
             ->get();
 
-        return response()->json($orders, 200);
+        $ordersCount = MachinesAndProcedure::join('orders', 'orders.machine_id', '=', 'machines_and_procedures.id')
+            ->where("end_time", "<", Carbon::now())
+            ->count();
+
+        $data = [
+            'items' => $orders,
+            'total' => $orders->count(),
+            'perPage' => $paginationData['perPage'],
+            'currentPage' => $paginationData['page'],
+            'lastPage' => (int) ceil($ordersCount / $paginationData['perPage']),
+        ];
+
+        return response()->json($data, 200);
     }
 
     /**

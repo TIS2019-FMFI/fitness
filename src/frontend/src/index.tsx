@@ -1,14 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
+import { CookiesProvider } from 'react-cookie';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import './index.css';
-import App from './App';
+import Welcome from './welcome';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
     <BrowserRouter>
-        <App key={window.location.href} />
+        <CookiesProvider>
+            <Welcome />
+        </CookiesProvider>
     </BrowserRouter>,
     document.getElementById('root')
 );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -7,107 +7,122 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 //import leftArrowImage from '/images/left_arrow.svg';
 //import rightArrowImage from '/images/right_arrow.svg';
 
-import ProcedureEntry from './procedure-entry';
+import ClientEntry from './client-entry/client-entry';
+import { TokenContext } from '../App';
 
-export interface Procedure {
+export interface Client {
     id: number;
+    note: string;
     name: string;
+    phone: string;
     isActive: boolean;
-    isForMultisportCard: boolean;
+    hasMultisportCard: boolean;
+    isGDPR: boolean;
 }
 
 const PER_PAGE = 10;
 
-function ProcedureManagement() {
+function ClientManagement() {
     const location = useLocation();
     const history = useHistory();
     const [maxPage, setMaxPage] = useState(999);
     const match = location.search.match(/page=([0-9]+)/);
     const matchedNumber = (match && match.length > 1 && Number(match[1])) || null;
     const [page, setPage] = useState(matchedNumber > 0 && matchedNumber <= maxPage ? matchedNumber : 1);
-    const [procedures, setProcedures] = useState([]);
+    const [clients, setClients] = useState([]);
+    const token = useContext(TokenContext);
 
     if (match === null || matchedNumber !== page) {
-        history.push(`/procedury?page=${page}`);
+        history.push(`/klienty?page=${page}`);
     }
 
     useEffect(() => {
-        fetchProcedures(page);
+        fetchClients(page);
     }, [page]);
 
-    async function fetchProcedures(page: number) {
+    async function fetchClients(page: number) {
         axios
-            .get(`http://localhost/api/v1/machines-and-procedures?orderBy=id&page=${page}&perPage=${PER_PAGE}`)
+            .get(`http://localhost/api/v1/clients?orderBy=id&token=${token}&page=${page}&perPage=${PER_PAGE}`)
             .then(res => {
-                setProcedures(
+                setClients(
                     res.data.items.map((object: any) => {
                         return {
                             id: object.id,
-                            name: object.name,
+                            note: object.note,
+                            name: `${object.first_name} ${object.last_name}`,
+                            phone: object.phone,
                             isActive: object.active,
-                            isForMultisportCard: object.is_for_multisport_card,
+                            hasMultisportCard: object.has_multisport_card,
+                            isGDPR: object.is_gdpr,
                         };
                     })
                 );
                 setMaxPage(res.data.lastPage);
             })
             .catch((error: any) => {
-                window.alert('Error v nacitavani procedur');
+                window.alert('Error v nacitavany zakaznikov');
                 console.log(error);
             });
     }
 
-    async function updateProcedure(procedure: Procedure) {
+    async function updateClient(client: Client) {
         axios
-            .post(`http://localhost/api/v1/machines-and-procedures/${procedure.id}`, {
-                name: procedure.name,
-                active: procedure.isActive,
-                is_for_multisport_card: procedure.isForMultisportCard,
+            .post(`http://localhost/api/v1/clients/${client.id}&token=${token}`, {
+                first_name: client.name.split(' ')[0],
+                last_name: client.name.split(' ')[1],
+                phone: client.phone,
+                active: client.isActive,
+                has_multisport_card: client.hasMultisportCard,
+                note: client.note,
+                is_gdpr: client.isGDPR,
             })
             .then(() => {
-                fetchProcedures(page);
+                fetchClients(page);
             });
     }
 
-    async function deleteProcedure(procedure: Procedure) {
+    async function deleteClient(client: Client) {
         axios
-            .delete(`http://localhost/api/v1/machines-and-procedures/${procedure.id}`)
+            .delete(`http://localhost/api/v1/clients/${client.id}&token=${token}`)
             .then(() => {
-                fetchProcedures(page);
+                fetchClients(page);
             })
             .catch((error: any) => {
-                window.alert('Error pri mazani procedury');
+                window.alert('Error pri mazany zakaznika');
                 console.log(error);
             });
     }
 
     function changePage(newPage: number) {
         setPage(newPage);
-        history.push(`/procedury?page=${page}`);
-        fetchProcedures(newPage);
+        history.push(`/klienty?page=${page}`);
+        fetchClients(newPage);
     }
 
     return (
         <Wrapper>
             <Header>
-                <Icon icon='bars' color='#0063ff' />
-                <HeaderText>Stroje a procedury</HeaderText>
+                <Icon size='3x' icon='bars' color='#0063ff' />
+                <HeaderText>Sprava klientov</HeaderText>
             </Header>
             <Table>
                 <tbody>
                     <TableRow>
-                        <TableDataHeader>ID</TableDataHeader>
-                        <TableDataHeader>Nazov</TableDataHeader>
-                        <TableDataHeader>Aktivny</TableDataHeader>
-                        <TableDataHeader>Multisport</TableDataHeader>
-                        <TableDataHeader></TableDataHeader>
+                        <TableDataHeader hideOnMobile={true}>ID</TableDataHeader>
+                        <TableDataHeader>Meno a priezvisko</TableDataHeader>
+                        <TableDataHeader>Telefonne cislo</TableDataHeader>
+                        <TableDataHeader hideOnMobile={true}>Aktivny</TableDataHeader>
+                        <TableDataHeader hideOnMobile={true}>Multisport</TableDataHeader>
+                        <TableDataHeader hideOnMobile={true}>GDPR</TableDataHeader>
+                        <TableDataHeader hideOnMobile={true}>Poznamka</TableDataHeader>
+                        <TableDataHeader hideOnMobile={true}></TableDataHeader>
                     </TableRow>
-                    {procedures.map(procedure => (
-                        <ProcedureEntry
-                            key={procedure.id}
-                            procedure={procedure}
-                            updateProcedure={updateProcedure}
-                            deleteProcedure={deleteProcedure}
+                    {clients.map(client => (
+                        <ClientEntry
+                            key={client.id}
+                            client={client}
+                            updateClient={updateClient}
+                            deleteClient={deleteClient}
                         />
                     ))}
                 </tbody>
@@ -211,4 +226,4 @@ const PagingButton = styled.button<{ selected?: boolean }>`
     align-items: center;
 `;
 
-export default ProcedureManagement;
+export default ClientManagement;

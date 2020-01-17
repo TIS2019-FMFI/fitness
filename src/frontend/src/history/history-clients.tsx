@@ -2,113 +2,88 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-//import leftArrowImage from '/images/left_arrow.svg';
-//import rightArrowImage from '/images/right_arrow.svg';
+import HistoryEntry from './history-entry';
 
-import ProcedureEntry from './procedure-entry';
-
-export interface Procedure {
+export interface ClientHistory {
     id: number;
     name: string;
-    isActive: boolean;
-    isForMultisportCard: boolean;
+    start: string;
+    end: string;
 }
 
 const PER_PAGE = 10;
 
-function ProcedureManagement() {
+function ClientHistory() {
     const location = useLocation();
     const history = useHistory();
     const [maxPage, setMaxPage] = useState(999);
     const match = location.search.match(/page=([0-9]+)/);
     const matchedNumber = (match && match.length > 1 && Number(match[1])) || null;
     const [page, setPage] = useState(matchedNumber > 0 && matchedNumber <= maxPage ? matchedNumber : 1);
-    const [procedures, setProcedures] = useState([]);
+    const [clientHistory, setClientHistory] = useState([]);
+    const [site] = useState('people');
 
     if (match === null || matchedNumber !== page) {
-        history.push(`/procedury?page=${page}`);
+        history.push(`/historia/clients?page=${page}`);
     }
 
     useEffect(() => {
-        fetchProcedures(page);
+        fetchClientHistory(page);
     }, [page]);
 
-    async function fetchProcedures(page: number) {
+    async function fetchClientHistory(page: number) {
         axios
-            .get(`http://localhost/api/v1/machines-and-procedures?orderBy=id&page=${page}&perPage=${PER_PAGE}`)
+            .get(`http://localhost/api/v1/clients/history?orderBy=id&page=${page}&perPage=${PER_PAGE}`)
             .then(res => {
-                setProcedures(
+                setClientHistory(
                     res.data.items.map((object: any) => {
                         return {
                             id: object.id,
-                            name: object.name,
-                            isActive: object.active,
-                            isForMultisportCard: object.is_for_multisport_card,
+                            name: `${object.first_name} ${object.last_name}`,
+                            start: object.start_time,
+                            end: object.end_time,
                         };
                     })
                 );
                 setMaxPage(res.data.lastPage);
             })
             .catch((error: any) => {
-                window.alert('Error v nacitavani procedur');
-                console.log(error);
-            });
-    }
-
-    async function updateProcedure(procedure: Procedure) {
-        axios
-            .post(`http://localhost/api/v1/machines-and-procedures/${procedure.id}`, {
-                name: procedure.name,
-                active: procedure.isActive,
-                is_for_multisport_card: procedure.isForMultisportCard,
-            })
-            .then(() => {
-                fetchProcedures(page);
-            });
-    }
-
-    async function deleteProcedure(procedure: Procedure) {
-        axios
-            .delete(`http://localhost/api/v1/machines-and-procedures/${procedure.id}`)
-            .then(() => {
-                fetchProcedures(page);
-            })
-            .catch((error: any) => {
-                window.alert('Error pri mazani procedury');
+                window.alert('Error v nacitavani historie');
                 console.log(error);
             });
     }
 
     function changePage(newPage: number) {
         setPage(newPage);
-        history.push(`/procedury?page=${page}`);
-        fetchProcedures(newPage);
+        history.push(`/historia/clients?page=${page}`);
+        fetchClientHistory(newPage);
     }
 
     return (
         <Wrapper>
+            <StyledLink to='/historia/clients' isActive={'people' === site}>
+                Ludia
+            </StyledLink>
+            <StyledLink to='/historia/machines' isActive={'machines' === site}>
+                Stroje
+            </StyledLink>
             <Header>
                 <Icon icon='bars' color='#0063ff' />
-                <HeaderText>Stroje a procedury</HeaderText>
+                <HeaderText>Historia objednavok</HeaderText>
             </Header>
             <Table>
                 <tbody>
                     <TableRow>
                         <TableDataHeader>ID</TableDataHeader>
-                        <TableDataHeader>Nazov</TableDataHeader>
-                        <TableDataHeader>Aktivny</TableDataHeader>
-                        <TableDataHeader>Multisport</TableDataHeader>
-                        <TableDataHeader></TableDataHeader>
+                        <TableDataHeader>Meno a priezvisko</TableDataHeader>
+                        <TableDataHeader>Zaciatok</TableDataHeader>
+                        <TableDataHeader>Koniec</TableDataHeader>
                     </TableRow>
-                    {procedures.map(procedure => (
-                        <ProcedureEntry
-                            key={procedure.id}
-                            procedure={procedure}
-                            updateProcedure={updateProcedure}
-                            deleteProcedure={deleteProcedure}
-                        />
+                    {clientHistory.map(ClientHistory => (
+                        <HistoryEntry key={ClientHistory.id} clientHistory={ClientHistory} />
                     ))}
                 </tbody>
             </Table>
@@ -146,6 +121,16 @@ function ProcedureManagement() {
         </Wrapper>
     );
 }
+
+const StyledLink = styled(Link)<{ isActive: boolean }>`
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    text-decoration: none;
+
+    color: ${props => (props.isActive ? '#f4f5f9' : '#0063ff')};
+    background-color: ${props => (props.isActive ? '#0063ff' : 'white')};
+`;
 
 const Wrapper = styled.div`
     margin-top: 80px;
@@ -185,7 +170,9 @@ export const TableRow = styled.tr`
 `;
 
 const TableDataHeader = styled.th<{ hideOnMobile?: boolean }>`
-    padding: 6px;
+    padding: 10px;
+    padding-left: 25px;
+    padding-right: 25px;
 
     @media (max-width: 100rem) {
         display: ${props => (props.hideOnMobile ? 'none' : 'table-cell')};
@@ -211,4 +198,4 @@ const PagingButton = styled.button<{ selected?: boolean }>`
     align-items: center;
 `;
 
-export default ProcedureManagement;
+export default ClientHistory;

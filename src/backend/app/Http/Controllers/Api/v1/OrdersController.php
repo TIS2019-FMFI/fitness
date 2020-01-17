@@ -8,6 +8,8 @@ use App\Http\Requests\Api\v1\Order\IndexOrder;
 use App\Http\Requests\Api\v1\Order\StoreOrder;
 use App\Http\Requests\Api\v1\Order\UpdateOrder;
 use App\Models\Order;
+use App\Services\Api\v1\PaginationService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 
 class OrdersController extends Controller
@@ -17,37 +19,37 @@ class OrdersController extends Controller
      *
      * @param IndexOrder $request
      * @return JsonResponse
+     * @throws \Exception
      */
     public function index(IndexOrder $request): JsonResponse {
-        $orderDirection = 'asc';
-        $perPage = 10;
-        $page = 1;
-        $orderBy = 'orders.id';
+        $paginationData = app(PaginationService::class)->getPagination($request);
+        $from = $request->input('from') ? Carbon::createFromFormat('d/m/Y H:i', $request->input('from')) : Carbon::now()->subWeek();
+        $to = $request->input('to') ?  Carbon::createFromFormat('d/m/Y H:i', $request->input('to')) : Carbon::now();
 
-        if($request->has('orderDirection')){
-            $orderDirection = $request->orderDirection;
-        }
-
-        if($request->has('perPage')) {
-            $perPage = $request->perPage;
-        }
-
-        if($request->has('page')){
-            $page = $request->page;
-        }
-
-        if($request->has('orderBy')){
-            $orderBy = $request->orderBy;
-        }
-
-        $orders = Order::join('clients', 'clients.id', '=', 'orders.client_id')
+        $orders = Order::whereBetween('start_time', [$from, $to])
+            ->join('clients', 'clients.id', '=', 'orders.client_id')
             ->join('machines_and_procedures', 'orders.machine_id', '=', 'machines_and_procedures.id')
-            ->orderBy($orderBy, $orderDirection)
-            ->offset(($perPage * $page) - $perPage)
-            ->limit($perPage)
+            ->orderBy('orders.id', $paginationData['orderDirection'])
+            ->offset($paginationData['offset'])
+            ->limit($paginationData['perPage'])
+            ->select('machines_and_procedures.*', 'clients.*', 'orders.id as order_id', 'orders.end_time as order_end_time', 'orders.start_time as order_start_time',
+                'orders.note as order_note', 'orders.client_id as order_client_id', 'orders.machine_id as order_machine_id')
             ->get();
 
-        return response()->json($orders, 200);
+        $ordersCount = Order::whereBetween('start_time', [$from, $to])
+            ->join('clients', 'clients.id', '=', 'orders.client_id')
+            ->join('machines_and_procedures', 'orders.machine_id', '=', 'machines_and_procedures.id')
+            ->count();
+
+        $data = [
+            'items' => $orders,
+            'total' => $orders->count(),
+            'perPage' => $paginationData['perPage'],
+            'currentPage' => $paginationData['page'],
+            'lastPage' => (int) ceil($ordersCount / $paginationData['perPage']),
+        ];
+
+        return response()->json($data, 200);
     }
 
     /**
@@ -57,7 +59,7 @@ class OrdersController extends Controller
      * @return JsonResponse
      */
     public function store(StoreOrder $request): JsonResponse {
-        $sanitized = $request->validated();
+        $sanitized = $request->getSanitized();
         $order = Order::create($sanitized);
 
         return response()->json($order, 201);
@@ -72,7 +74,7 @@ class OrdersController extends Controller
      */
     public function update(UpdateOrder $request, int $orderId): JsonResponse {
         $order = Order::findOrFail($orderId);
-        $data = $request->validated();
+        $data = $request->getSanitized();
         $order->update($data);
 
         return response()->json($order, 200);
@@ -81,7 +83,7 @@ class OrdersController extends Controller
     /**
      * Remove the specified order from storage.
      *
-     * @param DestroyClient $request
+     * @param DestroyOrder $request
      * @param int $orderId
      * @return JsonResponse
      */
