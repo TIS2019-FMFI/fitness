@@ -60,7 +60,6 @@ function ProcedureManagement(props: Props) {
             .catch((error: any) => {
                 props.handleError(error);
                 window.alert('Nastala chyba pri načitávaní strojov a procedúr');
-                console.log(error);
             });
     }
 
@@ -93,7 +92,6 @@ function ProcedureManagement(props: Props) {
             })
             .catch((error: any) => {
                 window.alert('Nastala chyba pri vymazávaní stroja/procedúry');
-                console.log(error);
             })
             .then(error => {
                 props.handleError(error);
@@ -117,7 +115,6 @@ function ProcedureManagement(props: Props) {
             .catch((error: any) => {
                 props.handleError(error);
                 window.alert('Nastala chyba pri pridávaní novej procedúry');
-                console.log(error);
             });
     }
 

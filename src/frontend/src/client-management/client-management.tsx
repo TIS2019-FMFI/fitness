@@ -48,8 +48,9 @@ function ClientManagement(props: Props) {
 
     async function fetchClients(page: number) {
         axios
-            .get(`${url}/api/v1/clients?orderBy=id&page=${page}&perPage=${PER_PAGE}`,
-                { headers: { 'Authorization': 'Bearer ' + token }})
+            .get(`${url}/api/v1/clients?orderBy=id&page=${page}&perPage=${PER_PAGE}`, {
+                headers: { Authorization: 'Bearer ' + token },
+            })
             .then(res => {
                 setClients(
                     res.data.items.map((object: any) => {
@@ -69,58 +70,68 @@ function ClientManagement(props: Props) {
             .catch((error: any) => {
                 props.handleError(error);
                 window.alert('Nastala chyba pri načitávaní klientov.');
-                console.log(error);
             });
     }
 
     async function updateClient(client: Client) {
         axios
-            .post(`${url}/api/v1/clients/${client.id}`, {
-                first_name: client.name.split(' ')[0],
-                last_name: client.name.split(' ')[1],
-                phone: client.phone,
-                active: client.isActive,
-                has_multisport_card: client.hasMultisportCard,
-                note: client.note,
-                is_gdpr: client.isGDPR,
-            }, { headers: { 'Authorization': 'Bearer ' + token }})
+            .post(
+                `http://localhost/api/v1/clients/${client.id}`,
+                {
+                    first_name: client.name.split(' ')[0],
+                    last_name: client.name.split(' ')[1],
+                    phone: client.phone,
+                    active: client.isActive,
+                    has_multisport_card: client.hasMultisportCard,
+                    note: client.note,
+                    is_gdpr: client.isGDPR,
+                },
+                { headers: { Authorization: 'Bearer ' + token } }
+            )
             .then(() => {
                 fetchClients(page);
-            }).then(error => {
+            })
+            .then(error => {
                 props.handleError(error);
             });
     }
 
     async function deleteClient(client: Client) {
         axios
-            .delete(`${url}/api/v1/clients/${client.id}`, { headers: { 'Authorization': 'Bearer ' + token }})
+            .delete(`${url}/api/v1/clients/${client.id}`, { headers: { Authorization: 'Bearer ' + token } })
             .then(() => {
                 fetchClients(page);
             })
             .catch((error: any) => {
                 window.alert('Nastala chyba pri vymazávaní klienta.');
-                console.log(error);
-            }).then(error => {
+            })
+            .then(error => {
                 props.handleError(error);
             });
     }
 
     function registerClient(client: Client) {
-        axios.post(`http://localhost/api/v1/clients`, {
-            first_name: client.name.split(' ')[0],
-            last_name: client.name.split(' ')[1],
-            phone: client.phone,
-            active: client.isActive,
-            has_multisport_card: client.hasMultisportCard,
-            note: client.note,
-            is_gdpr: client.isGDPR,
-        }, { headers: { 'Authorization': 'Bearer ' + token }}).then(() => {
-            fetchClients(page);
-        }).catch((error: any) => {
-            props.handleError(error)
-            window.alert('Nastala chyba pri pridávaní nového klienta');
-            console.log(error);
-        });
+        axios
+            .post(
+                `http://localhost/api/v1/clients`,
+                {
+                    first_name: client.name.split(' ')[0],
+                    last_name: client.name.split(' ')[1],
+                    phone: client.phone,
+                    active: client.isActive,
+                    has_multisport_card: client.hasMultisportCard,
+                    note: client.note,
+                    is_gdpr: client.isGDPR,
+                },
+                { headers: { Authorization: 'Bearer ' + token } }
+            )
+            .then(() => {
+                fetchClients(page);
+            })
+            .catch((error: any) => {
+                props.handleError(error);
+                window.alert('Nastala chyba pri pridávaní nového klienta');
+            });
     }
 
     function changePage(newPage: number) {
@@ -134,19 +145,24 @@ function ClientManagement(props: Props) {
             <Wrapper>
                 <Header>
                     <Icon size='3x' icon='bars' color='#0063ff' />
-                    <HeaderText>Sprava klientov</HeaderText>
-                    <Icon size='3x' icon={['far', 'plus-square']} color='#0063ff' onClick={() => setAddingClient(true)}/>
+                    <HeaderText>Správa klientov</HeaderText>
+                    <Icon
+                        size='3x'
+                        icon={['far', 'plus-square']}
+                        color='#0063ff'
+                        onClick={() => setAddingClient(true)}
+                    />
                 </Header>
                 <Table>
                     <tbody>
                         <TableRow>
                             <TableDataHeader hideOnMobile={true}>ID</TableDataHeader>
                             <TableDataHeader>Meno a priezvisko</TableDataHeader>
-                            <TableDataHeader>Telefonne cislo</TableDataHeader>
-                            <TableDataHeader hideOnMobile={true}>Aktivny</TableDataHeader>
+                            <TableDataHeader>Telefónne číslo</TableDataHeader>
+                            <TableDataHeader hideOnMobile={true}>Aktívny</TableDataHeader>
                             <TableDataHeader hideOnMobile={true}>Multisport</TableDataHeader>
                             <TableDataHeader hideOnMobile={true}>GDPR</TableDataHeader>
-                            <TableDataHeader hideOnMobile={true}>Poznamka</TableDataHeader>
+                            <TableDataHeader hideOnMobile={true}>Poznámka</TableDataHeader>
                             <TableDataHeader hideOnMobile={true}></TableDataHeader>
                         </TableRow>
                         {clients.map(client => (
@@ -191,11 +207,12 @@ function ClientManagement(props: Props) {
                     </PagingButton>
                 </PagingDiv>
             </Wrapper>
-                {addingClient ?
-                        <ClientRegistration registerClient={(client: Client) => registerClient(client)} setIsOpen={setAddingClient} />
-                    :
-                        null
-                }
+            {addingClient ? (
+                <ClientRegistration
+                    registerClient={(client: Client) => registerClient(client)}
+                    setIsOpen={setAddingClient}
+                />
+            ) : null}
         </React.Fragment>
     );
 }
