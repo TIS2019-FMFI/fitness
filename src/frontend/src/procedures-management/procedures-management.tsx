@@ -119,7 +119,7 @@ function ProcedureManagement() {
                         changePage(page - 1);
                     }}
                 >
-                    <img alt={'back arrow'} />
+                    <FontAwesomeIcon size='1x' icon='chevron-left' color='#0063ff' />
                 </PagingButton>
                 {page > 1 ? (
                     <PagingButton onClick={() => changePage(1)}>
@@ -140,7 +140,7 @@ function ProcedureManagement() {
                         changePage(page + 1);
                     }}
                 >
-                    <img alt={'forward arrow'} />
+                    <FontAwesomeIcon size='1x' icon='chevron-right' color='#0063ff' />
                 </PagingButton>
             </PagingDiv>
         </Wrapper>

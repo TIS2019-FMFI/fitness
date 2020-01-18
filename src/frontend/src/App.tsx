@@ -15,6 +15,8 @@ import {
     faBars,
     faCommentDots,
     faCheckCircle,
+    faChevronLeft,
+    faChevronRight
 } from '@fortawesome/free-solid-svg-icons';
 import { faUser, faBookmark, faCircle } from '@fortawesome/free-regular-svg-icons';
 
@@ -39,7 +41,9 @@ library.add(
     faBars,
     faCommentDots,
     faCheckCircle,
-    faCircle
+    faCircle,
+    faChevronLeft,
+    faChevronRight
 );
 
 export const TokenContext = React.createContext('');
