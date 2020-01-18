@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Requests\Api\v1\User\LoginUserOwn;
-use App\Http\Requests\Api\v1\User\RegisterUserOwn;
+use App\Http\Requests\Api\v1\User\LoginUser;
+use App\Http\Requests\Api\v1\User\RegisterUser;
 use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,12 +11,19 @@ use Illuminate\Support\Facades\Hash;
 use JWTAuth;
 use JWTAuthException;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+
 
 
 class UserController extends Controller
 {
 
+    /**
+     * Get token
+     *
+     * @param $email
+     * @param $password
+     * @return JsonResponse|null
+     */
     private function getToken($email, $password)
     {
         $token = null;
@@ -38,17 +45,23 @@ class UserController extends Controller
                 'message' => 'Token creation failed',
             ]);
         }
+
         return $token;
     }
 
-    public function login(Request $request)
+    /**
+     * Login user
+     *
+     * @param LoginUser $request
+     * @return JsonResponse
+     */
+    public function login(LoginUser $request): JsonResponse
     {
-        $user = User::where('email', $request->email)
-            ->get()
-            ->first();
+        $sanitized = $request->validated();
+        $user = User::where('email', $sanitized['email'])->get()->first();
 
-        if ($user && Hash::check($request->password, $user->password)) {
-            $token = self::getToken($request->email, $request->password);
+        if ($user && Hash::check( $sanitized['password'], $user->password)) {
+            $token = self::getToken( $sanitized['email'],  $sanitized['password']);
             $user->auth_token = $token;
             $user->save();
 
@@ -72,17 +85,26 @@ class UserController extends Controller
         return response()->json($response, 201);
     }
 
-    public function register(Request $request) {
+    /**
+     * Register newly created user
+     *
+     * @param RegisterUser $request
+     * @return JsonResponse
+     */
+    public function register(RegisterUser $request): JsonResponse {
+        $sanitized = $request->validated();
+
         $payload = [
-            'password' => Hash::make($request->password),
-            'email' => $request->email,
-            'name' => $request->name,
+            'password' => Hash::make($sanitized['password']),
+            'email' => $sanitized['email'],
+            'name' => $sanitized['name'],
             'auth_token' => ''
         ];
 
         $user = new User($payload);
+
         if ($user->save()) {
-            $token = self::getToken($request->email, $request->password);
+            $token = self::getToken($sanitized['email'], $sanitized['password']);
 
             if (!is_string($token)) {
                 return response()->json([
@@ -91,9 +113,7 @@ class UserController extends Controller
                 ], 201);
             }
 
-            $user = User::where('email', $request->email)
-                ->get()
-                ->first();
+            $user = User::where('email', $sanitized['email'])->get()->first();
 
             $user->auth_token = $token;
             $user->save();
