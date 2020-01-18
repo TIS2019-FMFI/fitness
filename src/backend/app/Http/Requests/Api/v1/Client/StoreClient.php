@@ -29,7 +29,7 @@ class StoreClient extends FormRequest
             'phone' => ['required', 'string'],
             'active' => ['required', 'boolean'],
             'has_multisport_card' => ['required', 'boolean'],
-            'note' => ['sometimes', 'string'],
+            'note' => ['nullable', 'string'],
             'is_gdpr' => ['required', 'boolean'],
         ];
     }

@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import { url } from 'App';
 import HistoryEntry from './history-entry';
 
 export interface ClientHistory {
@@ -36,7 +37,7 @@ function ClientHistory() {
 
     async function fetchClientHistory(page: number) {
         axios
-            .get(`http://localhost/api/v1/clients/history?orderBy=id&page=${page}&perPage=${PER_PAGE}`)
+            .get(`${url}/api/v1/clients/history?orderBy=id&page=${page}&perPage=${PER_PAGE}`)
             .then(res => {
                 setClientHistory(
                     res.data.items.map((object: any) => {

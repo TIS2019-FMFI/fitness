@@ -4,9 +4,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-//import leftArrowImage from '/images/left_arrow.svg';
-//import rightArrowImage from '/images/right_arrow.svg';
-
+import { url } from 'App';
 import ProcedureEntry from './procedure-entry';
 
 export interface Procedure {
@@ -37,7 +35,7 @@ function ProcedureManagement() {
 
     async function fetchProcedures(page: number) {
         axios
-            .get(`http://localhost/api/v1/machines-and-procedures?orderBy=id&page=${page}&perPage=${PER_PAGE}`)
+            .get(`${url}/api/v1/machines-and-procedures?orderBy=id&page=${page}&perPage=${PER_PAGE}`)
             .then(res => {
                 setProcedures(
                     res.data.items.map((object: any) => {
@@ -59,7 +57,7 @@ function ProcedureManagement() {
 
     async function updateProcedure(procedure: Procedure) {
         axios
-            .post(`http://localhost/api/v1/machines-and-procedures/${procedure.id}`, {
+            .post(`${url}/api/v1/machines-and-procedures/${procedure.id}`, {
                 name: procedure.name,
                 active: procedure.isActive,
                 is_for_multisport_card: procedure.isForMultisportCard,
@@ -71,7 +69,7 @@ function ProcedureManagement() {
 
     async function deleteProcedure(procedure: Procedure) {
         axios
-            .delete(`http://localhost/api/v1/machines-and-procedures/${procedure.id}`)
+            .delete(`${url}/api/v1/machines-and-procedures/${procedure.id}`)
             .then(() => {
                 fetchProcedures(page);
             })
