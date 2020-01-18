@@ -16,7 +16,7 @@ import {
     faCommentDots,
     faCheckCircle,
     faChevronLeft,
-    faChevronRight
+    faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { faUser, faBookmark, faCircle, faPlusSquare } from '@fortawesome/free-regular-svg-icons';
 
@@ -63,7 +63,7 @@ function App(props: Props) {
             window.location.reload(false);
         }
     }
-    
+
     return (
         <Router>
             <TokenContext.Provider value={props.token}>
@@ -75,13 +75,13 @@ function App(props: Props) {
                                 <ClientManagement handleError={handleError} />
                             </Route>
                             <Route path='/procedury'>
-                                <Procedures />
+                                <Procedures handleError={handleError} />
                             </Route>
                             <Route path='/historia/machines'>
-                                <HistoryM />
+                                <HistoryM handleError={handleError} />
                             </Route>
                             <Route path='/historia/clients'>
-                                <HistoryC />
+                                <HistoryC handleError={handleError} />
                             </Route>
                             <Route exact path='/'>
                                 <Home handleError={handleError} isPublic={false} />

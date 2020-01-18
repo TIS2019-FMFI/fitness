@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from 'react-modal';
 import styled from 'styled-components';
 import { Button, Input } from 'reactstrap';
+import { Client } from '../client-management';
+import Checkbox from '../client-entry/checkbox';
 
-import { Client } from 'client-management/client-management';
-import Checkbox from 'client-management/client-entry/checkbox';
 
 export interface Props {
     registerClient: (client: Client) => void;
@@ -30,7 +30,6 @@ function ClientRegistration(props: Props) {
             hasMultisportCard,
             isGDPR,
         } as Client;
-        
         props.registerClient(client);
         setIsOpen(false);
     }

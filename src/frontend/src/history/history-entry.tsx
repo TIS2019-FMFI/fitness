@@ -15,6 +15,7 @@ function ClientEntry(props: Props) {
             <TableRow key={ClientHistory.id}>
                 <TableData width='50px'>{ClientHistory.id}</TableData>
                 <TableData width='50px'>{ClientHistory.name}</TableData>
+                <TableData width='50px'>{ClientHistory.date}</TableData>
                 <TableData width='50px'>{ClientHistory.start}</TableData>
                 <TableData width='50px'>{ClientHistory.end}</TableData>
             </TableRow>
@@ -25,9 +26,9 @@ function ClientEntry(props: Props) {
 const TableData = styled.td<{ width?: string; align?: string; hideOnMobile?: boolean }>`
     width: ${props => (props.width ? props.width : 'auto')};
     max-width: ${props => (props.width ? props.width : 'unset')};
-    padding: 10px;
+    padding: 6px;
 
-    text-align: ${props => (props.align ? props.align : 'center')};
+    text-align: ${props => (props.align ? props.align : 'left')};
 
     @media (max-width: 1020px) {
         display: ${props => (props.hideOnMobile ? 'none' : 'table-cell')};
