@@ -101,6 +101,7 @@ const Container = styled.div`
 `;
 
 const MainContent = styled.div`
+    overflow: scroll;
     margin-left: 40px;
     width: 100%;
 `;

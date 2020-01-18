@@ -155,7 +155,7 @@ function Home(props: Props) {
                 );
             })
             .catch(error => {
-                props.handleError(error)
+                props.handleError(error);
                 console.error(error);
                 window.alert('Nastala chyba pri načitávaní klientov');
             });
@@ -223,7 +223,11 @@ function Home(props: Props) {
 
     return (
         <HomeWrapper>
-            <DatePicker todayButton='Dnes' selected={date} onChange={(date: Date) => setDate(date)} />
+            <DatePicker
+                todayButton='Dnes'
+                selected={date}
+                onChange={(date: Date) => setDate(date)}
+            />
             <Table>
                 <tbody>
                     <tr>
@@ -258,8 +262,10 @@ function Home(props: Props) {
 
 const HomeWrapper = styled.div`
     width: max-content;
+    
     padding-top: 10px;
     margin: 20px;
+    
 
     border-radius: 10px;
     display: flex;
@@ -273,11 +279,15 @@ const Table = styled.table`
     margin-top: 10px;
 
     border-collapse: collapse;
-    border-top: 1px black dashed;
+    border-top: 1px #999999 dashed;
 `;
 
 const TableHead = styled.th`
-    border-left: 1px black dashed;
+    border-left: 1px #999999 dashed;
+    font-weight: 400;
+    color: #999999;
 `;
+
+
 
 export default Home;

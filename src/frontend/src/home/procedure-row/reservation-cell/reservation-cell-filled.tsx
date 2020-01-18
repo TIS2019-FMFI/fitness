@@ -30,8 +30,8 @@ function ReservationCellFilled(props: Props) {
 export const CellBody = styled.div`
     height: 100%;
     width: auto;
-    margin: 4px;
-    padding: 5px;
+    margin: 5px 5px 5px 5px;
+    padding: 10px;
 
     display: flex;
     position: relative;

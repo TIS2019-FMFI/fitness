@@ -1,2 +1,2 @@
 export const startHour = 8;
-export const endHour = 15;
+export const endHour = 20;
