@@ -27,6 +27,7 @@ function Home(props: Props) {
     const [date, setDate] = useState(new Date());
     const [allClients, setAllClients] = useState([]);
     const token = useContext(TokenContext);
+    const { isPublic, handleError } = props;
 
     let startTime = new Date(date);
     startTime.setHours(startHour);
@@ -42,7 +43,7 @@ function Home(props: Props) {
     }
     
     function fetchProcedures() {
-        axios.get(`${url}/api/v1/machines-and-procedures?orderBy=id&perPage=-1`, { headers: { 'Authorization': 'Bearer ' + token }}).then(res => {
+        axios.get(`${url}/api/v1/machines-and-procedures${isPublic ? '-public' : ''}?orderBy=id&perPage=-1`, { headers: { 'Authorization': 'Bearer ' + token }}).then(res => {
             setProcedures(
                 res.data.items.map(object => {
                     return {
@@ -54,7 +55,7 @@ function Home(props: Props) {
                 })
             );
         }).catch(error => {
-            props.handleError(error)
+            handleError(error)
         });
     }
     
@@ -69,7 +70,7 @@ function Home(props: Props) {
 
         axios
             .get(
-                `${url}/api/v1/orders?from=${startTime
+                `${url}/api/v1/orders${ isPublic ? '-time-public' : '' }?from=${startTime
                     .toLocaleString('en-GB', dateOptions)
                     .replace(',', '')}&to=${endTime.toLocaleString('en-GB', dateOptions).replace(',', '')}&perPage=-1`,
                 { headers: { 'Authorization': 'Bearer ' + token }}
@@ -105,7 +106,7 @@ function Home(props: Props) {
 
                 setOrders(ordersDict);
             }).catch(error => {
-                props.handleError(error)
+                handleError(error)
                 console.error(error)
             });
     }
@@ -133,7 +134,7 @@ function Home(props: Props) {
                 fetchOrders(reservationTimes[0], endTime);
             })
             .catch(error => {
-                props.handleError(error)
+                handleError(error)
                 window.alert('Order failed');
                 console.error(error);
             });
@@ -158,7 +159,7 @@ function Home(props: Props) {
                 );
             })
             .catch(error => {
-                props.handleError(error);
+                handleError(error);
                 console.error(error);
                 window.alert('Nastala chyba pri načitávaní klientov');
             });
@@ -192,7 +193,7 @@ function Home(props: Props) {
                 fetchOrders(reservationTimes[0], endTime);
             })
             .catch(error => {
-                props.handleError(error);
+                handleError(error);
                 window.alert('Nastala chyba pri vytváraní rezervácie');
                 console.error(error);
             });
@@ -205,7 +206,7 @@ function Home(props: Props) {
                 fetchOrders(reservationTimes[0], endTime);
             })
             .catch((error: any) => {
-                props.handleError(error)
+                handleError(error)
                 window.alert('Nastala chyba pri vymazávaní rezervácie');
                 console.log(error);
             });
