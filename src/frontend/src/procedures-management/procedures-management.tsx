@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 //import rightArrowImage from '/images/right_arrow.svg';
 
 import ProcedureEntry from './procedure-entry';
+import { TokenContext, url } from '../App';
 
 export interface Procedure {
     id: number;
@@ -16,9 +17,13 @@ export interface Procedure {
     isForMultisportCard: boolean;
 }
 
+export interface Props {
+    handleError: (error) => void;
+}
+
 const PER_PAGE = 10;
 
-function ProcedureManagement() {
+function ProcedureManagement(props: Props) {
     const location = useLocation();
     const history = useHistory();
     const [maxPage, setMaxPage] = useState(999);
@@ -26,6 +31,7 @@ function ProcedureManagement() {
     const matchedNumber = (match && match.length > 1 && Number(match[1])) || null;
     const [page, setPage] = useState(matchedNumber > 0 && matchedNumber <= maxPage ? matchedNumber : 1);
     const [procedures, setProcedures] = useState([]);
+    const token = useContext(TokenContext);
 
     if (match === null || matchedNumber !== page) {
         history.push(`/procedury?page=${page}`);
@@ -37,7 +43,9 @@ function ProcedureManagement() {
 
     async function fetchProcedures(page: number) {
         axios
-            .get(`http://localhost/api/v1/machines-and-procedures?orderBy=id&page=${page}&perPage=${PER_PAGE}`)
+            .get(`http://localhost/api/v1/machines-and-procedures?orderBy=id&page=${page}&perPage=${PER_PAGE}`, {
+                headers: { Authorization: 'Bearer ' + token },
+            })
             .then(res => {
                 setProcedures(
                     res.data.items.map((object: any) => {
@@ -52,6 +60,7 @@ function ProcedureManagement() {
                 setMaxPage(res.data.lastPage);
             })
             .catch((error: any) => {
+                props.handleError(error);
                 window.alert('Error v nacitavani procedur');
                 console.log(error);
             });
@@ -59,25 +68,37 @@ function ProcedureManagement() {
 
     async function updateProcedure(procedure: Procedure) {
         axios
-            .post(`http://localhost/api/v1/machines-and-procedures/${procedure.id}`, {
-                name: procedure.name,
-                active: procedure.isActive,
-                is_for_multisport_card: procedure.isForMultisportCard,
-            })
+            .post(
+                `http://localhost/api/v1/machines-and-procedures/${procedure.id}`,
+                {
+                    name: procedure.name,
+                    active: procedure.isActive,
+                    is_for_multisport_card: procedure.isForMultisportCard,
+                },
+                { headers: { Authorization: 'Bearer ' + token } }
+            )
             .then(() => {
                 fetchProcedures(page);
+            })
+            .then(error => {
+                props.handleError(error);
             });
     }
 
     async function deleteProcedure(procedure: Procedure) {
         axios
-            .delete(`http://localhost/api/v1/machines-and-procedures/${procedure.id}`)
+            .delete(`http://localhost/api/v1/machines-and-procedures/${procedure.id}`, {
+                headers: { Authorization: 'Bearer ' + token },
+            })
             .then(() => {
                 fetchProcedures(page);
             })
             .catch((error: any) => {
                 window.alert('Error pri mazani procedury');
                 console.log(error);
+            })
+            .then(error => {
+                props.handleError(error);
             });
     }
 
@@ -90,7 +111,7 @@ function ProcedureManagement() {
     return (
         <Wrapper>
             <Header>
-                <Icon icon='bars' color='#0063ff' />
+                <Icon size='3x' icon='bars' color='#0063ff' />
                 <HeaderText>Stroje a procedury</HeaderText>
             </Header>
             <Table>

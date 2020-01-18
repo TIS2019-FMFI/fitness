@@ -21,7 +21,7 @@ class Navigation extends React.PureComponent<Props> {
                     </LinkDiv>
                 </StyledLink>
                 <StyledLink
-                    to='/historia/machines'
+                    to='/historia/clients'
                     isActive={'/historia/clients' === path || '/historia/machines' === path}
                 >
                     <LinkDiv>

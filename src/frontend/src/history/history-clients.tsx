@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import HistoryEntry from './history-entry';
+import { TokenContext, url } from '../App';
 
 export interface ClientHistory {
     id: number;
@@ -14,9 +15,13 @@ export interface ClientHistory {
     end: string;
 }
 
+export interface Props {
+    handleError: (error) => void;
+}
+
 const PER_PAGE = 10;
 
-function ClientHistory() {
+function ClientHistory(props: Props) {
     const location = useLocation();
     const history = useHistory();
     const [maxPage, setMaxPage] = useState(999);
@@ -25,6 +30,7 @@ function ClientHistory() {
     const [page, setPage] = useState(matchedNumber > 0 && matchedNumber <= maxPage ? matchedNumber : 1);
     const [clientHistory, setClientHistory] = useState([]);
     const [site] = useState('people');
+    const token = useContext(TokenContext);
 
     if (match === null || matchedNumber !== page) {
         history.push(`/historia/clients?page=${page}`);
@@ -36,7 +42,9 @@ function ClientHistory() {
 
     async function fetchClientHistory(page: number) {
         axios
-            .get(`http://localhost/api/v1/clients/history?orderBy=id&page=${page}&perPage=${PER_PAGE}`)
+            .get(`http://localhost/api/v1/clients/history?orderBy=id&page=${page}&perPage=${PER_PAGE}`, {
+                headers: { Authorization: 'Bearer ' + token },
+            })
             .then(res => {
                 setClientHistory(
                     res.data.items.map((object: any) => {
@@ -51,6 +59,7 @@ function ClientHistory() {
                 setMaxPage(res.data.lastPage);
             })
             .catch((error: any) => {
+                props.handleError(error);
                 window.alert('Error v nacitavani historie');
                 console.log(error);
             });
@@ -63,62 +72,67 @@ function ClientHistory() {
     }
 
     return (
-        <Wrapper>
-            <StyledLink to='/historia/clients' isActive={'people' === site}>
-                Ludia
-            </StyledLink>
-            <StyledLink to='/historia/machines' isActive={'machines' === site}>
-                Stroje
-            </StyledLink>
-            <Header>
-                <Icon icon='bars' color='#0063ff' />
-                <HeaderText>Historia objednavok</HeaderText>
-            </Header>
-            <Table>
-                <tbody>
-                    <TableRow>
-                        <TableDataHeader>ID</TableDataHeader>
-                        <TableDataHeader>Meno a priezvisko</TableDataHeader>
-                        <TableDataHeader>Zaciatok</TableDataHeader>
-                        <TableDataHeader>Koniec</TableDataHeader>
-                    </TableRow>
-                    {clientHistory.map(ClientHistory => (
-                        <HistoryEntry key={ClientHistory.id} clientHistory={ClientHistory} />
-                    ))}
-                </tbody>
-            </Table>
-            <PagingDiv>
-                <PagingButton
-                    disabled={page < 2}
-                    onClick={() => {
-                        changePage(page - 1);
-                    }}
-                >
-                    <img alt={'back arrow'} />
-                </PagingButton>
-                {page > 1 ? (
-                    <PagingButton onClick={() => changePage(1)}>
-                        <span>{1}</span>
+        <>
+            <div style={{ marginTop: 80 }}>
+                <StyledLink to='/historia/clients' isActive={'people' === site}>
+                    Ludia
+                </StyledLink>
+                <StyledLink to='/historia/machines' isActive={'machines' === site}>
+                    Stroje
+                </StyledLink>
+            </div>
+
+            <Wrapper>
+                <Header>
+                    <Icon size='3x' icon='bars' color='#0063ff' />
+                    <HeaderText>Historia objednavok</HeaderText>
+                </Header>
+                <Table>
+                    <tbody>
+                        <TableRow>
+                            <TableDataHeader>ID</TableDataHeader>
+                            <TableDataHeader>Meno a priezvisko</TableDataHeader>
+                            <TableDataHeader>Zaciatok</TableDataHeader>
+                            <TableDataHeader>Koniec</TableDataHeader>
+                        </TableRow>
+                        {clientHistory.map(ClientHistory => (
+                            <HistoryEntry key={ClientHistory.id} clientHistory={ClientHistory} />
+                        ))}
+                    </tbody>
+                </Table>
+                <PagingDiv>
+                    <PagingButton
+                        disabled={page < 2}
+                        onClick={() => {
+                            changePage(page - 1);
+                        }}
+                    >
+                        <FontAwesomeIcon size='1x' icon='chevron-left' color='#0063ff' />
                     </PagingButton>
-                ) : null}
-                <PagingButton selected={true}>
-                    <span>{page}</span>
-                </PagingButton>
-                {page !== maxPage ? (
-                    <PagingButton onClick={() => changePage(maxPage)}>
-                        <span>{maxPage}</span>
+                    {page > 1 ? (
+                        <PagingButton onClick={() => changePage(1)}>
+                            <span>{1}</span>
+                        </PagingButton>
+                    ) : null}
+                    <PagingButton selected={true}>
+                        <span>{page}</span>
                     </PagingButton>
-                ) : null}
-                <PagingButton
-                    disabled={page >= maxPage}
-                    onClick={() => {
-                        changePage(page + 1);
-                    }}
-                >
-                    <img alt={'forward arrow'} />
-                </PagingButton>
-            </PagingDiv>
-        </Wrapper>
+                    {page !== maxPage ? (
+                        <PagingButton onClick={() => changePage(maxPage)}>
+                            <span>{maxPage}</span>
+                        </PagingButton>
+                    ) : null}
+                    <PagingButton
+                        disabled={page >= maxPage}
+                        onClick={() => {
+                            changePage(page + 1);
+                        }}
+                    >
+                        <FontAwesomeIcon size='1x' icon='chevron-right' color='#0063ff' />
+                    </PagingButton>
+                </PagingDiv>
+            </Wrapper>
+        </>
     );
 }
 
@@ -133,7 +147,7 @@ const StyledLink = styled(Link)<{ isActive: boolean }>`
 `;
 
 const Wrapper = styled.div`
-    margin-top: 80px;
+    margin-top: 40px;
     border: 1px solid #e6e6e6;
 
     background-color: white;
