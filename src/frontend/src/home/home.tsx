@@ -3,6 +3,8 @@ import axios from 'axios';
 import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 import { Client } from '../client-management/client-management';
 import { Procedure } from '../procedures-management/procedures-management';
@@ -222,13 +224,44 @@ function Home(props: Props) {
 
     const dateOptions = { hour: '2-digit', minute: '2-digit' };
 
+    const DatePickerInput = ({ value, onClick }) => (
+        <div style={{ display: 'flex', alignItems: 'center'}}>
+            <div onClick={() => {
+                    const newDate = new Date(date);
+                    newDate.setHours(date.getHours() - 24);
+                    setDate(newDate)
+                }}
+            >
+                <FontAwesomeIcon size='1x' icon='chevron-left' color='#0063ff' />
+            </div>
+            <div onClick={onClick}>
+                <span style={{ fontSize: '24px', margin: '4px', color: '#999' }}>
+                    {value}
+                </span>
+            </div>
+            <div onClick={() => {
+                    const newDate = new Date(date);
+                    newDate.setHours(date.getHours() + 24);
+                    setDate(newDate)
+                }}
+            >
+                <FontAwesomeIcon size='1x' icon='chevron-right' color='#0063ff' />
+            </div>
+        </div>
+    );
+
     return (
         <HomeWrapper>
-            <DatePicker
-                todayButton='Dnes'
-                selected={date}
-                onChange={(date: Date) => setDate(date)}
-            />
+            <div style={{ alignSelf: 'start', marginLeft: '20px' }}>
+                <DatePicker
+                    dateFormat="dd MMMM yyyy"
+                    locale="sk-SK"
+                    customInput={<DatePickerInput value={date} onClick={() => {}} />}
+                    todayButton='Dnes'
+                    selected={date}
+                    onChange={(date: Date) => setDate(date)}
+                />
+            </div>
             <Table>
                 <tbody>
                     <tr>
@@ -275,6 +308,10 @@ const HomeWrapper = styled.div`
 
     background-color: white;
 `;
+
+const Icon = styled(FontAwesomeIcon)`
+
+`
 
 const Table = styled.table`
     margin-top: 10px;
