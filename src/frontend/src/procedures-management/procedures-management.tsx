@@ -101,7 +101,7 @@ function ProcedureManagement(props: Props) {
     function registerProcedure(procedure: Procedure) {
         axios
             .post(
-                `http://localhost/api/v1/machines-and-procedures`,
+                `${url}/api/v1/machines-and-procedures`,
                 {
                     name: procedure.name,
                     active: procedure.isActive,

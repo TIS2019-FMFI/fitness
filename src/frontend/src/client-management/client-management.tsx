@@ -76,7 +76,7 @@ function ClientManagement(props: Props) {
     async function updateClient(client: Client) {
         axios
             .post(
-                `http://localhost/api/v1/clients/${client.id}`,
+                `${url}/api/v1/clients/${client.id}`,
                 {
                     first_name: client.name.split(' ')[0],
                     last_name: client.name.split(' ')[1],
