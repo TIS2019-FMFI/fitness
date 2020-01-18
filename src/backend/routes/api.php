@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,11 +12,12 @@ use Illuminate\Http\Request;
 */
 
 Route::prefix('v1')->namespace('Api\v1')->group(static function () {
-
-    Route::post('user/login', 'UserController@login');
-    Route::post('user/register', 'UserController@register');
-    Route::get('orders-time-public', 'AvailabilityController@ordersTime');
-    Route::get('machines-and-procedures-public', 'AvailabilityController@machinesAndProcedures');
+    Route::post('user/login',                                   'UserController@login');
+    Route::post('user/register',                                'UserController@register');
+    Route::post('user/logout',                                  'UserController@logout');
+    Route::post('user/refresh',                                 'UserController@refresh');
+    Route::get('orders-time-public',                            'AvailabilityController@ordersTime');
+    Route::get('machines-and-procedures-public',                'AvailabilityController@machinesAndProcedures');
 
     Route::middleware(['jwt.auth'])->group(function () {
         Route::prefix('clients')->group(static function() {

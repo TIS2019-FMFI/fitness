@@ -13,7 +13,6 @@ class DestroyOrder extends FormRequest
      */
     public function authorize(): bool
     {
-        //TODO authorize for action
         return true;
     }
 
@@ -25,7 +24,7 @@ class DestroyOrder extends FormRequest
     public function rules(): array
     {
         return [
-            //
+
         ];
     }
 }

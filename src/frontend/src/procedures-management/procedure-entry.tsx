@@ -81,7 +81,7 @@ function ProcedureEntry(props: Props) {
                 ) : (
                     <ImageButton
                         onClick={() => {
-                            if (window.confirm(`Chcete vymazat klienta ${procedure.name}`)) {
+                            if (window.confirm(`Chcete vymazať klienta ${procedure.name} ?`)) {
                                 deleteProcedure(procedure);
                             }
                         }}
@@ -101,7 +101,7 @@ const TableData = styled.td<{ width?: string; align?: string; hideOnMobile?: boo
 
     text-align: ${props => (props.align ? props.align : 'center')};
 
-    @media (max-width: 100rem) {
+    @media (max-width: 1020px) {
         display: ${props => (props.hideOnMobile ? 'none' : 'table-cell')};
     }
 `;

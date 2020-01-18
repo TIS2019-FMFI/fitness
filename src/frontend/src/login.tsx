@@ -3,8 +3,10 @@ import styled from 'styled-components';
 import React, { useState } from 'react';
 import { Input, Button } from 'reactstrap';
 
+import { url } from 'App'
+
 export interface Props {
-    setLogin: (token: string, endDate: Date) => void;
+    setLogin: (token: string, expiresIn: number) => void;
 }
 
 function Login(props: Props) {
@@ -18,42 +20,39 @@ function Login(props: Props) {
         };
 
         axios
-            .post('http://localhost/api/v1/user/login', object)
+            .post(`${url}/api/v1/user/login`, object)
             .then(response => {
                 if (response.data.success) {
-                    const d = new Date();
-                    d.setMonth(10);
-                    props.setLogin(response.data.data.auth_token, d);
+                    props.setLogin(response.data.data.auth_token, response.data.data.expires_in);
                 } else {
-                    window.alert('Zle heslo');
+                    window.alert('Zadali ste zlé prihlasovacie údaje');
                 }
             })
-            .catch(() => {
-                window.alert('Zle heslo');
-            });
+            .catch((error) => {
+                window.alert('Zadali ste zlé prihlasovacie údaje');
+                console.error(error);
+            })
     }
 
     return (
         <LoginWrapper style={{ padding: '10px' }}>
-            <h1>Prihlasenie</h1>
-            <br />
-            <br />
-            <Input placeholder='Email' value={email} onChange={event => setEmail(event.target.value)} />
-            <br />
+            <h1>Prihlásenie</h1>
+            <Input placeholder='Email' value={email} onChange={event => setEmail(event.target.value)} style={{ marginTop: '35px' }}/>
             <Input
                 placeholder='Heslo'
                 value={password}
                 type='password'
                 onChange={event => setPassword(event.target.value)}
+                style={{ marginTop: '25px' }}
             />
-            <br />
             <StyledButton
                 color='primary'
                 onClick={() => {
                     postCredentials();
                 }}
+                style={{ marginTop: '35px' }}
             >
-                Prihlasit
+                Prihlásiť
             </StyledButton>
         </LoginWrapper>
     );

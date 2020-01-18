@@ -4,9 +4,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-//import leftArrowImage from '/images/left_arrow.svg';
-//import rightArrowImage from '/images/right_arrow.svg';
-
+import { url } from 'App';
 import ProcedureEntry from './procedure-entry';
 
 export interface Procedure {
@@ -37,7 +35,7 @@ function ProcedureManagement() {
 
     async function fetchProcedures(page: number) {
         axios
-            .get(`http://localhost/api/v1/machines-and-procedures?orderBy=id&page=${page}&perPage=${PER_PAGE}`)
+            .get(`${url}/api/v1/machines-and-procedures?orderBy=id&page=${page}&perPage=${PER_PAGE}`)
             .then(res => {
                 setProcedures(
                     res.data.items.map((object: any) => {
@@ -52,14 +50,14 @@ function ProcedureManagement() {
                 setMaxPage(res.data.lastPage);
             })
             .catch((error: any) => {
-                window.alert('Error v nacitavani procedur');
+                window.alert('Nastala chyba pri načitávaní strojov a procedúr');
                 console.log(error);
             });
     }
 
     async function updateProcedure(procedure: Procedure) {
         axios
-            .post(`http://localhost/api/v1/machines-and-procedures/${procedure.id}`, {
+            .post(`${url}/api/v1/machines-and-procedures/${procedure.id}`, {
                 name: procedure.name,
                 active: procedure.isActive,
                 is_for_multisport_card: procedure.isForMultisportCard,
@@ -71,12 +69,12 @@ function ProcedureManagement() {
 
     async function deleteProcedure(procedure: Procedure) {
         axios
-            .delete(`http://localhost/api/v1/machines-and-procedures/${procedure.id}`)
+            .delete(`${url}/api/v1/machines-and-procedures/${procedure.id}`)
             .then(() => {
                 fetchProcedures(page);
             })
             .catch((error: any) => {
-                window.alert('Error pri mazani procedury');
+                window.alert('Nastala chyba pri vymazávaní stroja/procedúry');
                 console.log(error);
             });
     }
@@ -91,14 +89,14 @@ function ProcedureManagement() {
         <Wrapper>
             <Header>
                 <Icon icon='bars' color='#0063ff' />
-                <HeaderText>Stroje a procedury</HeaderText>
+                <HeaderText>Stroje a procedúry</HeaderText>
             </Header>
             <Table>
                 <tbody>
                     <TableRow>
                         <TableDataHeader>ID</TableDataHeader>
-                        <TableDataHeader>Nazov</TableDataHeader>
-                        <TableDataHeader>Aktivny</TableDataHeader>
+                        <TableDataHeader>Názov</TableDataHeader>
+                        <TableDataHeader>Aktívny</TableDataHeader>
                         <TableDataHeader>Multisport</TableDataHeader>
                         <TableDataHeader></TableDataHeader>
                     </TableRow>
@@ -119,7 +117,7 @@ function ProcedureManagement() {
                         changePage(page - 1);
                     }}
                 >
-                    <img alt={'back arrow'} />
+                    <FontAwesomeIcon size='1x' icon='chevron-left' color='#0063ff' />
                 </PagingButton>
                 {page > 1 ? (
                     <PagingButton onClick={() => changePage(1)}>
@@ -140,7 +138,7 @@ function ProcedureManagement() {
                         changePage(page + 1);
                     }}
                 >
-                    <img alt={'forward arrow'} />
+                    <FontAwesomeIcon size='1x' icon='chevron-right' color='#0063ff' />
                 </PagingButton>
             </PagingDiv>
         </Wrapper>
@@ -175,6 +173,8 @@ const HeaderText = styled.span`
 
 const Table = styled.table`
     margin: 20px 0 20px 40px;
+    min-width: 90%;
+    text-align: left;
 
     border-top: 1px solid #d5dee3;
     border-collapse: collapse;
@@ -182,12 +182,14 @@ const Table = styled.table`
 
 export const TableRow = styled.tr`
     border-bottom: 1px solid #d5dee3;
+    height: 50px;
+    text-align: left;
 `;
 
 const TableDataHeader = styled.th<{ hideOnMobile?: boolean }>`
     padding: 6px;
 
-    @media (max-width: 100rem) {
+    @media (max-width: 1020px) {
         display: ${props => (props.hideOnMobile ? 'none' : 'table-cell')};
     }
 `;

@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import { url } from 'App';
 import HistoryEntry from './history-entry';
 
 export interface ClientHistory {
@@ -36,7 +37,7 @@ function ClientHistory() {
 
     async function fetchClientHistory(page: number) {
         axios
-            .get(`http://localhost/api/v1/clients/history?orderBy=id&page=${page}&perPage=${PER_PAGE}`)
+            .get(`${url}/api/v1/clients/history?orderBy=id&page=${page}&perPage=${PER_PAGE}`)
             .then(res => {
                 setClientHistory(
                     res.data.items.map((object: any) => {
@@ -51,7 +52,7 @@ function ClientHistory() {
                 setMaxPage(res.data.lastPage);
             })
             .catch((error: any) => {
-                window.alert('Error v nacitavani historie');
+                window.alert('Nastala chyba pri načitávaní histórie.');
                 console.log(error);
             });
     }
@@ -72,14 +73,14 @@ function ClientHistory() {
             </StyledLink>
             <Header>
                 <Icon icon='bars' color='#0063ff' />
-                <HeaderText>Historia objednavok</HeaderText>
+                <HeaderText>História objednávok</HeaderText>
             </Header>
             <Table>
                 <tbody>
                     <TableRow>
                         <TableDataHeader>ID</TableDataHeader>
                         <TableDataHeader>Meno a priezvisko</TableDataHeader>
-                        <TableDataHeader>Zaciatok</TableDataHeader>
+                        <TableDataHeader>Začiatok</TableDataHeader>
                         <TableDataHeader>Koniec</TableDataHeader>
                     </TableRow>
                     {clientHistory.map(ClientHistory => (
@@ -174,7 +175,7 @@ const TableDataHeader = styled.th<{ hideOnMobile?: boolean }>`
     padding-left: 25px;
     padding-right: 25px;
 
-    @media (max-width: 100rem) {
+    @media (max-width: 1020px) {
         display: ${props => (props.hideOnMobile ? 'none' : 'table-cell')};
     }
 `;
