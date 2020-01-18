@@ -3,7 +3,6 @@ import { useLocation, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import ProcedureEntry from './procedure-entry';
 import { TokenContext, url } from '../App';
 import ProcedureRegistration from './procedure-registration';

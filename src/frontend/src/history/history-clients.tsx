@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import HistoryEntry from './history-entry';
 import { TokenContext, url } from '../App';
 
