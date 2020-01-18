@@ -53,8 +53,14 @@ function ClientHistory2(props: Props) {
                             id: object.id,
                             name: object.name,
                             date: object.start_time.split(' ')[0],
-                            start: object.start_time.split(' ')[1],
-                            end: object.end_time.split(' ')[1],
+                            start:
+                                object.start_time.split(' ')[1].split(':')[0] +
+                                ':' +
+                                object.start_time.split(' ')[1].split(':')[1],
+                            end:
+                                object.end_time.split(' ')[1].split(':')[0] +
+                                ':' +
+                                object.end_time.split(' ')[1].split(':')[1],
                         };
                     })
                 );

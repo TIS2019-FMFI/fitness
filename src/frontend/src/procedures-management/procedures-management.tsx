@@ -108,7 +108,7 @@ function ProcedureManagement(props: Props) {
                 {
                     name: procedure.name,
                     active: procedure.isActive,
-                    has_multisport_card: procedure.isForMultisportCard,
+                    is_for_multisport_card: procedure.isForMultisportCard,
                 },
                 { headers: { Authorization: 'Bearer ' + token } }
             )
@@ -117,7 +117,7 @@ function ProcedureManagement(props: Props) {
             })
             .catch((error: any) => {
                 props.handleError(error);
-                window.alert('Nastala chyba pri pridávaní nového klienta');
+                window.alert('Nastala chyba pri pridávaní novej procedúry');
                 console.log(error);
             });
     }
