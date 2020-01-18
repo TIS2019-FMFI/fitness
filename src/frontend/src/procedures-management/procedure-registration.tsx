@@ -4,48 +4,38 @@ import Modal from 'react-modal';
 import styled from 'styled-components';
 import { Button, Input } from 'reactstrap';
 
-import { Client } from '../client-management';
-import Checkbox from '../client-entry/checkbox';
+import { Procedure } from './procedures-management';
+import Checkbox from '../client-management/client-entry/checkbox';
 
 export interface Props {
-    registerClient: (client: Client) => void;
+    registerProcedure: (procedure: Procedure) => void;
     setIsOpen: (isOpen: boolean) => void;
 }
 
-function ClientRegistration(props: Props) {
+function ProcedureRegistration(props: Props) {
     const { setIsOpen } = props;
     const [name, setName] = useState('');
-    const [note, setNote] = useState('');
-    const [number, setNumber] = useState('');
     const [isActive, setIsActive] = useState(true);
-    const [hasMultisportCard, setHasMultisportCard] = useState(false);
-    const [isGDPR, setIsGDPR] = useState(false);
+    const [isForMultisportCard, setIsForMultisportCard] = useState(false);
 
-    function registerClient() {
-        const client = {
+    function registerProcedure() {
+        const procedure = {
             name,
-            phone: number,
-            note,
             isActive,
-            hasMultisportCard,
-            isGDPR,
-        } as Client;
+            isForMultisportCard,
+        } as Procedure;
 
-        props.registerClient(client);
+        props.registerProcedure(procedure);
         setIsOpen(false);
     }
 
     return (
         <Modal isOpen={true} onRequestClose={() => setIsOpen(false)} style={ModalStyles} contentLabel='Example Modal'>
             <div>
-                <h2 style={{ margin: 0 }}>Nový klient</h2>
+                <h2 style={{ margin: 0 }}>Nová procedúra</h2>
                 <div style={{ display: 'flex', alignItems: 'center', marginTop: '5px', marginBottom: '10px' }}>
-                    <span>Meno a priezvisko</span>
+                    <span>Názov</span>
                     <StyledInput type='text' value={name} onChange={event => setName(event.target.value)} />
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', marginTop: '5px', marginBottom: '10px' }}>
-                    <span>Telefónne číslo</span>
-                    <StyledInput type='number' value={number} onChange={event => setNumber(event.target.value)} />
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div style={{ display: 'inline-flex', alignItems: 'center' }}>
@@ -55,22 +45,14 @@ function ClientRegistration(props: Props) {
                     <div style={{ display: 'inline-flex', alignItems: 'center' }}>
                         <StyledLabel>Multisport</StyledLabel>
                         <Checkbox
-                            checked={hasMultisportCard}
+                            checked={isForMultisportCard}
                             disabled={false}
-                            onClick={() => setHasMultisportCard(!hasMultisportCard)}
+                            onClick={() => setIsForMultisportCard(!isForMultisportCard)}
                         />
                     </div>
-                    <div style={{ display: 'inline-flex', alignItems: 'center' }}>
-                        <StyledLabel>GDPR</StyledLabel>
-                        <Checkbox checked={isGDPR} disabled={false} onClick={() => setIsGDPR(!isGDPR)} />
-                    </div>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', marginTop: '5px', marginBottom: '10px' }}>
-                    <span>Poznámka</span>
-                    <StyledInput type='textarea' value={note} onChange={event => setNote(event.target.value)} />
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Button disabled={name === ''} color='success' onClick={registerClient}>
+                    <Button disabled={name === ''} color='success' onClick={registerProcedure}>
                         Pridať
                         <FontAwesomeIcon style={{ marginLeft: '4px' }} icon='save' />
                     </Button>
@@ -105,4 +87,4 @@ const StyledLabel = styled.span`
     margin-left: 0;
 `;
 
-export default ClientRegistration;
+export default ProcedureRegistration;

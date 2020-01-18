@@ -11,6 +11,7 @@ import { TokenContext, url } from '../App';
 export interface ClientHistory {
     id: number;
     name: string;
+    date: string;
     start: string;
     end: string;
 }
@@ -51,8 +52,9 @@ function ClientHistory(props: Props) {
                         return {
                             id: object.id,
                             name: `${object.first_name} ${object.last_name}`,
-                            start: object.start_time,
-                            end: object.end_time,
+                            date: object.start_time.split(' ')[0],
+                            start: object.start_time.split(' ')[1],
+                            end: object.end_time.split(' ')[1],
                         };
                     })
                 );
@@ -75,7 +77,7 @@ function ClientHistory(props: Props) {
         <>
             <div style={{ marginTop: 80 }}>
                 <StyledLink to='/historia/clients' isActive={'people' === site}>
-                    Ludia
+                    Ľudia
                 </StyledLink>
                 <StyledLink to='/historia/machines' isActive={'machines' === site}>
                     Stroje
@@ -92,6 +94,7 @@ function ClientHistory(props: Props) {
                         <TableRow>
                             <TableDataHeader>ID</TableDataHeader>
                             <TableDataHeader>Meno a priezvisko</TableDataHeader>
+                            <TableDataHeader>Dátum</TableDataHeader>
                             <TableDataHeader>Začiatok</TableDataHeader>
                             <TableDataHeader>Koniec</TableDataHeader>
                         </TableRow>
@@ -174,6 +177,8 @@ const HeaderText = styled.span`
 
 const Table = styled.table`
     margin: 20px 0 20px 40px;
+    min-width: 90%;
+    text-align: left;
 
     border-top: 1px solid #d5dee3;
     border-collapse: collapse;
@@ -181,12 +186,13 @@ const Table = styled.table`
 
 export const TableRow = styled.tr`
     border-bottom: 1px solid #d5dee3;
+    height: 50px;
+    text-align: left;
 `;
 
 const TableDataHeader = styled.th<{ hideOnMobile?: boolean }>`
-    padding: 10px;
-    padding-left: 25px;
-    padding-right: 25px;
+    padding: 6px;
+    text-align: left;
 
     @media (max-width: 1020px) {
         display: ${props => (props.hideOnMobile ? 'none' : 'table-cell')};

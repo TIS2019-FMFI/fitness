@@ -11,6 +11,7 @@ import { TokenContext, url } from '../App';
 export interface ClientHistory {
     id: number;
     name: string;
+    date: string;
     start: string;
     end: string;
 }
@@ -43,7 +44,7 @@ function ClientHistory2(props: Props) {
     async function fetchClientHistory(page: number) {
         axios
             .get(`${url}/api/v1/machines-and-procedures/history?orderBy=id&page=${page}&perPage=${PER_PAGE}`, {
-                 headers: { Authorization: 'Bearer ' + token },
+                headers: { Authorization: 'Bearer ' + token },
             })
             .then(res => {
                 setClientHistory(
@@ -51,8 +52,9 @@ function ClientHistory2(props: Props) {
                         return {
                             id: object.id,
                             name: object.name,
-                            start: object.start_time,
-                            end: object.end_time,
+                            date: object.start_time.split(' ')[0],
+                            start: object.start_time.split(' ')[1],
+                            end: object.end_time.split(' ')[1],
                         };
                     })
                 );
@@ -75,7 +77,7 @@ function ClientHistory2(props: Props) {
         <>
             <div style={{ marginTop: 80 }}>
                 <StyledLink to='/historia/clients' isActive={'people' === site}>
-                    Ludia
+                    Ľudia
                 </StyledLink>
                 <StyledLink to='/historia/machines' isActive={'machines' === site}>
                     Stroje
@@ -174,6 +176,8 @@ const HeaderText = styled.span`
 
 const Table = styled.table`
     margin: 20px 0 20px 40px;
+    min-width: 90%;
+    text-align: left;
 
     border-top: 1px solid #d5dee3;
     border-collapse: collapse;
@@ -184,9 +188,8 @@ export const TableRow = styled.tr`
 `;
 
 const TableDataHeader = styled.th<{ hideOnMobile?: boolean }>`
-    padding: 10px;
-    padding-left: 25px;
-    padding-right: 25px;
+    padding: 6px;
+    text-align: left;
 
     @media (max-width: 1020px) {
         display: ${props => (props.hideOnMobile ? 'none' : 'table-cell')};

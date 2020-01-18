@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import ProcedureEntry from './procedure-entry';
 import { TokenContext, url } from '../App';
+import ProcedureRegistration from './procedure-registration';
 
 export interface Procedure {
     id: number;
@@ -29,6 +30,7 @@ function ProcedureManagement(props: Props) {
     const [page, setPage] = useState(matchedNumber > 0 && matchedNumber <= maxPage ? matchedNumber : 1);
     const [procedures, setProcedures] = useState([]);
     const token = useContext(TokenContext);
+    const [addingProcedure, setAddingProcedure] = useState(false);
 
     if (match === null || matchedNumber !== page) {
         history.push(`/procedury?page=${page}`);
@@ -41,7 +43,7 @@ function ProcedureManagement(props: Props) {
     async function fetchProcedures(page: number) {
         axios
             .get(`${url}/api/v1/machines-and-procedures?orderBy=id&page=${page}&perPage=${PER_PAGE}`, {
-                 headers: { Authorization: 'Bearer ' + token },
+                headers: { Authorization: 'Bearer ' + token },
             })
             .then(res => {
                 setProcedures(
@@ -65,12 +67,14 @@ function ProcedureManagement(props: Props) {
 
     async function updateProcedure(procedure: Procedure) {
         axios
-            .post(`${url}/api/v1/machines-and-procedures/${procedure.id}`, {
-                name: procedure.name,
-                active: procedure.isActive,
-                is_for_multisport_card: procedure.isForMultisportCard,
-            },
-            { headers: { Authorization: 'Bearer ' + token } }
+            .post(
+                `${url}/api/v1/machines-and-procedures/${procedure.id}`,
+                {
+                    name: procedure.name,
+                    active: procedure.isActive,
+                    is_for_multisport_card: procedure.isForMultisportCard,
+                },
+                { headers: { Authorization: 'Bearer ' + token } }
             )
             .then(() => {
                 fetchProcedures(page);
@@ -97,6 +101,27 @@ function ProcedureManagement(props: Props) {
             });
     }
 
+    function registerProcedure(procedure: Procedure) {
+        axios
+            .post(
+                `http://localhost/api/v1/machines-and-procedures`,
+                {
+                    name: procedure.name,
+                    active: procedure.isActive,
+                    has_multisport_card: procedure.isForMultisportCard,
+                },
+                { headers: { Authorization: 'Bearer ' + token } }
+            )
+            .then(() => {
+                fetchProcedures(page);
+            })
+            .catch((error: any) => {
+                props.handleError(error);
+                window.alert('Nastala chyba pri pridávaní nového klienta');
+                console.log(error);
+            });
+    }
+
     function changePage(newPage: number) {
         setPage(newPage);
         history.push(`/procedury?page=${page}`);
@@ -104,62 +129,76 @@ function ProcedureManagement(props: Props) {
     }
 
     return (
-        <Wrapper>
-            <Header>
-                <Icon size='3x' icon='bars' color='#0063ff' />
-                <HeaderText>Stroje a procedúry</HeaderText>
-            </Header>
-            <Table>
-                <tbody>
-                    <TableRow>
-                        <TableDataHeader>ID</TableDataHeader>
-                        <TableDataHeader>Názov</TableDataHeader>
-                        <TableDataHeader>Aktívny</TableDataHeader>
-                        <TableDataHeader>Multisport</TableDataHeader>
-                        <TableDataHeader></TableDataHeader>
-                    </TableRow>
-                    {procedures.map(procedure => (
-                        <ProcedureEntry
-                            key={procedure.id}
-                            procedure={procedure}
-                            updateProcedure={updateProcedure}
-                            deleteProcedure={deleteProcedure}
-                        />
-                    ))}
-                </tbody>
-            </Table>
-            <PagingDiv>
-                <PagingButton
-                    disabled={page < 2}
-                    onClick={() => {
-                        changePage(page - 1);
-                    }}
-                >
-                    <FontAwesomeIcon size='1x' icon='chevron-left' color='#0063ff' />
-                </PagingButton>
-                {page > 1 ? (
-                    <PagingButton onClick={() => changePage(1)}>
-                        <span>{1}</span>
+        <React.Fragment>
+            <Wrapper>
+                <Header>
+                    <Icon size='3x' icon='bars' color='#0063ff' />
+                    <HeaderText>Stroje a procedúry</HeaderText>
+                    <Icon
+                        size='3x'
+                        icon={['far', 'plus-square']}
+                        color='#0063ff'
+                        onClick={() => setAddingProcedure(true)}
+                    />
+                </Header>
+                <Table>
+                    <tbody>
+                        <TableRow>
+                            <TableDataHeader>ID</TableDataHeader>
+                            <TableDataHeader>Názov</TableDataHeader>
+                            <TableDataHeader>Aktívny</TableDataHeader>
+                            <TableDataHeader>Multisport</TableDataHeader>
+                            <TableDataHeader></TableDataHeader>
+                        </TableRow>
+                        {procedures.map(procedure => (
+                            <ProcedureEntry
+                                key={procedure.id}
+                                procedure={procedure}
+                                updateProcedure={updateProcedure}
+                                deleteProcedure={deleteProcedure}
+                            />
+                        ))}
+                    </tbody>
+                </Table>
+                <PagingDiv>
+                    <PagingButton
+                        disabled={page < 2}
+                        onClick={() => {
+                            changePage(page - 1);
+                        }}
+                    >
+                        <FontAwesomeIcon size='1x' icon='chevron-left' color='#0063ff' />
                     </PagingButton>
-                ) : null}
-                <PagingButton selected={true}>
-                    <span>{page}</span>
-                </PagingButton>
-                {page !== maxPage ? (
-                    <PagingButton onClick={() => changePage(maxPage)}>
-                        <span>{maxPage}</span>
+                    {page > 1 ? (
+                        <PagingButton onClick={() => changePage(1)}>
+                            <span>{1}</span>
+                        </PagingButton>
+                    ) : null}
+                    <PagingButton selected={true}>
+                        <span>{page}</span>
                     </PagingButton>
-                ) : null}
-                <PagingButton
-                    disabled={page >= maxPage}
-                    onClick={() => {
-                        changePage(page + 1);
-                    }}
-                >
-                    <FontAwesomeIcon size='1x' icon='chevron-right' color='#0063ff' />
-                </PagingButton>
-            </PagingDiv>
-        </Wrapper>
+                    {page !== maxPage ? (
+                        <PagingButton onClick={() => changePage(maxPage)}>
+                            <span>{maxPage}</span>
+                        </PagingButton>
+                    ) : null}
+                    <PagingButton
+                        disabled={page >= maxPage}
+                        onClick={() => {
+                            changePage(page + 1);
+                        }}
+                    >
+                        <FontAwesomeIcon size='1x' icon='chevron-right' color='#0063ff' />
+                    </PagingButton>
+                </PagingDiv>
+            </Wrapper>
+            {addingProcedure ? (
+                <ProcedureRegistration
+                    registerProcedure={(procedure: Procedure) => registerProcedure(procedure)}
+                    setIsOpen={setAddingProcedure}
+                />
+            ) : null}
+        </React.Fragment>
     );
 }
 
