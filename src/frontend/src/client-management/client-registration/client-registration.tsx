@@ -45,7 +45,7 @@ function ClientRegistration(props: Props) {
                 <div>
                     <h2 style={{ margin: 0 }}>Nový klient</h2>
                     <div style={{ display: 'flex', alignItems: 'center', marginTop: '5px', marginBottom: '10px' }}>
-                        <span>Meno</span>
+                        <span>Meno a priezvisko</span>
                         <StyledInput type='text' value={name} onChange={event => setName(event.target.value)} />
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', marginTop: '5px', marginBottom: '10px' }}>
