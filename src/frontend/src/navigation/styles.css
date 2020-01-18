@@ -6,3 +6,17 @@ body {
 #root {
     height: 100%;
 }
+
+
+a:link {
+    text-decoration: none !important;
+}
+
+a:visited {
+    text-decoration: none !important;
+}
+
+a:hover {
+    color: white !important;
+    text-decoration: none !important;
+}

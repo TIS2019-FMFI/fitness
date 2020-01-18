@@ -52,7 +52,7 @@ function ClientHistory2() {
                 setMaxPage(res.data.lastPage);
             })
             .catch((error: any) => {
-                window.alert('Error v nacitavani historie');
+                window.alert('Nastala chyba pri načitávaní histórie.');
                 console.log(error);
             });
     }
@@ -73,14 +73,14 @@ function ClientHistory2() {
             </StyledLink>
             <Header>
                 <Icon icon='bars' color='#0063ff' />
-                <HeaderText>Historia objednavok</HeaderText>
+                <HeaderText>História objednávok</HeaderText>
             </Header>
             <Table>
                 <tbody>
                     <TableRow>
                         <TableDataHeader>ID</TableDataHeader>
-                        <TableDataHeader>Nazov</TableDataHeader>
-                        <TableDataHeader>Zaciatok</TableDataHeader>
+                        <TableDataHeader>Názov</TableDataHeader>
+                        <TableDataHeader>Začiatok</TableDataHeader>
                         <TableDataHeader>Koniec</TableDataHeader>
                     </TableRow>
                     {clientHistory.map(ClientHistory => (
@@ -175,7 +175,7 @@ const TableDataHeader = styled.th<{ hideOnMobile?: boolean }>`
     padding-left: 25px;
     padding-right: 25px;
 
-    @media (max-width: 100rem) {
+    @media (max-width: 1020px) {
         display: ${props => (props.hideOnMobile ? 'none' : 'table-cell')};
     }
 `;

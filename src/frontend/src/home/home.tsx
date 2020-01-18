@@ -3,6 +3,8 @@ import axios from 'axios';
 import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 import { Client } from '../client-management/client-management';
 import { Procedure } from '../procedures-management/procedures-management';
@@ -10,6 +12,7 @@ import { OrderReservation } from './procedure-row/reservation-cell/reservation-c
 import ProcedureRow, { addInterval, Reservation } from './procedure-row/procedure-row';
 import { startHour, endHour } from './clock';
 import { TokenContext, url } from '../App';
+
 
 export const ClientsContext = React.createContext([]);
 
@@ -155,9 +158,9 @@ function Home(props: Props) {
                 );
             })
             .catch(error => {
-                props.handleError(error)
+                props.handleError(error);
                 console.error(error);
-                window.alert('Error pri nacitavany pouzivateov');
+                window.alert('Nastala chyba pri načitávaní klientov');
             });
     }
 
@@ -189,8 +192,8 @@ function Home(props: Props) {
                 fetchOrders(reservationTimes[0], endTime);
             })
             .catch(error => {
-                props.handleError(error)
-                window.alert('Order failed');
+                props.handleError(error);
+                window.alert('Nastala chyba pri vytváraní rezervácie');
                 console.error(error);
             });
     }
@@ -203,7 +206,7 @@ function Home(props: Props) {
             })
             .catch((error: any) => {
                 props.handleError(error)
-                window.alert('Error pri mazany rezervacie');
+                window.alert('Nastala chyba pri vymazávaní rezervácie');
                 console.log(error);
             });
     }
@@ -221,9 +224,44 @@ function Home(props: Props) {
 
     const dateOptions = { hour: '2-digit', minute: '2-digit' };
 
+    const DatePickerInput = ({ value, onClick }) => (
+        <div style={{ display: 'flex', alignItems: 'center'}}>
+            <div onClick={() => {
+                    const newDate = new Date(date);
+                    newDate.setHours(date.getHours() - 24);
+                    setDate(newDate)
+                }}
+            >
+                <FontAwesomeIcon size='1x' icon='chevron-left' color='#0063ff' />
+            </div>
+            <div onClick={onClick}>
+                <span style={{ fontSize: '24px', margin: '4px', color: '#999' }}>
+                    {value}
+                </span>
+            </div>
+            <div onClick={() => {
+                    const newDate = new Date(date);
+                    newDate.setHours(date.getHours() + 24);
+                    setDate(newDate)
+                }}
+            >
+                <FontAwesomeIcon size='1x' icon='chevron-right' color='#0063ff' />
+            </div>
+        </div>
+    );
+
     return (
         <HomeWrapper>
-            <DatePicker todayButton='Dnes' selected={date} onChange={(date: Date) => setDate(date)} />
+            <div style={{ alignSelf: 'start', marginLeft: '20px' }}>
+                <DatePicker
+                    dateFormat="dd MMMM yyyy"
+                    locale="sk-SK"
+                    customInput={<DatePickerInput value={date} onClick={() => {}} />}
+                    todayButton='Dnes'
+                    selected={date}
+                    onChange={(date: Date) => setDate(date)}
+                />
+            </div>
             <Table>
                 <tbody>
                     <tr>
@@ -258,8 +296,10 @@ function Home(props: Props) {
 
 const HomeWrapper = styled.div`
     width: max-content;
+    
     padding-top: 10px;
     margin: 20px;
+    
 
     border-radius: 10px;
     display: flex;
@@ -269,15 +309,23 @@ const HomeWrapper = styled.div`
     background-color: white;
 `;
 
+const Icon = styled(FontAwesomeIcon)`
+
+`
+
 const Table = styled.table`
     margin-top: 10px;
 
     border-collapse: collapse;
-    border-top: 1px black dashed;
+    border-top: 1px #999999 dashed;
 `;
 
 const TableHead = styled.th`
-    border-left: 1px black dashed;
+    border-left: 1px #999999 dashed;
+    font-weight: 400;
+    color: #999999;
 `;
+
+
 
 export default Home;

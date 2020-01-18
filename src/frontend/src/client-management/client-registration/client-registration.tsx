@@ -43,18 +43,18 @@ function ClientRegistration(props: Props) {
                 contentLabel='Example Modal'
             >
                 <div>
-                    <h2 style={{ margin: 0 }}>Novy klient</h2>
+                    <h2 style={{ margin: 0 }}>Nový klient</h2>
                     <div style={{ display: 'flex', alignItems: 'center', marginTop: '5px', marginBottom: '10px' }}>
                         <span>Meno</span>
                         <StyledInput type='text' value={name} onChange={event => setName(event.target.value)} />
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', marginTop: '5px', marginBottom: '10px' }}>
-                        <span>Cislo</span>
+                        <span>Telefónne číslo</span>
                         <StyledInput type='number' value={number} onChange={event => setNumber(event.target.value)} />
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                         <div style={{ display: 'inline-flex', alignItems: 'center'}}>
-                            <StyledLabel>Aktivny</StyledLabel>
+                            <StyledLabel>Aktívny</StyledLabel>
                             <Checkbox checked={isActive} disabled={false} onClick={() => setIsActive(!isActive)} />
                         </div>
                         <div style={{ display: 'inline-flex', alignItems: 'center'}}>
@@ -67,16 +67,16 @@ function ClientRegistration(props: Props) {
                         </div>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', marginTop: '5px', marginBottom: '10px' }}>
-                        <span>Poznamka</span>
+                        <span>Poznámka</span>
                         <StyledInput type='textarea' value={note} onChange={event => setNote(event.target.value)} />
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                         <Button disabled={name === ''} color='success' onClick={registerClient}>
-                            Register
+                            Pridať
                             <FontAwesomeIcon style={{ marginLeft: '4px'}} icon='save' />
                         </Button>
                         <Button onClick={() => setIsOpen(false)}>
-                            Zrusit
+                            Zrušit
                             <FontAwesomeIcon style={{ marginLeft: '4px'}} icon='window-close' />
                         </Button>
                     </div>
