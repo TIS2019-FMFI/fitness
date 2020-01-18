@@ -94,6 +94,7 @@ function ClientHistory2(props: Props) {
                         <TableRow>
                             <TableDataHeader>ID</TableDataHeader>
                             <TableDataHeader>Názov</TableDataHeader>
+                            <TableDataHeader>Dátum</TableDataHeader>
                             <TableDataHeader>Začiatok</TableDataHeader>
                             <TableDataHeader>Koniec</TableDataHeader>
                         </TableRow>
