@@ -3,8 +3,10 @@ import styled from 'styled-components';
 import React, { useState } from 'react';
 import { Input, Button } from 'reactstrap';
 
+import { url } from 'App'
+
 export interface Props {
-    setLogin: (token: string, endDate: Date) => void;
+    setLogin: (token: string, expiresIn: number) => void;
 }
 
 function Login(props: Props) {
@@ -18,19 +20,18 @@ function Login(props: Props) {
         };
 
         axios
-            .post('http://localhost/api/v1/user/login', object)
+            .post(`${url}/api/v1/user/login`, object)
             .then(response => {
                 if (response.data.success) {
-                    const d = new Date();
-                    d.setMonth(10);
-                    props.setLogin(response.data.data.auth_token, d);
+                    props.setLogin(response.data.data.auth_token, response.data.data.expires_in);
                 } else {
                     window.alert('Zle heslo');
                 }
             })
-            .catch(() => {
+            .catch((error) => {
                 window.alert('Zle heslo');
-            });
+                console.error(error);
+            })
     }
 
     return (

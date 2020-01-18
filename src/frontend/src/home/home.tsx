@@ -9,99 +9,13 @@ import { Procedure } from '../procedures-management/procedures-management';
 import { OrderReservation } from './procedure-row/reservation-cell/reservation-cell-create';
 import ProcedureRow, { addInterval, Reservation } from './procedure-row/procedure-row';
 import { startHour, endHour } from './clock';
-import { TokenContext } from '../App';
+import { TokenContext, url } from '../App';
 
 export const ClientsContext = React.createContext([]);
 
-function fetchProcedures(setProcedures: (procedures: Procedure[]) => void, token: string) {
-    axios.get(`http://localhost/api/v1/machines-and-procedures?token=${token}&orderBy=id&perPage=-1`).then(res => {
-        setProcedures(
-            res.data.items.map(object => {
-                return {
-                    id: object.id,
-                    name: object.name,
-                    active: object.active,
-                    isForMultisportCard: object.is_for_multisport_card,
-                };
-            })
-        );
-    });
-}
-
-function fetchAllClients(setAllClients: (clients: Client[]) => void, token: string) {
-    axios
-        .get(`http://localhost/api/v1/clients?token=${token}&perPage=-1`)
-        .then(res => {
-            setAllClients(
-                res.data.items.map((object: any) => {
-                    return {
-                        id: object.id,
-                        note: object.note,
-                        name: `${object.first_name} ${object.last_name}`,
-                        phone: object.phone,
-                        isActive: object.active,
-                        hasMultisportCard: object.has_multisport_card,
-                        isGDPR: object.is_gdpr,
-                    };
-                })
-            );
-        })
-        .catch(error => {
-            console.error(error);
-            window.alert('Error pri nacitavany pouzivateov');
-        });
-}
-
-function fetchOrders(startTime: Date, endTime: Date, setOrders: any, token: string): void {
-    const dateOptions = {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-    };
-
-    axios
-        .get(
-            `http://localhost/api/v1/orders?token=${token}&from=${startTime
-                .toLocaleString('en-GB', dateOptions)
-                .replace(',', '')}&to=${endTime.toLocaleString('en-GB', dateOptions).replace(',', '')}&perPage=-1`
-        )
-        .then(res => {
-            const ordersDict = {};
-            res.data.items.forEach((object: any) => {
-                if (!(object.order_machine_id in ordersDict)) {
-                    ordersDict[object.order_machine_id] = [];
-                }
-
-                ordersDict[object.order_machine_id].push({
-                    id: object.order_id,
-                    note: object.order_note ? object.order_note : '',
-                    client: {
-                        id: object.id,
-                        note: object.note,
-                        name: `${object.first_name} ${object.last_name}`,
-                        phone: object.phone,
-                        isActive: object.active,
-                        hasMultisportCard: object.has_multisport_card,
-                        isGDPR: object.is_gdpr,
-                    } as Client,
-                    endTime: new Date(object.order_end_time),
-                    startTime: new Date(object.order_start_time),
-                    procedure: {
-                        id: object.order_machine_id,
-                        isActive: object.active,
-                        isForMultisportCard: object.is_for_multisport_card,
-                    } as Procedure,
-                } as Reservation);
-            });
-
-            setOrders(ordersDict);
-        });
-}
-
 export interface Props {
     isPublic: boolean;
+    handleError: (error) => void;
 }
 
 function Home(props: Props) {
@@ -123,6 +37,75 @@ function Home(props: Props) {
         reservationTimes.push(startTime);
         startTime = addInterval(startTime);
     }
+    
+    function fetchProcedures() {
+        axios.get(`${url}/api/v1/machines-and-procedures?orderBy=id&perPage=-1`, { headers: { 'Authorization': 'Bearer ' + token }}).then(res => {
+            setProcedures(
+                res.data.items.map(object => {
+                    return {
+                        id: object.id,
+                        name: object.name,
+                        active: object.active,
+                        isForMultisportCard: object.is_for_multisport_card,
+                    };
+                })
+            );
+        }).catch(error => {
+            props.handleError(error)
+        });
+    }
+    
+    function fetchOrders(startTime: Date, endTime: Date): void {
+        const dateOptions = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+        };
+
+        axios
+            .get(
+                `${url}/api/v1/orders?from=${startTime
+                    .toLocaleString('en-GB', dateOptions)
+                    .replace(',', '')}&to=${endTime.toLocaleString('en-GB', dateOptions).replace(',', '')}&perPage=-1`,
+                { headers: { 'Authorization': 'Bearer ' + token }}
+            )
+            .then(res => {
+                const ordersDict = {};
+                res.data.items.forEach((object: any) => {
+                    if (!(object.order_machine_id in ordersDict)) {
+                        ordersDict[object.order_machine_id] = [];
+                    }
+
+                    ordersDict[object.order_machine_id].push({
+                        id: object.order_id,
+                        note: object.order_note ? object.order_note : '',
+                        client: {
+                            id: object.id,
+                            note: object.note,
+                            name: `${object.first_name} ${object.last_name}`,
+                            phone: object.phone,
+                            isActive: object.active,
+                            hasMultisportCard: object.has_multisport_card,
+                            isGDPR: object.is_gdpr,
+                        } as Client,
+                        endTime: new Date(object.order_end_time),
+                        startTime: new Date(object.order_start_time),
+                        procedure: {
+                            id: object.order_machine_id,
+                            isActive: object.active,
+                            isForMultisportCard: object.is_for_multisport_card,
+                        } as Procedure,
+                    } as Reservation);
+                });
+
+                setOrders(ordersDict);
+            }).catch(error => {
+                props.handleError(error)
+                console.error(error)
+            });
+    }
 
     function saveReservation(reservation: Reservation) {
         const dateOptions = {
@@ -142,15 +125,42 @@ function Home(props: Props) {
         };
 
         axios
-            .post(`http://localhost/api/v1/orders/${reservation.id}?token=${token}`, orderObject)
+            .post(`${url}/api/v1/orders/${reservation.id}`, orderObject, { headers: { 'Authorization': 'Bearer ' + token }})
             .then(res => {
-                fetchOrders(reservationTimes[0], endTime, setOrders, token);
+                fetchOrders(reservationTimes[0], endTime);
             })
             .catch(error => {
+                props.handleError(error)
                 window.alert('Order failed');
                 console.error(error);
             });
     }
+    
+    function fetchAllClients() {
+        axios
+            .get(`${url}/api/v1/clients?&perPage=-1`, { headers: { 'Authorization': 'Bearer ' + token }})
+            .then(res => {
+                setAllClients(
+                    res.data.items.map((object: any) => {
+                        return {
+                            id: object.id,
+                            note: object.note,
+                            name: `${object.first_name} ${object.last_name}`,
+                            phone: object.phone,
+                            isActive: object.active,
+                            hasMultisportCard: object.has_multisport_card,
+                            isGDPR: object.is_gdpr,
+                        };
+                    })
+                );
+            })
+            .catch(error => {
+                props.handleError(error)
+                console.error(error);
+                window.alert('Error pri nacitavany pouzivateov');
+            });
+    }
+
 
     function createReservation(orderReservation: OrderReservation) {
         const dateOptions = {
@@ -174,11 +184,12 @@ function Home(props: Props) {
         }
 
         axios
-            .post(`http://localhost/api/v1/orders?token=${token}`, orderObject)
+            .post(`${url}/api/v1/orders`, orderObject, { headers: { 'Authorization': 'Bearer ' + token }})
             .then(res => {
-                fetchOrders(reservationTimes[0], endTime, setOrders, token);
+                fetchOrders(reservationTimes[0], endTime);
             })
             .catch(error => {
+                props.handleError(error)
                 window.alert('Order failed');
                 console.error(error);
             });
@@ -186,24 +197,25 @@ function Home(props: Props) {
 
     function removeReservation(reservation: Reservation) {
         axios
-            .delete(`http://localhost/api/v1/orders/${reservation.id}?token=${token}`)
+            .delete(`${url}/api/v1/orders/${reservation.id}`, { headers: { 'Authorization': 'Bearer ' + token }})
             .then(() => {
-                fetchOrders(reservationTimes[0], endTime, setOrders, token);
+                fetchOrders(reservationTimes[0], endTime);
             })
             .catch((error: any) => {
+                props.handleError(error)
                 window.alert('Error pri mazany rezervacie');
                 console.log(error);
             });
     }
 
     useEffect(() => {
-        fetchProcedures(setProcedures, token);
-        fetchOrders(reservationTimes[0], endTime, setOrders, token);
+        fetchProcedures();
+        fetchOrders(reservationTimes[0], endTime);
     }, [date]);
 
     useEffect(() => {
         if (!props.isPublic) {
-            fetchAllClients(setAllClients, token);
+            fetchAllClients();
         }
     }, []);
 

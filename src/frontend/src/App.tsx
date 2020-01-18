@@ -1,4 +1,5 @@
 import React from 'react';
+import { useCookies } from 'react-cookie';
 import styled from 'styled-components';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -42,12 +43,22 @@ library.add(
 );
 
 export const TokenContext = React.createContext('');
+export const url = 'http://localhost';
 
 export interface Props {
     token: string;
 }
 
 function App(props: Props) {
+    const [cookies, setCookie, removeCookie] = useCookies(['token']);
+
+    function handleError(error: any) {
+        if (error && error.response && error.response.status == 401) {
+            removeCookie('token-object');
+            window.location.reload(false);
+        }
+    }
+    
     return (
         <Router>
             <TokenContext.Provider value={props.token}>
@@ -56,7 +67,7 @@ function App(props: Props) {
                     <Switch>
                         <MainContent>
                             <Route path='/klienty'>
-                                <ClientManagement />
+                                <ClientManagement handleError={handleError} />
                             </Route>
                             <Route path='/procedury'>
                                 <Procedures />
@@ -68,7 +79,7 @@ function App(props: Props) {
                                 <HistoryC />
                             </Route>
                             <Route exact path='/'>
-                                <Home isPublic={false} />
+                                <Home handleError={handleError} isPublic={false} />
                             </Route>
                         </MainContent>
                     </Switch>
