@@ -37,23 +37,25 @@ function Login(props: Props) {
     return (
         <LoginWrapper style={{ padding: '10px' }}>
             <h1>Prihlásenie</h1>
-            <Input placeholder='Email' value={email} onChange={event => setEmail(event.target.value)} style={{ marginTop: '35px' }}/>
-            <Input
-                placeholder='Heslo'
-                value={password}
-                type='password'
-                onChange={event => setPassword(event.target.value)}
-                style={{ marginTop: '25px' }}
-            />
-            <StyledButton
-                color='primary'
-                onClick={() => {
-                    postCredentials();
-                }}
-                style={{ marginTop: '35px' }}
-            >
-                Prihlásiť
-            </StyledButton>
+            <form>
+                <Input placeholder='Email' value={email} onChange={event => setEmail(event.target.value)} style={{ marginTop: '35px' }}/>
+                <Input
+                    placeholder='Heslo'
+                    value={password}
+                    type='password'
+                    onChange={event => setPassword(event.target.value)}
+                    style={{ marginTop: '25px' }}
+                />
+                <StyledButton
+                    color='primary'
+                    onClick={() => {
+                        postCredentials();
+                    }}
+                    style={{ marginTop: '35px' }}
+                >
+                    Prihlásiť
+                </StyledButton>
+            </form>
         </LoginWrapper>
     );
 }
