@@ -6,13 +6,10 @@ use App\Http\Requests\Api\v1\User\LoginUser;
 use App\Http\Requests\Api\v1\User\RegisterUser;
 use App\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use JWTAuth;
 use JWTAuthException;
 use App\Http\Controllers\Controller;
-
-
 
 class UserController extends Controller
 {
@@ -76,10 +73,9 @@ class UserController extends Controller
                 ]
             ];
         } else {
-            $response = [
-                'success' => false,
-                'data' => 'Record doesnt exists'
-            ];
+            return response()->json([
+                'data' => 'User with this credentials doesnt exist'
+            ], 404);
         }
 
         return response()->json($response, 201);
@@ -108,18 +104,17 @@ class UserController extends Controller
 
             if (!is_string($token)) {
                 return response()->json([
-                    'success' => false,
                     'data' => 'Token generation failed'
-                ], 201);
+                ], 404);
             }
 
             $user = User::where('email', $sanitized['email'])->get()->first();
-
             $user->auth_token = $token;
             $user->save();
+
             $response = [
-                'success'=>true,
-                'data'=> [
+                'success'=> true,
+                'data' => [
                     'name' => $user->name,
                     'id' => $user->id,
                     'email' => $request->email,
@@ -129,10 +124,9 @@ class UserController extends Controller
             ];
         }
         else {
-            $response = [
-                'success' => false,
+            return response()->json([
                 'data' => 'Couldnt register user'
-            ];
+            ], 404);
         }
 
         return response()->json($response, 201);
