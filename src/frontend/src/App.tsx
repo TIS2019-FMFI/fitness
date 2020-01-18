@@ -15,7 +15,7 @@ import {
     faCommentDots,
     faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons';
-import { faUser, faBookmark, faCircle } from '@fortawesome/free-regular-svg-icons';
+import { faUser, faBookmark, faCircle, faPlusSquare } from '@fortawesome/free-regular-svg-icons';
 
 import Navigation from './navigation/navigation';
 import ClientManagement from './client-management/client-management';
@@ -38,7 +38,8 @@ library.add(
     faBars,
     faCommentDots,
     faCheckCircle,
-    faCircle
+    faCircle,
+    faPlusSquare
 );
 
 export const TokenContext = React.createContext('');

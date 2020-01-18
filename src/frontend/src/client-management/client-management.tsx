@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 //import leftArrowImage from '/images/left_arrow.svg';
 //import rightArrowImage from '/images/right_arrow.svg';
 
+import ClientRegistration from './client-registration/client-registration';
 import ClientEntry from './client-entry/client-entry';
 import { TokenContext } from '../App';
 
@@ -29,6 +30,7 @@ function ClientManagement() {
     const match = location.search.match(/page=([0-9]+)/);
     const matchedNumber = (match && match.length > 1 && Number(match[1])) || null;
     const [page, setPage] = useState(matchedNumber > 0 && matchedNumber <= maxPage ? matchedNumber : 1);
+    const [addingClient, setAddingClient] = useState(false);
     const [clients, setClients] = useState([]);
     const token = useContext(TokenContext);
 
@@ -67,7 +69,7 @@ function ClientManagement() {
 
     async function updateClient(client: Client) {
         axios
-            .post(`http://localhost/api/v1/clients/${client.id}&token=${token}`, {
+            .post(`http://localhost/api/v1/clients/${client.id}?token=${token}`, {
                 first_name: client.name.split(' ')[0],
                 last_name: client.name.split(' ')[1],
                 phone: client.phone,
@@ -83,7 +85,7 @@ function ClientManagement() {
 
     async function deleteClient(client: Client) {
         axios
-            .delete(`http://localhost/api/v1/clients/${client.id}&token=${token}`)
+            .delete(`http://localhost/api/v1/clients/${client.id}?token=${token}`)
             .then(() => {
                 fetchClients(page);
             })
@@ -93,6 +95,23 @@ function ClientManagement() {
             });
     }
 
+    function registerClient(client: Client) {
+        axios.post(`http://localhost/api/v1/clients?token=${token}`, {
+            first_name: client.name.split(' ')[0],
+            last_name: client.name.split(' ')[1],
+            phone: client.phone,
+            active: client.isActive,
+            has_multisport_card: client.hasMultisportCard,
+            note: client.note,
+            is_gdpr: client.isGDPR,
+        }).then(() => {
+            fetchClients(page);
+        }).catch((error: any) => {
+            window.alert('Error pri registrovany zakaznika');
+            console.log(error);
+        });
+    }
+
     function changePage(newPage: number) {
         setPage(newPage);
         history.push(`/klienty?page=${page}`);
@@ -100,65 +119,73 @@ function ClientManagement() {
     }
 
     return (
-        <Wrapper>
-            <Header>
-                <Icon size='3x' icon='bars' color='#0063ff' />
-                <HeaderText>Sprava klientov</HeaderText>
-            </Header>
-            <Table>
-                <tbody>
-                    <TableRow>
-                        <TableDataHeader hideOnMobile={true}>ID</TableDataHeader>
-                        <TableDataHeader>Meno a priezvisko</TableDataHeader>
-                        <TableDataHeader>Telefonne cislo</TableDataHeader>
-                        <TableDataHeader hideOnMobile={true}>Aktivny</TableDataHeader>
-                        <TableDataHeader hideOnMobile={true}>Multisport</TableDataHeader>
-                        <TableDataHeader hideOnMobile={true}>GDPR</TableDataHeader>
-                        <TableDataHeader hideOnMobile={true}>Poznamka</TableDataHeader>
-                        <TableDataHeader hideOnMobile={true}></TableDataHeader>
-                    </TableRow>
-                    {clients.map(client => (
-                        <ClientEntry
-                            key={client.id}
-                            client={client}
-                            updateClient={updateClient}
-                            deleteClient={deleteClient}
-                        />
-                    ))}
-                </tbody>
-            </Table>
-            <PagingDiv>
-                <PagingButton
-                    disabled={page < 2}
-                    onClick={() => {
-                        changePage(page - 1);
-                    }}
-                >
-                    <img alt={'back arrow'} />
-                </PagingButton>
-                {page > 1 ? (
-                    <PagingButton onClick={() => changePage(1)}>
-                        <span>{1}</span>
+        <React.Fragment>
+            <Wrapper>
+                <Header>
+                    <Icon size='3x' icon='bars' color='#0063ff' />
+                    <HeaderText>Sprava klientov</HeaderText>
+                    <Icon size='3x' icon={['far', 'plus-square']} color='#0063ff' onClick={() => setAddingClient(true)}/>
+                </Header>
+                <Table>
+                    <tbody>
+                        <TableRow>
+                            <TableDataHeader hideOnMobile={true}>ID</TableDataHeader>
+                            <TableDataHeader>Meno a priezvisko</TableDataHeader>
+                            <TableDataHeader>Telefonne cislo</TableDataHeader>
+                            <TableDataHeader hideOnMobile={true}>Aktivny</TableDataHeader>
+                            <TableDataHeader hideOnMobile={true}>Multisport</TableDataHeader>
+                            <TableDataHeader hideOnMobile={true}>GDPR</TableDataHeader>
+                            <TableDataHeader hideOnMobile={true}>Poznamka</TableDataHeader>
+                            <TableDataHeader hideOnMobile={true}></TableDataHeader>
+                        </TableRow>
+                        {clients.map(client => (
+                            <ClientEntry
+                                key={client.id}
+                                client={client}
+                                updateClient={updateClient}
+                                deleteClient={deleteClient}
+                            />
+                        ))}
+                    </tbody>
+                </Table>
+                <PagingDiv>
+                    <PagingButton
+                        disabled={page < 2}
+                        onClick={() => {
+                            changePage(page - 1);
+                        }}
+                    >
+                        <img alt={'back arrow'} />
                     </PagingButton>
-                ) : null}
-                <PagingButton selected={true}>
-                    <span>{page}</span>
-                </PagingButton>
-                {page !== maxPage ? (
-                    <PagingButton onClick={() => changePage(maxPage)}>
-                        <span>{maxPage}</span>
+                    {page > 1 ? (
+                        <PagingButton onClick={() => changePage(1)}>
+                            <span>{1}</span>
+                        </PagingButton>
+                    ) : null}
+                    <PagingButton selected={true}>
+                        <span>{page}</span>
                     </PagingButton>
-                ) : null}
-                <PagingButton
-                    disabled={page >= maxPage}
-                    onClick={() => {
-                        changePage(page + 1);
-                    }}
-                >
-                    <img alt={'forward arrow'} />
-                </PagingButton>
-            </PagingDiv>
-        </Wrapper>
+                    {page !== maxPage ? (
+                        <PagingButton onClick={() => changePage(maxPage)}>
+                            <span>{maxPage}</span>
+                        </PagingButton>
+                    ) : null}
+                    <PagingButton
+                        disabled={page >= maxPage}
+                        onClick={() => {
+                            changePage(page + 1);
+                        }}
+                    >
+                        <img alt={'forward arrow'} />
+                    </PagingButton>
+                </PagingDiv>
+            </Wrapper>
+            {addingClient ?
+                    <ClientRegistration registerClient={(client: Client) => registerClient(client)} setIsOpen={setAddingClient} />
+                :
+                    null
+            }
+        </React.Fragment>
     );
 }
 
