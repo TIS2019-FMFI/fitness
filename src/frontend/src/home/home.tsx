@@ -157,7 +157,7 @@ function Home(props: Props) {
             .catch(error => {
                 props.handleError(error)
                 console.error(error);
-                window.alert('Error pri nacitavany pouzivateov');
+                window.alert('Nastala chyba pri načitávaní klientov');
             });
     }
 
@@ -189,8 +189,8 @@ function Home(props: Props) {
                 fetchOrders(reservationTimes[0], endTime);
             })
             .catch(error => {
-                props.handleError(error)
-                window.alert('Order failed');
+                props.handleError(error);
+                window.alert('Nastala chyba pri vytváraní rezervácie');
                 console.error(error);
             });
     }
@@ -203,7 +203,7 @@ function Home(props: Props) {
             })
             .catch((error: any) => {
                 props.handleError(error)
-                window.alert('Error pri mazany rezervacie');
+                window.alert('Nastala chyba pri vymazávaní rezervácie');
                 console.log(error);
             });
     }

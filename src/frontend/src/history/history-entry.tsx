@@ -29,7 +29,7 @@ const TableData = styled.td<{ width?: string; align?: string; hideOnMobile?: boo
 
     text-align: ${props => (props.align ? props.align : 'center')};
 
-    @media (max-width: 100rem) {
+    @media (max-width: 1020px) {
         display: ${props => (props.hideOnMobile ? 'none' : 'table-cell')};
     }
 `;

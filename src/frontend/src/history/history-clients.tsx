@@ -174,7 +174,7 @@ const TableDataHeader = styled.th<{ hideOnMobile?: boolean }>`
     padding-left: 25px;
     padding-right: 25px;
 
-    @media (max-width: 100rem) {
+    @media (max-width: 1020px) {
         display: ${props => (props.hideOnMobile ? 'none' : 'table-cell')};
     }
 `;

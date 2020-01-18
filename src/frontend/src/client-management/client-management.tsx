@@ -37,7 +37,7 @@ function ClientManagement(props: Props) {
     const token = useContext(TokenContext);
 
     if (match === null || matchedNumber !== page) {
-        history.push(`/klienty?page=${page}`);
+        history.push(`/klienti?page=${page}`);
     }
 
     useEffect(() => {
@@ -65,8 +65,8 @@ function ClientManagement(props: Props) {
                 setMaxPage(res.data.lastPage);
             })
             .catch((error: any) => {
-                props.handleError(error)
-                window.alert('Error v nacitavany zakaznikov');
+                props.handleError(error);
+                window.alert('Nastala chyba pri načitávaní klientov.');
                 console.log(error);
             });
     }
@@ -96,7 +96,7 @@ function ClientManagement(props: Props) {
                 fetchClients(page);
             })
             .catch((error: any) => {
-                window.alert('Error pri mazany zakaznika');
+                window.alert('Nastala chyba pri vymazávaní klienta.');
                 console.log(error);
             }).then(error => {
                 props.handleError(error);
@@ -105,7 +105,7 @@ function ClientManagement(props: Props) {
 
     function changePage(newPage: number) {
         setPage(newPage);
-        history.push(`/klienty?page=${page}`);
+        history.push(`/klienti?page=${page}`);
         fetchClients(newPage);
     }
 
@@ -113,18 +113,18 @@ function ClientManagement(props: Props) {
         <Wrapper>
             <Header>
                 <Icon size='3x' icon='bars' color='#0063ff' />
-                <HeaderText>Sprava klientov</HeaderText>
+                <HeaderText>Správa klientov</HeaderText>
             </Header>
             <Table>
                 <tbody>
                     <TableRow>
                         <TableDataHeader hideOnMobile={true}>ID</TableDataHeader>
                         <TableDataHeader>Meno a priezvisko</TableDataHeader>
-                        <TableDataHeader>Telefonne cislo</TableDataHeader>
-                        <TableDataHeader hideOnMobile={true}>Aktivny</TableDataHeader>
+                        <TableDataHeader>Telefónne číslo</TableDataHeader>
+                        <TableDataHeader hideOnMobile={true}>Aktívny</TableDataHeader>
                         <TableDataHeader hideOnMobile={true}>Multisport</TableDataHeader>
                         <TableDataHeader hideOnMobile={true}>GDPR</TableDataHeader>
-                        <TableDataHeader hideOnMobile={true}>Poznamka</TableDataHeader>
+                        <TableDataHeader hideOnMobile={true}>Poznámka</TableDataHeader>
                         <TableDataHeader hideOnMobile={true}></TableDataHeader>
                     </TableRow>
                     {clients.map(client => (
@@ -200,6 +200,8 @@ const HeaderText = styled.span`
 
 const Table = styled.table`
     margin: 20px 0 20px 40px;
+    min-width: 90%;
+    text-align: left;
 
     border-top: 1px solid #d5dee3;
     border-collapse: collapse;
@@ -207,12 +209,15 @@ const Table = styled.table`
 
 export const TableRow = styled.tr`
     border-bottom: 1px solid #d5dee3;
+    height: 50px;
+    text-align: left;
 `;
 
 const TableDataHeader = styled.th<{ hideOnMobile?: boolean }>`
     padding: 6px;
+    text-align: left;
 
-    @media (max-width: 100rem) {
+    @media (max-width: 1020px) {
         display: ${props => (props.hideOnMobile ? 'none' : 'table-cell')};
     }
 `;

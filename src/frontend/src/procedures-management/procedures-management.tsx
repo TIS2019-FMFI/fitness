@@ -52,7 +52,7 @@ function ProcedureManagement() {
                 setMaxPage(res.data.lastPage);
             })
             .catch((error: any) => {
-                window.alert('Error v nacitavani procedur');
+                window.alert('Nastala chyba pri načitávaní strojov a procedúr');
                 console.log(error);
             });
     }
@@ -76,7 +76,7 @@ function ProcedureManagement() {
                 fetchProcedures(page);
             })
             .catch((error: any) => {
-                window.alert('Error pri mazani procedury');
+                window.alert('Nastala chyba pri vymazávaní stroja/procedúry');
                 console.log(error);
             });
     }
@@ -91,14 +91,14 @@ function ProcedureManagement() {
         <Wrapper>
             <Header>
                 <Icon icon='bars' color='#0063ff' />
-                <HeaderText>Stroje a procedury</HeaderText>
+                <HeaderText>Stroje a procedúry</HeaderText>
             </Header>
             <Table>
                 <tbody>
                     <TableRow>
                         <TableDataHeader>ID</TableDataHeader>
-                        <TableDataHeader>Nazov</TableDataHeader>
-                        <TableDataHeader>Aktivny</TableDataHeader>
+                        <TableDataHeader>Názov</TableDataHeader>
+                        <TableDataHeader>Aktívny</TableDataHeader>
                         <TableDataHeader>Multisport</TableDataHeader>
                         <TableDataHeader></TableDataHeader>
                     </TableRow>
@@ -175,6 +175,8 @@ const HeaderText = styled.span`
 
 const Table = styled.table`
     margin: 20px 0 20px 40px;
+    min-width: 90%;
+    text-align: left;
 
     border-top: 1px solid #d5dee3;
     border-collapse: collapse;
@@ -182,12 +184,14 @@ const Table = styled.table`
 
 export const TableRow = styled.tr`
     border-bottom: 1px solid #d5dee3;
+    height: 50px;
+    text-align: left;
 `;
 
 const TableDataHeader = styled.th<{ hideOnMobile?: boolean }>`
     padding: 6px;
 
-    @media (max-width: 100rem) {
+    @media (max-width: 1020px) {
         display: ${props => (props.hideOnMobile ? 'none' : 'table-cell')};
     }
 `;

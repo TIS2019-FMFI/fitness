@@ -70,7 +70,7 @@ function App(props: Props) {
                     <Route>{({ location }) => <Navigation path={location.pathname} />}</Route>
                     <Switch>
                         <MainContent>
-                            <Route path='/klienty'>
+                            <Route path='/klienti'>
                                 <ClientManagement handleError={handleError} />
                             </Route>
                             <Route path='/procedury'>
@@ -94,7 +94,7 @@ function App(props: Props) {
 }
 
 const Container = styled.div`
-    height: 100%;
+    min-height: 100%;
     display: flex;
     flex-flow: row;
     background-color: #f4f5f9;
