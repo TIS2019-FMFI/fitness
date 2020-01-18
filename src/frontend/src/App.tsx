@@ -18,7 +18,7 @@ import {
     faChevronLeft,
     faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
-import { faUser, faBookmark, faCircle } from '@fortawesome/free-regular-svg-icons';
+import { faUser, faBookmark, faCircle, faPlusSquare } from '@fortawesome/free-regular-svg-icons';
 
 import Navigation from './navigation/navigation';
 import ClientManagement from './client-management/client-management';
@@ -43,7 +43,8 @@ library.add(
     faCheckCircle,
     faCircle,
     faChevronLeft,
-    faChevronRight
+    faChevronRight,
+    faPlusSquare
 );
 
 export const TokenContext = React.createContext('');
@@ -70,7 +71,7 @@ function App(props: Props) {
                     <Route>{({ location }) => <Navigation path={location.pathname} />}</Route>
                     <Switch>
                         <MainContent>
-                            <Route path='/klienty'>
+                            <Route path='/klienti'>
                                 <ClientManagement handleError={handleError} />
                             </Route>
                             <Route path='/procedury'>
@@ -94,13 +95,14 @@ function App(props: Props) {
 }
 
 const Container = styled.div`
-    height: 100%;
+    min-height: 100%;
     display: flex;
     flex-flow: row;
     background-color: #f4f5f9;
 `;
 
 const MainContent = styled.div`
+    overflow: scroll;
     margin-left: 40px;
     width: 100%;
 `;

@@ -115,7 +115,7 @@ function ClientEntry(props: Props) {
                     ) : (
                         <ImageButton
                             onClick={() => {
-                                if (window.confirm(`Chcete vymazat klienta ${client.name}`)) {
+                                if (window.confirm(`Určite chcete vymazať klienta ${client.name} ?`)) {
                                     deleteClient(client);
                                 }
                             }}
@@ -132,7 +132,7 @@ function ClientEntry(props: Props) {
                 contentLabel='Example Modal'
             >
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                    <h2 style={{ margin: 0 }}>Poznamka</h2>
+                    <h2 style={{ margin: 0 }}>Poznámka</h2>
                     <FontAwesomeIcon icon='window-close' onClick={() => setNoteIsOpen(false)} />
                 </div>
                 {isEditing ? (
@@ -169,9 +169,9 @@ const TableData = styled.td<{ width?: string; align?: string; hideOnMobile?: boo
     max-width: ${props => (props.width ? props.width : 'unset')};
     padding: 10px;
 
-    text-align: ${props => (props.align ? props.align : 'center')};
+    text-align: ${props => (props.align ? props.align : 'left')};
 
-    @media (max-width: 100rem) {
+    @media (max-width: 1020px) {
         display: ${props => (props.hideOnMobile ? 'none' : 'table-cell')};
     }
 `;

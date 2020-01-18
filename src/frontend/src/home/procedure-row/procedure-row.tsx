@@ -107,10 +107,12 @@ const ProcedureRowWrapper = styled.tr`
 `;
 
 const TableDataName = styled.td`
-    width: '50px';
+    width: 10px;
+    text-align: center
+    color: #999999;
     padding: 0 10px;
 
-    border-top: 1px black dashed;
+    border-top: 1px #999999 dashed;
     background-color: white;
 `;
 

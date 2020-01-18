@@ -85,12 +85,10 @@ const ModalStyles = {
 };
 
 export const CellWrapper = styled.td`
-    width: 130px;
-    height: 80px;
-
-    border: 1px black dashed;
+    width: 210px;
+    height: 160px;
+    border: 1px #999999 dashed;
     border-right: none;
-
     text-align: center;
 `;
 

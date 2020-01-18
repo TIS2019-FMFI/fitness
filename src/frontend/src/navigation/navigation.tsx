@@ -17,7 +17,7 @@ class Navigation extends React.PureComponent<Props> {
                 <StyledLink to='/' isActive={'/' === path}>
                     <LinkDiv>
                         <LinkImage icon={'/' === path ? 'bookmark' : ['far', 'bookmark']} />
-                        <LinkText>Rezervacie</LinkText>
+                        <LinkText>Rezervácie</LinkText>
                     </LinkDiv>
                 </StyledLink>
                 <StyledLink
@@ -26,19 +26,19 @@ class Navigation extends React.PureComponent<Props> {
                 >
                     <LinkDiv>
                         <LinkImage icon={'history'} />
-                        <LinkText>Historia objednavok</LinkText>
+                        <LinkText>História objednávok</LinkText>
                     </LinkDiv>
                 </StyledLink>
-                <StyledLink to='/klienty' isActive={'/klienty' === path}>
+                <StyledLink to='/klienti' isActive={'/klienti' === path}>
                     <LinkDiv>
-                        <LinkImage icon={'/klienty' === path ? 'user' : ['far', 'user']} />
-                        <LinkText>Sprava klientov</LinkText>
+                        <LinkImage icon={'/klienti' === path ? 'user' : ['far', 'user']} />
+                        <LinkText>Správa klientov</LinkText>
                     </LinkDiv>
                 </StyledLink>
                 <StyledLink to='/procedury' isActive={'/procedury' === path}>
                     <LinkDiv>
                         <LinkImage icon={'dumbbell'} />
-                        <LinkText>Stroje a procedury</LinkText>
+                        <LinkText>Stroje a procedúry</LinkText>
                     </LinkDiv>
                 </StyledLink>
             </NavigationContainer>
@@ -66,11 +66,13 @@ const StyledLink = styled(Link)<{ isActive: boolean }>`
     flex-flow: column;
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
+    
 
     text-decoration: none;
 
     background-color: ${props => (props.isActive ? '#f4f5f9' : '#0063ff')};
     color: ${props => (props.isActive ? '#0063ff' : 'white')};
+    text-decoration: none;
 `;
 
 const LinkDiv = styled.div`

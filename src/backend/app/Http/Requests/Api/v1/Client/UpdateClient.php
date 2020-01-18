@@ -13,7 +13,6 @@ class UpdateClient extends FormRequest
      */
     public function authorize(): bool
     {
-        //TODO authorize for action
         return true;
     }
 

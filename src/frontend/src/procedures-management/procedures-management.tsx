@@ -4,9 +4,6 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-//import leftArrowImage from '/images/left_arrow.svg';
-//import rightArrowImage from '/images/right_arrow.svg';
-
 import ProcedureEntry from './procedure-entry';
 import { TokenContext, url } from '../App';
 
@@ -43,8 +40,8 @@ function ProcedureManagement(props: Props) {
 
     async function fetchProcedures(page: number) {
         axios
-            .get(`http://localhost/api/v1/machines-and-procedures?orderBy=id&page=${page}&perPage=${PER_PAGE}`, {
-                headers: { Authorization: 'Bearer ' + token },
+            .get(`${url}/api/v1/machines-and-procedures?orderBy=id&page=${page}&perPage=${PER_PAGE}`, {
+                 headers: { Authorization: 'Bearer ' + token },
             })
             .then(res => {
                 setProcedures(
@@ -61,21 +58,19 @@ function ProcedureManagement(props: Props) {
             })
             .catch((error: any) => {
                 props.handleError(error);
-                window.alert('Error v nacitavani procedur');
+                window.alert('Nastala chyba pri načitávaní strojov a procedúr');
                 console.log(error);
             });
     }
 
     async function updateProcedure(procedure: Procedure) {
         axios
-            .post(
-                `http://localhost/api/v1/machines-and-procedures/${procedure.id}`,
-                {
-                    name: procedure.name,
-                    active: procedure.isActive,
-                    is_for_multisport_card: procedure.isForMultisportCard,
-                },
-                { headers: { Authorization: 'Bearer ' + token } }
+            .post(`${url}/api/v1/machines-and-procedures/${procedure.id}`, {
+                name: procedure.name,
+                active: procedure.isActive,
+                is_for_multisport_card: procedure.isForMultisportCard,
+            },
+            { headers: { Authorization: 'Bearer ' + token } }
             )
             .then(() => {
                 fetchProcedures(page);
@@ -87,14 +82,14 @@ function ProcedureManagement(props: Props) {
 
     async function deleteProcedure(procedure: Procedure) {
         axios
-            .delete(`http://localhost/api/v1/machines-and-procedures/${procedure.id}`, {
+            .delete(`${url}/api/v1/machines-and-procedures/${procedure.id}`, {
                 headers: { Authorization: 'Bearer ' + token },
             })
             .then(() => {
                 fetchProcedures(page);
             })
             .catch((error: any) => {
-                window.alert('Error pri mazani procedury');
+                window.alert('Nastala chyba pri vymazávaní stroja/procedúry');
                 console.log(error);
             })
             .then(error => {
@@ -112,14 +107,14 @@ function ProcedureManagement(props: Props) {
         <Wrapper>
             <Header>
                 <Icon size='3x' icon='bars' color='#0063ff' />
-                <HeaderText>Stroje a procedury</HeaderText>
+                <HeaderText>Stroje a procedúry</HeaderText>
             </Header>
             <Table>
                 <tbody>
                     <TableRow>
                         <TableDataHeader>ID</TableDataHeader>
-                        <TableDataHeader>Nazov</TableDataHeader>
-                        <TableDataHeader>Aktivny</TableDataHeader>
+                        <TableDataHeader>Názov</TableDataHeader>
+                        <TableDataHeader>Aktívny</TableDataHeader>
                         <TableDataHeader>Multisport</TableDataHeader>
                         <TableDataHeader></TableDataHeader>
                     </TableRow>
@@ -196,6 +191,8 @@ const HeaderText = styled.span`
 
 const Table = styled.table`
     margin: 20px 0 20px 40px;
+    min-width: 90%;
+    text-align: left;
 
     border-top: 1px solid #d5dee3;
     border-collapse: collapse;
@@ -203,12 +200,14 @@ const Table = styled.table`
 
 export const TableRow = styled.tr`
     border-bottom: 1px solid #d5dee3;
+    height: 50px;
+    text-align: left;
 `;
 
 const TableDataHeader = styled.th<{ hideOnMobile?: boolean }>`
     padding: 6px;
 
-    @media (max-width: 100rem) {
+    @media (max-width: 1020px) {
         display: ${props => (props.hideOnMobile ? 'none' : 'table-cell')};
     }
 `;
