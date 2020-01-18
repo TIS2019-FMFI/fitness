@@ -11,6 +11,7 @@ import ProcedureRow, { addInterval, Reservation } from './procedure-row/procedur
 import { startHour, endHour } from './clock';
 import { TokenContext, url } from '../App';
 
+
 export const ClientsContext = React.createContext([]);
 
 export interface Props {
