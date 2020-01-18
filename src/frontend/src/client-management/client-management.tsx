@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import ClientRegistration from './client-registration/client-registration';
 import ClientEntry from './client-entry/client-entry';
-import { TokenContext } from '../App';
+import { TokenContext, url } from '../App';
 
 export interface Client {
     id: number;
@@ -23,7 +23,11 @@ export interface Client {
 
 const PER_PAGE = 10;
 
-function ClientManagement() {
+export interface Props {
+    handleError: (error) => void;
+}
+
+function ClientManagement(props: Props) {
     const location = useLocation();
     const history = useHistory();
     const [maxPage, setMaxPage] = useState(999);
@@ -44,7 +48,8 @@ function ClientManagement() {
 
     async function fetchClients(page: number) {
         axios
-            .get(`http://localhost/api/v1/clients?orderBy=id&token=${token}&page=${page}&perPage=${PER_PAGE}`)
+            .get(`${url}/api/v1/clients?orderBy=id&page=${page}&perPage=${PER_PAGE}`,
+                { headers: { 'Authorization': 'Bearer ' + token }})
             .then(res => {
                 setClients(
                     res.data.items.map((object: any) => {
@@ -62,6 +67,7 @@ function ClientManagement() {
                 setMaxPage(res.data.lastPage);
             })
             .catch((error: any) => {
+                props.handleError(error)
                 window.alert('Error v nacitavany zakaznikov');
                 console.log(error);
             });
@@ -69,7 +75,7 @@ function ClientManagement() {
 
     async function updateClient(client: Client) {
         axios
-            .post(`http://localhost/api/v1/clients/${client.id}?token=${token}`, {
+            .post(`${url}/api/v1/clients/${client.id}`, {
                 first_name: client.name.split(' ')[0],
                 last_name: client.name.split(' ')[1],
                 phone: client.phone,
@@ -77,26 +83,30 @@ function ClientManagement() {
                 has_multisport_card: client.hasMultisportCard,
                 note: client.note,
                 is_gdpr: client.isGDPR,
-            })
+            }, { headers: { 'Authorization': 'Bearer ' + token }})
             .then(() => {
                 fetchClients(page);
+            }).then(error => {
+                props.handleError(error);
             });
     }
 
     async function deleteClient(client: Client) {
         axios
-            .delete(`http://localhost/api/v1/clients/${client.id}?token=${token}`)
+            .delete(`${url}/api/v1/clients/${client.id}`, { headers: { 'Authorization': 'Bearer ' + token }})
             .then(() => {
                 fetchClients(page);
             })
             .catch((error: any) => {
                 window.alert('Error pri mazany zakaznika');
                 console.log(error);
+            }).then(error => {
+                props.handleError(error);
             });
     }
 
     function registerClient(client: Client) {
-        axios.post(`http://localhost/api/v1/clients?token=${token}`, {
+        axios.post(`http://localhost/api/v1/clients`, {
             first_name: client.name.split(' ')[0],
             last_name: client.name.split(' ')[1],
             phone: client.phone,
@@ -104,9 +114,10 @@ function ClientManagement() {
             has_multisport_card: client.hasMultisportCard,
             note: client.note,
             is_gdpr: client.isGDPR,
-        }).then(() => {
+        }, { headers: { 'Authorization': 'Bearer ' + token }}).then(() => {
             fetchClients(page);
         }).catch((error: any) => {
+            props.handleError(error)
             window.alert('Error pri registrovany zakaznika');
             console.log(error);
         });

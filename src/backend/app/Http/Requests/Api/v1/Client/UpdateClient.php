@@ -30,7 +30,7 @@ class UpdateClient extends FormRequest
             'phone' => ['sometimes', 'string'],
             'active' => ['sometimes', 'boolean'],
             'has_multisport_card' => ['sometimes', 'boolean'],
-            'note' => ['sometimes', 'string'],
+            'note' => ['nullable', 'string'],
             'is_gdpr' => ['sometimes', 'boolean'],
         ];
     }
