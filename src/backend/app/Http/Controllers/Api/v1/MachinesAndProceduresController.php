@@ -11,6 +11,7 @@ use App\Models\MachinesAndProcedure;
 use App\Services\Api\v1\PaginationService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 class MachinesAndProceduresController extends Controller
 {
@@ -80,10 +81,10 @@ class MachinesAndProceduresController extends Controller
      * @return JsonResponse
      */
     public function store(StoreMachinesAndProcedure $request): JsonResponse {
-        Log::info('Ulozenie aktivity do databazy: ', $request->only(['name']));
-
         $sanitized = $request->validated();
         $machinesAndProcedure = MachinesAndProcedure::create($sanitized);
+
+        Log::info('Uloženie aktivity do databázy: ', [$sanitized['name']]);
 
         return response()->json($machinesAndProcedure, 201);
     }
@@ -96,11 +97,11 @@ class MachinesAndProceduresController extends Controller
      * @return JsonResponse
      */
     public function update(UpdateMachinesAndProcedure $request, int $machinesAndProcedureId): JsonResponse {
-        Log::info('Aktualizovanie aktivity s id ' . $machinesAndProcedureId);
-
         $machinesAndProcedure = MachinesAndProcedure::findOrFail($machinesAndProcedureId);
         $data = $request->validated();
         $machinesAndProcedure->update($data);
+
+        Log::info('Aktualizovanie aktivity s id ' . $machinesAndProcedureId);
 
         return response()->json($machinesAndProcedure, 200);
     }
@@ -113,10 +114,10 @@ class MachinesAndProceduresController extends Controller
      * @return JsonResponse
      */
     public function destroy(DestroyMachinesAndProcedure $request, int $machinesAndProcedureId): JsonResponse {
-        Log::info('Odstranenie aktivity s id ' . $machinesAndProcedureId);
-
         $machinesAndProcedure = MachinesAndProcedure::findOrFail($machinesAndProcedureId);
         $machinesAndProcedure->delete();
+
+        Log::info('Odstránenie aktivity s id ' . $machinesAndProcedureId);
 
         return response()->json(null, 204);
     }

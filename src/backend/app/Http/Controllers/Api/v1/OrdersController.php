@@ -11,6 +11,7 @@ use App\Models\Order;
 use App\Services\Api\v1\PaginationService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 class OrdersController extends Controller
 {
@@ -59,10 +60,10 @@ class OrdersController extends Controller
      * @return JsonResponse
      */
     public function store(StoreOrder $request): JsonResponse {
-        Log::info('Ulozenie objednavky do databazy: ', $request->only(['client_id', 'machine_id']));
-
         $sanitized = $request->getSanitized();
         $order = Order::create($sanitized);
+
+        Log::info('Uloženie objednávky do databázy: ', [$sanitized['client_id'], $sanitized['machine_id']]);
 
         return response()->json($order, 201);
     }
@@ -75,11 +76,11 @@ class OrdersController extends Controller
      * @return JsonResponse
      */
     public function update(UpdateOrder $request, int $orderId): JsonResponse {
-        Log::info('Aktualizovanie objednavky s id ' . $orderId);
-
         $order = Order::findOrFail($orderId);
         $data = $request->getSanitized();
         $order->update($data);
+
+        Log::info('Aktualizovanie objednávky s id ' . $orderId);
 
         return response()->json($order, 200);
     }
@@ -92,10 +93,10 @@ class OrdersController extends Controller
      * @return JsonResponse
      */
     public function destroy(DestroyOrder $request, int $orderId): JsonResponse {
-        Log::info('Odstranenie aktivity s id ' . $orderId);
-
         $order = Order::findOrFail($orderId);
         $order->delete();
+
+        Log::info('Odstránenie objedávky s id ' . $orderId);
 
         return response()->json(null, 204);
     }
