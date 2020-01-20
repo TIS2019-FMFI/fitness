@@ -79,6 +79,8 @@ class ClientsController extends Controller
      * @return JsonResponse
      */
     public function store(StoreClient $request): JsonResponse {
+        Log::info('Ulozenie klienta do databazy: ', $request->only(['first_name', 'last_name']));
+
         $sanitized = $request->validated();
         $client = Client::create($sanitized);
 
@@ -93,6 +95,8 @@ class ClientsController extends Controller
      * @return JsonResponse
      */
     public function update(UpdateClient $request, int $clientId): JsonResponse {
+        Log::info('Aktualizovanie klienta s id ' . $clientId);
+
         $client = Client::findOrFail($clientId);
         $data = $request->validated();
         $client->update($data);
@@ -108,6 +112,8 @@ class ClientsController extends Controller
      * @return JsonResponse
      */
     public function destroy(DestroyClient $request, int $clientId): JsonResponse {
+        Log::info('Odstranenie klienta s id ' . $clientId);
+
         $client = Client::findOrFail($clientId);
         $client->delete();
 
@@ -121,6 +127,8 @@ class ClientsController extends Controller
      * @return JsonResponse
      */
     public function findClient(String $string): JsonResponse {
+        Log::info('Vyhladavanie klienta s klucom ' . $string);
+
         $clients = Client::where('first_name', 'ILIKE', '%' . $string . '%')
             ->orWhere('last_name', 'ILIKE', '%' . $string . '%')
             ->orWhere('phone', 'ILIKE', '%' . $string . '%')->get();

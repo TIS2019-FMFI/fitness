@@ -59,6 +59,8 @@ class OrdersController extends Controller
      * @return JsonResponse
      */
     public function store(StoreOrder $request): JsonResponse {
+        Log::info('Ulozenie objednavky do databazy: ', $request->only(['client_id', 'machine_id']));
+
         $sanitized = $request->getSanitized();
         $order = Order::create($sanitized);
 
@@ -73,6 +75,8 @@ class OrdersController extends Controller
      * @return JsonResponse
      */
     public function update(UpdateOrder $request, int $orderId): JsonResponse {
+        Log::info('Aktualizovanie objednavky s id ' . $orderId);
+
         $order = Order::findOrFail($orderId);
         $data = $request->getSanitized();
         $order->update($data);
@@ -88,20 +92,11 @@ class OrdersController extends Controller
      * @return JsonResponse
      */
     public function destroy(DestroyOrder $request, int $orderId): JsonResponse {
+        Log::info('Odstranenie aktivity s id ' . $orderId);
+
         $order = Order::findOrFail($orderId);
         $order->delete();
 
         return response()->json(null, 204);
-    }
-
-    //TODO: implement me pls
-    public function findOrder(String $string): JsonResponse {
-        /*
-        $orders = Order::where('first_name', 'ILIKE', '%' . $string . '%')
-            ->orWhere('last_name', 'ILIKE', '%' . $string . '%')
-            ->orWhere('phone', 'ILIKE', '%' . $string . '%')->get();
-        */
-
-        return response()->json([], 200);
     }
 }

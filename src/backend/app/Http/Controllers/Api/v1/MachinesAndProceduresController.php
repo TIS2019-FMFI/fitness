@@ -80,6 +80,8 @@ class MachinesAndProceduresController extends Controller
      * @return JsonResponse
      */
     public function store(StoreMachinesAndProcedure $request): JsonResponse {
+        Log::info('Ulozenie aktivity do databazy: ', $request->only(['name']));
+
         $sanitized = $request->validated();
         $machinesAndProcedure = MachinesAndProcedure::create($sanitized);
 
@@ -94,6 +96,8 @@ class MachinesAndProceduresController extends Controller
      * @return JsonResponse
      */
     public function update(UpdateMachinesAndProcedure $request, int $machinesAndProcedureId): JsonResponse {
+        Log::info('Aktualizovanie aktivity s id ' . $machinesAndProcedureId);
+
         $machinesAndProcedure = MachinesAndProcedure::findOrFail($machinesAndProcedureId);
         $data = $request->validated();
         $machinesAndProcedure->update($data);
@@ -109,6 +113,8 @@ class MachinesAndProceduresController extends Controller
      * @return JsonResponse
      */
     public function destroy(DestroyMachinesAndProcedure $request, int $machinesAndProcedureId): JsonResponse {
+        Log::info('Odstranenie aktivity s id ' . $machinesAndProcedureId);
+
         $machinesAndProcedure = MachinesAndProcedure::findOrFail($machinesAndProcedureId);
         $machinesAndProcedure->delete();
 
