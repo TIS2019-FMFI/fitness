@@ -113,7 +113,7 @@ function ClientManagement(props: Props) {
     function registerClient(client: Client) {
         axios
             .post(
-                `http://localhost/api/v1/clients`,
+                `${url}/api/v1/clients`,
                 {
                     first_name: client.name.split(' ')[0],
                     last_name: client.name.split(' ')[1],

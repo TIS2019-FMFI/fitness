@@ -83,7 +83,7 @@ class ClientsController extends Controller
         $sanitized = $request->validated();
         $client = Client::create($sanitized);
 
-        Log::info('Uloženie klienta do databázy: ', [$sanitized['first_name'], $sanitized['last_name']]);
+        Log::info('Uloženie klienta do databázy: ', ['meno' => $sanitized['first_name'], 'priezvisko' => $sanitized['last_name']]);
 
         return response()->json($client, 201);
     }

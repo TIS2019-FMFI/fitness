@@ -63,7 +63,7 @@ class OrdersController extends Controller
         $sanitized = $request->getSanitized();
         $order = Order::create($sanitized);
 
-        Log::info('Uloženie objednávky do databázy: ', [$sanitized['client_id'], $sanitized['machine_id']]);
+        Log::info('Uloženie objednávky do databázy: ', ['klient' => $sanitized['client_id'], 'aktivita' => $sanitized['machine_id']]);
 
         return response()->json($order, 201);
     }
