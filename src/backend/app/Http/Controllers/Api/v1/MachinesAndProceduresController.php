@@ -11,6 +11,7 @@ use App\Models\MachinesAndProcedure;
 use App\Services\Api\v1\PaginationService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 class MachinesAndProceduresController extends Controller
 {
@@ -83,6 +84,8 @@ class MachinesAndProceduresController extends Controller
         $sanitized = $request->validated();
         $machinesAndProcedure = MachinesAndProcedure::create($sanitized);
 
+        Log::info('Uloženie aktivity do databázy: ', [$sanitized['name']]);
+
         return response()->json($machinesAndProcedure, 201);
     }
 
@@ -98,6 +101,8 @@ class MachinesAndProceduresController extends Controller
         $data = $request->validated();
         $machinesAndProcedure->update($data);
 
+        Log::info('Aktualizovanie aktivity s id ' . $machinesAndProcedureId);
+
         return response()->json($machinesAndProcedure, 200);
     }
 
@@ -111,6 +116,8 @@ class MachinesAndProceduresController extends Controller
     public function destroy(DestroyMachinesAndProcedure $request, int $machinesAndProcedureId): JsonResponse {
         $machinesAndProcedure = MachinesAndProcedure::findOrFail($machinesAndProcedureId);
         $machinesAndProcedure->delete();
+
+        Log::info('Odstránenie aktivity s id ' . $machinesAndProcedureId);
 
         return response()->json(null, 204);
     }

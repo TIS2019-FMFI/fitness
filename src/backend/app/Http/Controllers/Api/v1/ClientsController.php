@@ -11,6 +11,7 @@ use App\Models\Client;
 use App\Services\Api\v1\PaginationService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 class ClientsController extends Controller
 {
@@ -82,6 +83,8 @@ class ClientsController extends Controller
         $sanitized = $request->validated();
         $client = Client::create($sanitized);
 
+        Log::info('Uloženie klienta do databázy: ', ['meno' => $sanitized['first_name'], 'priezvisko' => $sanitized['last_name']]);
+
         return response()->json($client, 201);
     }
 
@@ -97,6 +100,8 @@ class ClientsController extends Controller
         $data = $request->validated();
         $client->update($data);
 
+        Log::info('Aktualizovanie klienta s id ' . $clientId);
+
         return response()->json($client, 200);
     }
 
@@ -111,6 +116,8 @@ class ClientsController extends Controller
         $client = Client::findOrFail($clientId);
         $client->delete();
 
+        Log::info('Odstránenie klienta s id ' . $clientId);
+
         return response()->json(null, 204);
     }
 
@@ -124,6 +131,8 @@ class ClientsController extends Controller
         $clients = Client::where('first_name', 'ILIKE', '%' . $string . '%')
             ->orWhere('last_name', 'ILIKE', '%' . $string . '%')
             ->orWhere('phone', 'ILIKE', '%' . $string . '%')->get();
+
+        Log::info('Vyhľadanie klienta s kľúčom ' . $string);
 
         return response()->json($clients, 200);
     }
