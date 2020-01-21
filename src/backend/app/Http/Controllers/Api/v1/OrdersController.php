@@ -11,6 +11,7 @@ use App\Models\Order;
 use App\Services\Api\v1\PaginationService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 class OrdersController extends Controller
 {
@@ -62,6 +63,8 @@ class OrdersController extends Controller
         $sanitized = $request->getSanitized();
         $order = Order::create($sanitized);
 
+        Log::info('Uloženie objednávky do databázy: ', ['klient' => $sanitized['client_id'], 'aktivita' => $sanitized['machine_id']]);
+
         return response()->json($order, 201);
     }
 
@@ -77,6 +80,8 @@ class OrdersController extends Controller
         $data = $request->getSanitized();
         $order->update($data);
 
+        Log::info('Aktualizovanie objednávky s id ' . $orderId);
+
         return response()->json($order, 200);
     }
 
@@ -91,17 +96,8 @@ class OrdersController extends Controller
         $order = Order::findOrFail($orderId);
         $order->delete();
 
+        Log::info('Odstránenie objedávky s id ' . $orderId);
+
         return response()->json(null, 204);
-    }
-
-    //TODO: implement me pls
-    public function findOrder(String $string): JsonResponse {
-        /*
-        $orders = Order::where('first_name', 'ILIKE', '%' . $string . '%')
-            ->orWhere('last_name', 'ILIKE', '%' . $string . '%')
-            ->orWhere('phone', 'ILIKE', '%' . $string . '%')->get();
-        */
-
-        return response()->json([], 200);
     }
 }

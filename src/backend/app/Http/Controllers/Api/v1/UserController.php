@@ -7,6 +7,7 @@ use App\Http\Requests\Api\v1\User\RegisterUser;
 use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use JWTAuth;
 use JWTAuthException;
 use App\Http\Controllers\Controller;
@@ -72,6 +73,9 @@ class UserController extends Controller
                     'expires_in' => auth('api')->factory()->getTTL() * 60
                 ]
             ];
+
+            Log::info('Prihlásil sa používateľ ' . $sanitized['email']);
+
         } else {
             return response()->json([
                 'data' => 'User with this credentials doesnt exist'
@@ -122,6 +126,9 @@ class UserController extends Controller
                     'expires_in' => auth('api')->factory()->getTTL() * 60
                 ]
             ];
+
+            Log::info('Zaregistroval sa používateľ ' . $sanitized['email']);
+
         }
         else {
             return response()->json([
