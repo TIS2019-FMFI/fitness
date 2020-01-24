@@ -26,12 +26,10 @@ Route::prefix('v1')->namespace('Api\v1')->group(static function () {
             Route::post('/',                                    'ClientsController@store');
             Route::post('/{clientId}',                          'ClientsController@update')->name('update');
             Route::delete('{clientId}',                         'ClientsController@destroy')->name('destroy');
-            Route::get('/findClient/{query?}',                  'ClientsController@findClient')->name('findClient');
         });
 
         Route::prefix('machines-and-procedures')->group(static function() {
             Route::get('/',                                     'MachinesAndProceduresController@index');
-            Route::get('/history',                              'MachinesAndProceduresController@history');
             Route::post('/',                                    'MachinesAndProceduresController@store');
             Route::post('/{machinesAndProcedureId}',            'MachinesAndProceduresController@update')->name('update');
             Route::delete('{machinesAndProcedureId}',           'MachinesAndProceduresController@destroy')->name('destroy');
@@ -42,7 +40,6 @@ Route::prefix('v1')->namespace('Api\v1')->group(static function () {
             Route::post('/',                                    'OrdersController@store');
             Route::post('/{orderId}',                           'OrdersController@update')->name('update');
             Route::delete('{orderId}',                          'OrdersController@destroy')->name('destroy');
-            Route::get('/findOrder/{query?}',                   'OrdersController@findOrder')->name('findOrder');
         });
     });
 });
