@@ -11,13 +11,13 @@ export interface Props {
 
 function ReservationCellPublic(props: Props) {
     const { reservation } = props;
-    const cell = reservation.id ? <Icon icon='user' /> : <span />;
+    const cell = reservation.id ? <Icon icon='user' size='5x'/> : <span />;
 
     return <CellWrapper>{cell}</CellWrapper>;
 }
 
 const Icon = styled(FontAwesomeIcon)`
-    color: #0063ff;
+    color: #ff0063;
 `;
 
 export default ReservationCellPublic;
