@@ -59,6 +59,7 @@ class ClientsController extends Controller
             ->get();
 
         $ordersCount =  Client::join('orders', 'orders.client_id', '=', 'clients.id')
+            ->join('machines_and_procedures', 'machines_and_procedures.id', '=', 'orders.machine_id')
             ->where("end_time", "<", Carbon::now())
             ->count();
 
