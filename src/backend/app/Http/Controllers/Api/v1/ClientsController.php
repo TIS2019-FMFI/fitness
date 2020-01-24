@@ -49,10 +49,16 @@ class ClientsController extends Controller
      * @return JsonResponse
      */
     public function history(IndexClient $request): JsonResponse {
+        $sanitized = $request->validated();
+        $query = isset($sanitized['data']) ? $sanitized['data'] : '';
         $paginationData = app(PaginationService::class)->getPagination($request);
 
         $orders = Client::join('orders', 'orders.client_id', '=', 'clients.id')
+            ->join('machines_and_procedures', 'machines_and_procedures.id', '=', 'orders.machine_id')
             ->where("end_time", "<", Carbon::now())
+            ->where('phone', 'ILIKE', '%' . $query . '%')
+            ->orWhere('first_name', 'ILIKE', '%' . $query . '%')
+            ->orWhere('last_name', 'ILIKE', '%' . $query . '%')
             ->orderByDesc("end_time")
             ->offset($paginationData['offset'])
             ->limit($paginationData['perPage'])
@@ -61,6 +67,9 @@ class ClientsController extends Controller
         $ordersCount =  Client::join('orders', 'orders.client_id', '=', 'clients.id')
             ->join('machines_and_procedures', 'machines_and_procedures.id', '=', 'orders.machine_id')
             ->where("end_time", "<", Carbon::now())
+            ->where('phone', 'ILIKE', '%' . $query . '%')
+            ->orWhere('first_name', 'ILIKE', '%' . $query . '%')
+            ->orWhere('last_name', 'ILIKE', '%' . $query . '%')
             ->count();
 
         $data = [

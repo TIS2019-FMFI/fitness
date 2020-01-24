@@ -28,6 +28,8 @@ class IndexClient extends FormRequest
             'orderDirection' => ['in:asc,desc', 'nullable'],
             'page' => ['integer', 'nullable'],
             'per_page' => ['integer', 'nullable'],
+            'data' => ['string', 'nullable'],
+
         ];
     }
 }
