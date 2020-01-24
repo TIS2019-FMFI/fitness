@@ -29,7 +29,6 @@ class IndexClient extends FormRequest
             'page' => ['integer', 'nullable'],
             'per_page' => ['integer', 'nullable'],
             'data' => ['string', 'nullable'],
-
         ];
     }
 }

@@ -56,9 +56,7 @@ class ClientsController extends Controller
         $orders = Client::join('orders', 'orders.client_id', '=', 'clients.id')
             ->join('machines_and_procedures', 'machines_and_procedures.id', '=', 'orders.machine_id')
             ->where("end_time", "<", Carbon::now())
-            ->where('phone', 'ILIKE', '%' . $query . '%')
-            ->orWhere('first_name', 'ILIKE', '%' . $query . '%')
-            ->orWhere('last_name', 'ILIKE', '%' . $query . '%')
+            ->whereRaw('concat(first_name, last_name) ILIKE \'%' . $query . '%\' OR ' . 'phone ILIKE \'%' . $query . '%\'')
             ->orderByDesc("end_time")
             ->offset($paginationData['offset'])
             ->limit($paginationData['perPage'])
@@ -67,9 +65,7 @@ class ClientsController extends Controller
         $ordersCount =  Client::join('orders', 'orders.client_id', '=', 'clients.id')
             ->join('machines_and_procedures', 'machines_and_procedures.id', '=', 'orders.machine_id')
             ->where("end_time", "<", Carbon::now())
-            ->where('phone', 'ILIKE', '%' . $query . '%')
-            ->orWhere('first_name', 'ILIKE', '%' . $query . '%')
-            ->orWhere('last_name', 'ILIKE', '%' . $query . '%')
+            ->whereRaw('concat(first_name, last_name) ILIKE \'%' . $query . '%\' OR ' . 'phone ILIKE \'%' . $query . '%\'')
             ->count();
 
         $data = [
