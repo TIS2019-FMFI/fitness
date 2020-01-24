@@ -85,8 +85,8 @@ const ModalStyles = {
 };
 
 export const CellWrapper = styled.td`
-    width: 210px;
-    height: 160px;
+    width: 100px;
+    height: 100px;
     border: 1px #999999 dashed;
     border-right: none;
     text-align: center;
