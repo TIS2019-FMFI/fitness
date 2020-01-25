@@ -2,10 +2,10 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import HistoryEntry from './history-entry';
 import { TokenContext, url } from '../App';
+import { Button, Input } from 'reactstrap';
 
 export interface ClientHistory {
     id: number;
@@ -30,7 +30,7 @@ function ClientHistory(props: Props) {
     const matchedNumber = (match && match.length > 1 && Number(match[1])) || null;
     const [page, setPage] = useState(matchedNumber > 0 && matchedNumber <= maxPage ? matchedNumber : 1);
     const [clientHistory, setClientHistory] = useState([]);
-    const [site] = useState('people');
+    const [data, setData] = useState('');
     const token = useContext(TokenContext);
 
     if (match === null || matchedNumber !== page) {
@@ -42,8 +42,9 @@ function ClientHistory(props: Props) {
     }, [page]);
 
     async function fetchClientHistory(page: number) {
+        console.log(`${url}/api/v1/clients/history?orderBy=id&page=${page}&perPage=${PER_PAGE}&data=${data}`);
         axios
-            .get(`${url}/api/v1/clients/history?orderBy=id&page=${page}&perPage=${PER_PAGE}`, {
+            .get(`${url}/api/v1/clients/history?orderBy=id&page=${page}&perPage=${PER_PAGE}&data=${data}`, {
                 headers: { Authorization: 'Bearer ' + token },
             })
             .then(res => {
@@ -70,7 +71,6 @@ function ClientHistory(props: Props) {
             .catch((error: any) => {
                 props.handleError(error);
                 window.alert('Nastala chyba pri načitávaní histórie.');
-                console.log(error);
             });
     }
 
@@ -82,7 +82,12 @@ function ClientHistory(props: Props) {
 
     return (
         <>
-            <div style={{ marginTop: 80 }}></div>
+            <div style={{ display: 'flex', marginTop: 80 }}>
+                <StyledInput type='text' onChange={event => setData(event.target.value)} />
+                <StyledButton color='success' onClick={() => fetchClientHistory(page)}>
+                    Hľadaj
+                </StyledButton>
+            </div>
 
             <Wrapper>
                 <Header>
@@ -140,14 +145,15 @@ function ClientHistory(props: Props) {
     );
 }
 
-const StyledLink = styled(Link)<{ isActive: boolean }>`
-    padding: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
-    text-decoration: none;
+const StyledButton = styled(Button)`
+    height: 40px;
+    margin-left: 10px;
+`;
 
-    color: ${props => (props.isActive ? '#f4f5f9' : '#0063ff')};
-    background-color: ${props => (props.isActive ? '#0063ff' : 'white')};
+const StyledInput = styled(Input)`
+    height: 40px;
+    margin-bottom: 10px;
+    width: 400px;
 `;
 
 const Wrapper = styled.div`
