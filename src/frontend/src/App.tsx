@@ -25,7 +25,6 @@ import ClientManagement from './client-management/client-management';
 import Home from './home/home';
 import Procedures from './procedures-management/procedures-management';
 import HistoryC from './history/history-clients';
-import HistoryM from './history/history-machines';
 
 library.add(
     fas,
@@ -76,9 +75,6 @@ function App(props: Props) {
                             </Route>
                             <Route path='/procedury'>
                                 <Procedures handleError={handleError} />
-                            </Route>
-                            <Route path='/historia/machines'>
-                                <HistoryM handleError={handleError} />
                             </Route>
                             <Route path='/historia/clients'>
                                 <HistoryC handleError={handleError} />
