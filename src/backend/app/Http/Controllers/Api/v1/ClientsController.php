@@ -49,17 +49,23 @@ class ClientsController extends Controller
      * @return JsonResponse
      */
     public function history(IndexClient $request): JsonResponse {
+        $sanitized = $request->validated();
+        $query = isset($sanitized['data']) ? $sanitized['data'] : '';
         $paginationData = app(PaginationService::class)->getPagination($request);
 
         $orders = Client::join('orders', 'orders.client_id', '=', 'clients.id')
+            ->join('machines_and_procedures', 'machines_and_procedures.id', '=', 'orders.machine_id')
             ->where("end_time", "<", Carbon::now())
+            ->whereRaw('concat(first_name, last_name) ILIKE \'%' . $query . '%\' OR ' . 'phone ILIKE \'%' . $query . '%\'')
             ->orderByDesc("end_time")
             ->offset($paginationData['offset'])
             ->limit($paginationData['perPage'])
             ->get();
 
         $ordersCount =  Client::join('orders', 'orders.client_id', '=', 'clients.id')
+            ->join('machines_and_procedures', 'machines_and_procedures.id', '=', 'orders.machine_id')
             ->where("end_time", "<", Carbon::now())
+            ->whereRaw('concat(first_name, last_name) ILIKE \'%' . $query . '%\' OR ' . 'phone ILIKE \'%' . $query . '%\'')
             ->count();
 
         $data = [

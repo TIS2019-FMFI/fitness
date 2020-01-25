@@ -44,37 +44,6 @@ class MachinesAndProceduresController extends Controller
     }
 
     /**
-     * Display the specified resource history.
-     *
-     * @param IndexMachinesAndProcedure $request
-     * @return JsonResponse
-     */
-    public function history(IndexMachinesAndProcedure $request): JsonResponse {
-        $paginationData = app(PaginationService::class)->getPagination($request);
-
-        $orders = MachinesAndProcedure::join('orders', 'orders.machine_id', '=', 'machines_and_procedures.id')
-            ->where("end_time", "<", Carbon::now())
-            ->orderByDesc("end_time")
-            ->offset($paginationData['offset'])
-            ->limit($paginationData['perPage'])
-            ->get();
-
-        $ordersCount = MachinesAndProcedure::join('orders', 'orders.machine_id', '=', 'machines_and_procedures.id')
-            ->where("end_time", "<", Carbon::now())
-            ->count();
-
-        $data = [
-            'items' => $orders,
-            'total' => $orders->count(),
-            'perPage' => $paginationData['perPage'],
-            'currentPage' => $paginationData['page'],
-            'lastPage' => (int) ceil($ordersCount / $paginationData['perPage']),
-        ];
-
-        return response()->json($data, 200);
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param StoreMachinesAndProcedure $request
