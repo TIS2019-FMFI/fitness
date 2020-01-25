@@ -15,6 +15,7 @@ function ClientEntry(props: Props) {
             <TableRow key={ClientHistory.id}>
                 <TableData width='50px'>{ClientHistory.id}</TableData>
                 <TableData width='50px'>{ClientHistory.name}</TableData>
+                <TableData width='50px'>{ClientHistory.procedure}</TableData>
                 <TableData width='50px'>{ClientHistory.date}</TableData>
                 <TableData width='50px'>{ClientHistory.start}</TableData>
                 <TableData width='50px'>{ClientHistory.end}</TableData>

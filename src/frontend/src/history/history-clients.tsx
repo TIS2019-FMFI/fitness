@@ -10,6 +10,7 @@ import { TokenContext, url } from '../App';
 export interface ClientHistory {
     id: number;
     name: string;
+    procedure: string;
     date: string;
     start: string;
     end: string;
@@ -51,6 +52,7 @@ function ClientHistory(props: Props) {
                         return {
                             id: object.id,
                             name: `${object.first_name} ${object.last_name}`,
+                            procedure: object.name,
                             date: object.start_time.split(' ')[0],
                             start:
                                 object.start_time.split(' ')[1].split(':')[0] +
@@ -80,14 +82,7 @@ function ClientHistory(props: Props) {
 
     return (
         <>
-            <div style={{ marginTop: 80 }}>
-                <StyledLink to='/historia/clients' isActive={'people' === site}>
-                    Ľudia
-                </StyledLink>
-                <StyledLink to='/historia/machines' isActive={'machines' === site}>
-                    Stroje
-                </StyledLink>
-            </div>
+            <div style={{ marginTop: 80 }}></div>
 
             <Wrapper>
                 <Header>
@@ -99,6 +94,7 @@ function ClientHistory(props: Props) {
                         <TableRow>
                             <TableDataHeader>ID</TableDataHeader>
                             <TableDataHeader>Meno a priezvisko</TableDataHeader>
+                            <TableDataHeader>Procedúra</TableDataHeader>
                             <TableDataHeader>Dátum</TableDataHeader>
                             <TableDataHeader>Začiatok</TableDataHeader>
                             <TableDataHeader>Koniec</TableDataHeader>
