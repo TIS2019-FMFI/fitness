@@ -81,7 +81,7 @@ function ProcedureEntry(props: Props) {
                 ) : (
                     <ImageButton
                         onClick={() => {
-                            if (window.confirm(`Chcete vymazať klienta ${procedure.name} ?`)) {
+                            if (window.confirm(`Chcete vymazať procedúru ${procedure.name} ?`)) {
                                 deleteProcedure(procedure);
                             }
                         }}
