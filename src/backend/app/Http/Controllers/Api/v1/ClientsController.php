@@ -56,7 +56,7 @@ class ClientsController extends Controller
         $orders = Client::join('orders', 'orders.client_id', '=', 'clients.id')
             ->join('machines_and_procedures', 'machines_and_procedures.id', '=', 'orders.machine_id')
             ->where("end_time", "<", Carbon::now())
-            ->whereRaw('concat(first_name, last_name) ILIKE \'%' . $query . '%\' OR ' . 'phone ILIKE \'%' . $query . '%\'')
+            ->whereRaw('concat(first_name,\' \',last_name) ilike \'%' . $query . '%\' OR ' . 'phone ilike \'%' . $query . '%\'')
             ->orderByDesc("end_time")
             ->offset($paginationData['offset'])
             ->limit($paginationData['perPage'])
@@ -65,7 +65,7 @@ class ClientsController extends Controller
         $ordersCount =  Client::join('orders', 'orders.client_id', '=', 'clients.id')
             ->join('machines_and_procedures', 'machines_and_procedures.id', '=', 'orders.machine_id')
             ->where("end_time", "<", Carbon::now())
-            ->whereRaw('concat(first_name, last_name) ILIKE \'%' . $query . '%\' OR ' . 'phone ILIKE \'%' . $query . '%\'')
+            ->whereRaw('concat(first_name,\' \', last_name) ilike \'%' . $query . '%\' OR ' . 'phone ilike \'%' . $query . '%\'')
             ->count();
 
         $data = [
