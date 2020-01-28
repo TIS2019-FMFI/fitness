@@ -61,6 +61,7 @@ function ProcedureEntry(props: Props) {
                             setIsEditing(false);
                             updateProcedure(procedure);
                         }}
+                        disabled={procedure.name === ''}
                     >
                         <Icon size='lg' icon='save' color={'#0063ff'} />
                     </ImageButton>
