@@ -95,6 +95,12 @@ function ClientEntry(props: Props) {
                                 setIsEditing(false);
                                 updateClient(client);
                             }}
+                            disabled={
+                                client.name.split(' ').length < 2 ||
+                                client.name.split(' ')[0] === '' ||
+                                client.name.split(' ')[1] === '' ||
+                                client.phone === ''
+                            }
                         >
                             <Icon size='lg' icon='save' color={'#0063ff'} />
                         </ImageButton>
