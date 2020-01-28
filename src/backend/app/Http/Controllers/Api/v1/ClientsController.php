@@ -58,6 +58,7 @@ class ClientsController extends Controller
             ->where("end_time", "<", Carbon::now())
             ->whereRaw('concat(first_name,\' \',last_name) ilike \'%' . $query . '%\' OR ' . 'phone ilike \'%' . $query . '%\'')
             ->orderByDesc("end_time")
+            ->select('orders.*', 'orders.id as id', 'machines_and_procedures.*', 'clients.*')
             ->offset($paginationData['offset'])
             ->limit($paginationData['perPage'])
             ->get();
