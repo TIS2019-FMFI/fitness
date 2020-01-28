@@ -50,7 +50,7 @@ function ClientHistory(props: Props) {
                 setClientHistory(
                     res.data.items.map((object: any) => {
                         return {
-                            id: object.id,
+                            id: object.order_id,
                             name: `${object.first_name} ${object.last_name}`,
                             procedure: object.name,
                             date: object.start_time.split(' ')[0],
@@ -81,11 +81,9 @@ function ClientHistory(props: Props) {
 
     return (
         <>
-            <div style={{ display: 'flex', marginTop: 80 }}>
-                <StyledInput type='text' onChange={event => setData(event.target.value)} />
-                <StyledButton color='success' onClick={() => changePage(1)}>
-                    Hľadaj
-                </StyledButton>
+            <div style={{ display: 'flex', marginTop: 40 }}>
+                <StyledInput placeholder={'Zadajte meno alebo telefónne číslo'} type='text' onChange={event => setData(event.target.value)} />
+                <StyledButton onClick={() => changePage(1)}>Hľadaj</StyledButton>
             </div>
 
             <Wrapper>
@@ -145,6 +143,7 @@ function ClientHistory(props: Props) {
 }
 
 const StyledButton = styled(Button)`
+    background-color: #0063ff;
     height: 40px;
     margin-left: 10px;
 `;
@@ -156,7 +155,7 @@ const StyledInput = styled(Input)`
 `;
 
 const Wrapper = styled.div`
-    margin-top: 40px;
+    margin-top: 20px;
     border: 1px solid #e6e6e6;
 
     background-color: white;

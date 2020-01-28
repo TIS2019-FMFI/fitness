@@ -51,22 +51,22 @@ class ClientsController extends Controller
     public function history(IndexClient $request): JsonResponse {
         $sanitized = $request->validated();
         $query = isset($sanitized['data']) ? $sanitized['data'] : '';
-        $queryContidion = '(concat(first_name, last_name) ILIKE \'%' . $query . '%\' OR ' . 'phone ILIKE \'%' . $query . '%\')';
         $paginationData = app(PaginationService::class)->getPagination($request);
 
         $orders = Client::join('orders', 'orders.client_id', '=', 'clients.id')
             ->join('machines_and_procedures', 'machines_and_procedures.id', '=', 'orders.machine_id')
-            ->where("end_time", "<", Carbon::now())
-            ->whereRaw($queryContidion)
+            ->whereRaw('end_time < \'%' . Carbon::now() . '%\' AND (concat(first_name,\' \',last_name) ilike \'%' . $query . '%\' OR ' . 'phone ilike \'%' . $query . '%\')')
             ->orderByDesc("end_time")
+            ->select('orders.*', 'orders.id as order_id', 'machines_and_procedures.*', 'clients.*')
             ->offset($paginationData['offset'])
             ->limit($paginationData['perPage'])
             ->get();
 
+
+
         $ordersCount =  Client::join('orders', 'orders.client_id', '=', 'clients.id')
             ->join('machines_and_procedures', 'machines_and_procedures.id', '=', 'orders.machine_id')
-            ->where("end_time", "<", Carbon::now())
-            ->whereRaw($queryContidion)
+            ->whereRaw('end_time < \'%' . Carbon::now() . '%\' AND ( concat(first_name,\' \',last_name) ilike \'%' . $query . '%\' OR ' . 'phone ilike \'%' . $query . '%\')')
             ->count();
 
         $data = [
