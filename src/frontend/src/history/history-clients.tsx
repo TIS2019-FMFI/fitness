@@ -42,7 +42,6 @@ function ClientHistory(props: Props) {
     }, [page]);
 
     async function fetchClientHistory(page: number) {
-        console.log(`${url}/api/v1/clients/history?orderBy=id&page=${page}&perPage=${PER_PAGE}&data=${data}`);
         axios
             .get(`${url}/api/v1/clients/history?orderBy=id&page=${page}&perPage=${PER_PAGE}&data=${data}`, {
                 headers: { Authorization: 'Bearer ' + token },
@@ -83,7 +82,7 @@ function ClientHistory(props: Props) {
     return (
         <>
             <div style={{ display: 'flex', marginTop: 40 }}>
-                <StyledInput type='text' onChange={event => setData(event.target.value)} />
+                <StyledInput placeholder={'Zadajte meno alebo telefónne číslo'} type='text' onChange={event => setData(event.target.value)} />
                 <StyledButton onClick={() => changePage(1)}>Hľadaj</StyledButton>
             </div>
 
