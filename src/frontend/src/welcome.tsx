@@ -17,8 +17,6 @@ function Welcome() {
     if (cookie) {
         cookie.endDate = new Date(cookie.endDate);
 
-        console.log(cookie.endDate, nextDay)
-
         if (cookie.endDate <= nextDay) {
             axios
                 .post(`${url}/api/v1/user/refresh`, {

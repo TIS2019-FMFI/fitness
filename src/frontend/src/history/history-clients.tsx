@@ -2,14 +2,15 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import HistoryEntry from './history-entry';
 import { TokenContext, url } from '../App';
+import { Button, Input } from 'reactstrap';
 
 export interface ClientHistory {
     id: number;
     name: string;
+    procedure: string;
     date: string;
     start: string;
     end: string;
@@ -29,7 +30,7 @@ function ClientHistory(props: Props) {
     const matchedNumber = (match && match.length > 1 && Number(match[1])) || null;
     const [page, setPage] = useState(matchedNumber > 0 && matchedNumber <= maxPage ? matchedNumber : 1);
     const [clientHistory, setClientHistory] = useState([]);
-    const [site] = useState('people');
+    const [data, setData] = useState('');
     const token = useContext(TokenContext);
 
     if (match === null || matchedNumber !== page) {
@@ -42,15 +43,16 @@ function ClientHistory(props: Props) {
 
     async function fetchClientHistory(page: number) {
         axios
-            .get(`${url}/api/v1/clients/history?orderBy=id&page=${page}&perPage=${PER_PAGE}`, {
+            .get(`${url}/api/v1/clients/history?orderBy=id&page=${page}&perPage=${PER_PAGE}&data=${data}`, {
                 headers: { Authorization: 'Bearer ' + token },
             })
             .then(res => {
                 setClientHistory(
                     res.data.items.map((object: any) => {
                         return {
-                            id: object.id,
+                            id: object.order_id,
                             name: `${object.first_name} ${object.last_name}`,
+                            procedure: object.name,
                             date: object.start_time.split(' ')[0],
                             start:
                                 object.start_time.split(' ')[1].split(':')[0] +
@@ -68,7 +70,6 @@ function ClientHistory(props: Props) {
             .catch((error: any) => {
                 props.handleError(error);
                 window.alert('Nastala chyba pri načitávaní histórie.');
-                console.log(error);
             });
     }
 
@@ -80,13 +81,9 @@ function ClientHistory(props: Props) {
 
     return (
         <>
-            <div style={{ marginTop: 80 }}>
-                <StyledLink to='/historia/clients' isActive={'people' === site}>
-                    Ľudia
-                </StyledLink>
-                <StyledLink to='/historia/machines' isActive={'machines' === site}>
-                    Stroje
-                </StyledLink>
+            <div style={{ display: 'flex', marginTop: 40 }}>
+                <StyledInput placeholder={'Zadajte meno alebo telefónne číslo'} type='text' onChange={event => setData(event.target.value)} />
+                <StyledButton onClick={() => changePage(1)}>Hľadaj</StyledButton>
             </div>
 
             <Wrapper>
@@ -99,6 +96,7 @@ function ClientHistory(props: Props) {
                         <TableRow>
                             <TableDataHeader>ID</TableDataHeader>
                             <TableDataHeader>Meno a priezvisko</TableDataHeader>
+                            <TableDataHeader>Procedúra</TableDataHeader>
                             <TableDataHeader>Dátum</TableDataHeader>
                             <TableDataHeader>Začiatok</TableDataHeader>
                             <TableDataHeader>Koniec</TableDataHeader>
@@ -144,18 +142,20 @@ function ClientHistory(props: Props) {
     );
 }
 
-const StyledLink = styled(Link)<{ isActive: boolean }>`
-    padding: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
-    text-decoration: none;
+const StyledButton = styled(Button)`
+    background-color: #0063ff;
+    height: 40px;
+    margin-left: 10px;
+`;
 
-    color: ${props => (props.isActive ? '#f4f5f9' : '#0063ff')};
-    background-color: ${props => (props.isActive ? '#0063ff' : 'white')};
+const StyledInput = styled(Input)`
+    height: 40px;
+    margin-bottom: 10px;
+    width: 400px;
 `;
 
 const Wrapper = styled.div`
-    margin-top: 40px;
+    margin-top: 20px;
     border: 1px solid #e6e6e6;
 
     background-color: white;
