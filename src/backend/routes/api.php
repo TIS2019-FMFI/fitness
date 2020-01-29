@@ -22,7 +22,7 @@ Route::prefix('v1')->namespace('Api\v1')->group(static function () {
     Route::middleware(['jwt.auth'])->group(function () {
         Route::prefix('clients')->group(static function() {
             Route::get('/',                                     'ClientsController@index');
-            Route::get('/history/export',                               'ClientsController@export');
+            Route::get('/history/export',                       'ClientsController@export');
             Route::get('/history',                              'ClientsController@history');
             Route::post('/',                                    'ClientsController@store');
             Route::post('/{clientId}',                          'ClientsController@update')->name('update');
