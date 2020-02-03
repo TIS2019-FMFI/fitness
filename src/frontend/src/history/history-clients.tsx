@@ -90,7 +90,7 @@ function ClientHistory(props: Props) {
                 />
                 <StyledButton onClick={() => changePage(1)}>Hľadaj</StyledButton>
                 <a id='export' style={{ marginLeft: 20 }} href={`${url}/api/v1/clients/history/export?token=${token}`}>
-                    <p id='text-export'>Exportovať ako .xslx</p>
+                    <p id='text-export'>Exportovať ako .xlsx</p>
                 </a>
             </div>
 
