@@ -13,7 +13,7 @@ class Navigation extends React.PureComponent<Props> {
     render() {
         const { path } = this.props;
         return (
-            <NavigationContainer>
+            <NavigationContainer id='navigation'>
                 <StyledLink to='/' isActive={'/' === path}>
                     <LinkDiv>
                         <LinkImage icon={'/' === path ? 'bookmark' : ['far', 'bookmark']} />
@@ -66,7 +66,6 @@ const StyledLink = styled(Link)<{ isActive: boolean }>`
     flex-flow: column;
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
-    
 
     text-decoration: none;
 
