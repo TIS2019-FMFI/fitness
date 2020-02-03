@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import HistoryEntry from './history-entry';
 import { TokenContext, url } from '../App';
 import { Button, Input } from 'reactstrap';
+import './historyStyles.css';
 
 export interface ClientHistory {
     id: number;
@@ -82,8 +83,15 @@ function ClientHistory(props: Props) {
     return (
         <>
             <div style={{ display: 'flex', marginTop: 40 }}>
-                <StyledInput placeholder={'Zadajte meno alebo telefónne číslo'} type='text' onChange={event => setData(event.target.value)} />
+                <StyledInput
+                    placeholder={'Zadajte meno alebo telefónne číslo'}
+                    type='text'
+                    onChange={event => setData(event.target.value)}
+                />
                 <StyledButton onClick={() => changePage(1)}>Hľadaj</StyledButton>
+                <a id='export' style={{ marginLeft: 20 }} href={`${url}/api/v1/clients/history/export?token=${token}`}>
+                    <p id='text-export'>Exportovať ako .xlsx</p>
+                </a>
             </div>
 
             <Wrapper>

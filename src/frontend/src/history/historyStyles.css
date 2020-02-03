@@ -1,0 +1,17 @@
+#export {
+    background-color: #0063ff;
+    color: white;
+    text-align: center;
+    height: 40px;
+    width: 200px;
+}
+
+#text-export {
+    padding-top: 7px;
+}
+
+@media print {
+    #navigation {
+        display: none;
+    }
+}

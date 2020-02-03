@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Exports\HistoryExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\Client\DestroyClient;
 use App\Http\Requests\Api\v1\Client\StoreClient;
@@ -11,6 +12,7 @@ use App\Models\Client;
 use App\Services\Api\v1\PaginationService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class ClientsController extends Controller
@@ -142,5 +144,16 @@ class ClientsController extends Controller
         Log::info('Vyhľadanie klienta s kľúčom ' . $string);
 
         return response()->json($clients, 200);
+    }
+
+    public function export(Request $request)
+    {
+        $orders = Client::join('orders', 'orders.client_id', '=', 'clients.id')
+            ->join('machines_and_procedures', 'machines_and_procedures.id', '=', 'orders.machine_id')
+            ->where('end_time', '<', Carbon::now())
+            ->orderByDesc("end_time")
+            ->get();
+
+        return (new HistoryExport($orders))->download('history-export.xlsx');
     }
 }

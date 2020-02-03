@@ -19,7 +19,15 @@ function ReservationCellFilled(props: Props) {
             <BottomDiv>
                 <ButtonsDiv>
                     <Icon onClick={editReservation} icon='edit' color={'#0063ff'} />
-                    <Icon onClick={deleteReservation} icon='trash' color={'#d32f2f'} />
+                    <Icon
+                        onClick={() => {
+                            if (window.confirm(`Chcete vymazať rezerváciu ?`)) {
+                                deleteReservation();
+                            }
+                        }}
+                        icon='trash'
+                        color={'#d32f2f'}
+                    />
                 </ButtonsDiv>
                 {reservation.note ? <Icon icon='comment-dots' color={'#0063ff'} /> : null}
             </BottomDiv>
