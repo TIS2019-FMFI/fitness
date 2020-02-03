@@ -13,7 +13,7 @@ class Navigation extends React.PureComponent<Props> {
     render() {
         const { path } = this.props;
         return (
-            <NavigationContainer id='navigacia'>
+            <NavigationContainer id='navigation'>
                 <StyledLink to='/' isActive={'/' === path}>
                     <LinkDiv>
                         <LinkImage icon={'/' === path ? 'bookmark' : ['far', 'bookmark']} />

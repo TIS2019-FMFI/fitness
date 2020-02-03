@@ -2,8 +2,8 @@
     background-color: #0063ff;
     color: white;
     text-align: center;
-    width: 100px;
     height: 40px;
+    width: 200px;
 }
 
 #text-export {
@@ -11,7 +11,7 @@
 }
 
 @media print {
-    #navigacia {
+    #navigation {
         display: none;
     }
 }
