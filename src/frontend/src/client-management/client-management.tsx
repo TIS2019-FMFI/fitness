@@ -4,9 +4,6 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-//import leftArrowImage from '/images/left_arrow.svg';
-//import rightArrowImage from '/images/right_arrow.svg';
-
 import ClientRegistration from './client-registration/client-registration';
 import ClientEntry from './client-entry/client-entry';
 import { TokenContext, url } from '../App';

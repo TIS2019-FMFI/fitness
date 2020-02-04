@@ -31,7 +31,7 @@ function ClientHistory(props: Props) {
     const matchedNumber = (match && match.length > 1 && Number(match[1])) || null;
     const [page, setPage] = useState(matchedNumber > 0 && matchedNumber <= maxPage ? matchedNumber : 1);
     const [clientHistory, setClientHistory] = useState([]);
-    const [data, setData] = useState('');
+    const [search, setSearch] = useState('');
     const token = useContext(TokenContext);
 
     if (match === null || matchedNumber !== page) {
@@ -44,7 +44,7 @@ function ClientHistory(props: Props) {
 
     async function fetchClientHistory(page: number) {
         axios
-            .get(`${url}/api/v1/clients/history?orderBy=id&page=${page}&perPage=${PER_PAGE}&data=${data}`, {
+            .get(`${url}/api/v1/clients/history?orderBy=id&page=${page}&perPage=${PER_PAGE}&data=${search}`, {
                 headers: { Authorization: 'Bearer ' + token },
             })
             .then(res => {
@@ -86,7 +86,7 @@ function ClientHistory(props: Props) {
                 <StyledInput
                     placeholder={'Zadajte meno alebo telefónne číslo'}
                     type='text'
-                    onChange={event => setData(event.target.value)}
+                    onChange={event => setSearch(event.target.value)}
                 />
                 <StyledButton onClick={() => changePage(1)}>Hľadaj</StyledButton>
                 <a id='export' style={{ marginLeft: 20 }} href={`${url}/api/v1/clients/history/export?token=${token}`}>
